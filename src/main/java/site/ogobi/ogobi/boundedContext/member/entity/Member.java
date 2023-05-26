@@ -1,9 +1,6 @@
 package site.ogobi.ogobi.boundedContext.member.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.*;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 
@@ -13,7 +10,7 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     private String nickname; // 닉네임
-
+    @Column(unique = true)
     private String username; // 진짜 로그인할때 쓰는 아이디
     private String password;
 

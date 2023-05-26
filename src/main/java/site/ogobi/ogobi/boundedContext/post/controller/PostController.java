@@ -2,9 +2,13 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
@@ -20,8 +24,9 @@ public class PostController {
 //    }
 
     @GetMapping("/list")
-    public String showList() {
+    public String showList(Model model) {
+        List<Post> postList = this.postService.getList();
+        model.addAttribute("postList", postList);
         return "post/list";
     }
-
 }

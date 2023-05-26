@@ -1,8 +1,28 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template}">
-
-<div layout:fragment="content" class="container my-3">
-    <h1>게시글 목록</h1>
+<html layout:decorate="~{template}">
+<head></head>
+<body>
+<div layout:fragment="content" class="overflow-x-auto">
+    <h1 class="font-semibold p-3 text-center">게시글 목록</h1>
+    <table class="table w-11/12 table-auto mx-auto">
+        <!-- head -->
+        <thead class="border-purple-800">
+        <tr>
+            <th></th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${postList}" class="hover">
+            <th th:text="${post.id}"></th>
+            <td th:text="${post.subject}"></td>
+            <td th:text="${post.author}"></td>
+            <td th:text="${post.createDate}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
+</body>
 </html>
