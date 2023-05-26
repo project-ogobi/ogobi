@@ -1,10 +1,8 @@
 package site.ogobi.ogobi.boundedContext.post.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
@@ -20,5 +18,10 @@ public class PostController {
 //    public String showPost(@PathVariable Long id){
 //
 //    }
+
+    @GetMapping("/list")
+    public String showList() {
+        return "post/list";
+    }
 
 }
