@@ -15,10 +15,10 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")  //글을 볼 수 있는지 권한확인, 로그인-> true / 로그아웃 -> false 반환
-    public String showPost(@PathVariable Long id){
-
-    }
+//    @GetMapping("/{id}")
+//    @PreAuthorize("isAuthenticated()")  //글을 볼 수 있는지 권한확인, 로그인-> true / 로그아웃 -> false 반환
+//    public String showPost(@PathVariable Long id){
+//
+//    }
 
 }
