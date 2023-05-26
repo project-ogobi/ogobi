@@ -1,4 +1,4 @@
-package site.ogobi.ogobi.boundedContext.post;
+package site.ogobi.ogobi.boundedContext.post.Entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
-import site.ogobi.ogobi.boundedContext.post.Post;
+import site.ogobi.ogobi.boundedContext.post.Entity.Post;
 
 @Entity
 public class Comment extends BaseEntity {
