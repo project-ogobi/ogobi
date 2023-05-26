@@ -1,6 +1,8 @@
 package site.ogobi.ogobi.boundedContext.challenge.entity;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.member.Member;
 import site.ogobi.ogobi.boundedContext.spendingHistory.SpendingHistory;
@@ -8,6 +10,8 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.SpendingHistory;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@SuperBuilder
+@NoArgsConstructor
 @Entity
 public class Challenge extends BaseEntity {
     private String challengeName;
