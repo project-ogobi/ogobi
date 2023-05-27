@@ -1,0 +1,37 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+    <form th:action="@{/templates/challenge}" method="post">
+
+        <!-- content 시작 -->
+        <div>
+            <div>
+                챌린지 상세보기
+
+                <div class="mt-4 mb-2 flex flex-col gap-2">
+                    <div>챌린지 시작</div>
+                    <div>챌린지 내용</div>
+                    <div>챌린지 기간</div>
+                    <div>목표 금액</div>
+                </div>
+                <div class="card card-compact w-96 bg-base-100 shadow-xl">
+
+                    <div class="card-body">
+                        <h2 class="card-title">지출내역1</h2>
+                        <p>4500원</p>
+                        <p>커피</p>
+                        <p>사진</p>
+                        <div class="card-actions justify-end">
+                            <button class="btn btn-primary">수정하기</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- content 종료 -->
+
+    </form>
+</div>

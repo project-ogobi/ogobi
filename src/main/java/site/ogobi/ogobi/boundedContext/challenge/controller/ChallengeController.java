@@ -15,10 +15,24 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
 
+    //challengeHome
+    @GetMapping("")
+    public String home(){
+
+        return "/challenge/challengeHome";
+    }
+
     //createForm
     @GetMapping("/createForm")
     public String gotoCreateForm(){
 
         return "/challenge/createForm";
     }
+
+    @GetMapping("/detail") //나중에 challenge_id로 바꾸기
+    public String showDetail(){
+
+        return "/challenge/detail";
+    }
+
 }
