@@ -4,12 +4,19 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 
 import java.util.List;
 
 @Entity
+@Getter
+@SuperBuilder
+@NoArgsConstructor
 public class Member extends BaseEntity {
 
     private String nickname; // 닉네임
@@ -23,6 +30,10 @@ public class Member extends BaseEntity {
 
     public boolean isAdmin() {
         return "admin".equals(username);
+    }
+
+    public boolean hasChallenge(){
+        return challenge.size() != 0;
     }
 
 }

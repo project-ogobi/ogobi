@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 @Service
 @RequiredArgsConstructor
@@ -13,9 +14,10 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
     @Transactional
-    public void create(String challengeName, String description, int targetMoney) {
+    public void create(Member member, String challengeName, String description, int targetMoney) {
         Challenge challenge = Challenge
                 .builder()
+                .member(member)
                 .challengeName(challengeName)
                 .description(description)
                 //startDate,endDate 추가하기

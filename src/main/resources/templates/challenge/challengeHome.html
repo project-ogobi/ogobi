@@ -2,7 +2,40 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="flex-grow flex flex-col items-center justify-center my-3">
-    <p> challengeHome입니다. </p>
-    <a href="/challenges/createForm" id="btn-challenge-create"  class="btn btn-primary">새 챌린지 등록하기</a>
+    <!-- content 시작 -->
+    <div class="container flex-grow flex flex-col items-center justify-center max-w-xl mx-auto min-w-xl">
+        <p> challengeHome입니다. </p>
+
+        <th:block th:unless="${@rq.member.hasChallenge}">
+            <div>등록된 챌린지가 없습니다.</div>
+        </th:block>
+
+        <th:block th:if="${@rq.member.hasChallenge}">
+            <ul>
+                <li th:each="challenge: ${challenge}">
+                    <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
+                        <div class="card-body">
+                            <h2 class="card-title">챌린지1</h2>
+                            <div th:text="${challenge.challengeName}"></div>
+                            <div th:text="${challenge.description}"></div>
+                            <p>기간</p>
+                            <p>목표금액</p>
+                            <div th:text="${challenge.targetMoney}"></div>
+                            <p>총 사용금액</p>
+                            <div th:text="${challenge.usedMoney}"></div>
+                            <p>달성률</p>
+                            <div th:text="${challenge.achievementRate}"></div>
+                            <div class="card-actions justify-end">
+                                <button class="btn btn-primary">수정하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </th:block>
+
+        <a href="/challenges/createForm" id="btn-challenge-create"  class="btn btn-primary my-3">새 챌린지 등록하기</a>
+    </div>
+    <!-- content 종료 -->
 
 </div>

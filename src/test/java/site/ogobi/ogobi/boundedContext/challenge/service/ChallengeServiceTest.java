@@ -5,18 +5,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ChallengeServiceTest {
+
+    private Rq rq;
     @Autowired
     private ChallengeService challengeService;
 
     @Autowired
     private ChallengeRepository challengeRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("create 테스트")
@@ -25,8 +33,12 @@ class ChallengeServiceTest {
         String challengeName = "테스트 챌린지 제목1";
         String description = "테스트 챌린지 내용1";
         int targetMoney = 100000;
+
+        Member member = Member.builder().username("testuser1").password("1234").build();
+        memberRepository.save(member);
+
         //when
-        challengeService.create(challengeName, description, targetMoney);
+        challengeService.create(member, challengeName, description, targetMoney);
 
         //then
         Challenge savedChallenge = challengeRepository.findById(1L).get();

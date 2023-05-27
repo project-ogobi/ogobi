@@ -2,7 +2,7 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
-    <form th:action="@{/templates/challenge}" method="post">
+    <form th:action="@{/challenges/createForm}" method="post">
 
         <!-- content 시작 -->
         <div class="container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
@@ -11,21 +11,21 @@
 
                 <div class="mt-4 mb-2 flex flex-col gap-2">
                     <div>챌린지 제목</div>
-                    <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full" />
+                    <input type="text" id="challengeName" name="challengeName" placeholder="Type here" class="input input-bordered input-primary w-full" />
 
                     <div>챌린지 내용</div>
-                    <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full" />
+                    <input type="text" id="description" name="description" placeholder="Type here" class="input input-bordered input-primary w-full" />
 
                     <div>챌린지 기간</div>
 
 
                     <div>목표 금액</div>
-                    <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full" />
+                    <input type="text" name="targetMoney" placeholder="Type here" class="input input-bordered input-primary w-full" />
 
                 </div>
 
                 <div class = "flex justify-end">
-                    <a href="/challenges/detail" class="btn btn-primary">등록하기</a>
+                    <button type="submit" name="submit" class="btn btn-primary">등록하기</button>
                 </div>
             </div>
 
