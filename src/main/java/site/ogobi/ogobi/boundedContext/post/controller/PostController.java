@@ -31,7 +31,6 @@ public class PostController {
 
     }
 
-
     @GetMapping("/list")
     public String showList(Model model) {
         List<Post> postList = this.postService.getList();
