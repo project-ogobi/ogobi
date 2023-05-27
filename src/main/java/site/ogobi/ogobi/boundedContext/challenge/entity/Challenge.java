@@ -1,6 +1,7 @@
 package site.ogobi.ogobi.boundedContext.challenge.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @Entity
+@Getter
 public class Challenge extends BaseEntity {
     private String challengeName;
     private String description;
