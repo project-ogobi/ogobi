@@ -1,7 +1,6 @@
 package site.ogobi.ogobi.boundedContext.post.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +21,8 @@ public class PostController {
     private final Rq rq;
     private final PostService postService;
 
-    @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")  //글을 볼 수 있는지 권한확인, 로그인-> true / 로그아웃 -> false 반환
+    @GetMapping("/detail/{id}")
+//    @PreAuthorize("isAuthenticated()")  //글을 볼 수 있는지 권한확인, 로그인-> true / 로그아웃 -> false 반환
     public String showPost(Model model, @PathVariable Long id){
         Post post = postService.getPost(id);
         model.addAttribute("post", post);

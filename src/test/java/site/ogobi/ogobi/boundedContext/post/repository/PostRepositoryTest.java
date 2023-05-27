@@ -17,7 +17,7 @@ class PostRepositoryTest {
     @DisplayName("게시글 데이터")
     @Rollback(false)
     void test001() {
-        Post p1 = Post.builder()    //Todo 에러 발생
+        Post p1 = Post.builder()
                 .subject("제목1")
                 .content("내용1")
                 .build();
