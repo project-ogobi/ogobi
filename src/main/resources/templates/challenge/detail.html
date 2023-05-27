@@ -2,7 +2,6 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
-    <form th:action="@{/templates/challenge}" method="post">
 
         <!-- content 시작 -->
         <div class="container flex-grow flex items-center justify-center max-w-xl mx-auto  min-w-xl">
@@ -10,28 +9,39 @@
                 챌린지 상세보기
 
                 <div class="mt-4 mb-2 flex flex-col gap-2">
-                    <div>챌린지 시작</div>
-                    <div>챌린지 내용</div>
+                    <div th:text="${challenge.challengeName}"></div>
+                    <div th:text="${challenge.description}"></div>
                     <div>챌린지 기간</div>
-                    <div>목표 금액</div>
+                    <div th:text="${challenge.targetMoney}">목표금액</div>
                 </div>
-                <div class="card card-compact w-96 bg-base-100 shadow-xl">
 
-                    <div class="card-body">
-                        <h2 class="card-title">지출내역1</h2>
-                        <p>4500원</p>
-                        <p>커피</p>
-                        <p>사진</p>
-                        <div class="card-actions justify-end">
-                            <button type="submit" name="submit" class="btn btn-primary">수정하기</button>
-                        </div>
-                    </div>
+                <th:block th:unless="${challenge.hasSpendingHistory}">
+                    <div>아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
+                </th:block>
 
-                </div>
+                <th:block th:if="${challenge.hasSpendingHistory}">
+                    <ul>
+                        <li th:each="spendingHistory: ${challenge.getSpendingHistories()}">
+                            <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
+                                <div class="card-body">
+                                    <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>
+                                    <div th:text="${spendingHistory.getPrice}"></div>
+                                    <p>날짜-시간</p>
+                                    <p>사진</p>
+                                    <div class="card-actions justify-end">
+                                        <button type="submit" class="btn btn-sm btn-primary">수정하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </th:block>
+
             </div>
+
 
         </div>
         <!-- content 종료 -->
 
-    </form>
+
 </div>

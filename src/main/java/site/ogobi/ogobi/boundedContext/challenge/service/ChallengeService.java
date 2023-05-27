@@ -7,6 +7,8 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
@@ -27,5 +29,9 @@ public class ChallengeService {
                 .build();
 
         challengeRepository.save(challenge);
+    }
+
+    public Optional<Challenge> findChallengeById(Long id) {
+        return challengeRepository.findById(id);
     }
 }

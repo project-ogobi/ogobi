@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.ogobi.ogobi.base.rq.Rq;
@@ -82,4 +83,13 @@ public class ChallengeController {
         return "/challenge/detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}")
+    public String showDetailById(@PathVariable Long challenge_id, Model model){
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+
+        model.addAttribute("challenge", challenge);
+
+        return "challenge/detail";
+    }
 }

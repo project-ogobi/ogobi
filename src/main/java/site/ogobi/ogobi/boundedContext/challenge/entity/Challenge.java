@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.spendingHistory.SpendingHistory;
+import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,5 +31,9 @@ public class Challenge extends BaseEntity {
 
     @OneToMany(mappedBy = "challenge", cascade = {CascadeType.ALL})
     private List<SpendingHistory> spendingHistories;
+
+    public boolean hasSpendingHistory(){
+        return spendingHistories.size() != 0;
+    }
 
 }
