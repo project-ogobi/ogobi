@@ -1,4 +1,4 @@
-package site.ogobi.ogobi.boundedContext.member;
+package site.ogobi.ogobi.boundedContext.member.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,5 +20,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;
+
+    public boolean isAdmin() {
+        return "admin".equals(username);
+    }
 
 }
