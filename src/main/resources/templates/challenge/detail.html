@@ -4,7 +4,7 @@
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
 
         <!-- content 시작 -->
-        <div class="container flex-grow flex items-center justify-center max-w-xl mx-auto  min-w-xl">
+        <div class="container flex-grow flex flex-col items-center justify-center max-w-xl mx-auto  min-w-xl">
             <div>
                 챌린지 상세보기
 
@@ -39,7 +39,7 @@
                 </th:block>
 
             </div>
-
+            <a th:href="@{'/challenges/' + challenge_id + '/spending-history'}" id="btn-challenge-spendinghistory"  class="btn btn-primary my-3">수행내역 입력하기</a>
 
         </div>
         <!-- content 종료 -->
