@@ -11,12 +11,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
@@ -33,7 +35,7 @@ public class ChallengeController {
     //challengeHome
     @PreAuthorize("isAuthenticated()")
     @GetMapping("")
-    public String home(Model model){
+    public String home(Model model) {
 
         List<Challenge> li = rq.getMember().getChallenge();
 
@@ -43,34 +45,21 @@ public class ChallengeController {
 
         return "/challenge/challengeHome";
     }
-    @AllArgsConstructor
-    @Getter
-    public static class CreateForm{
-
-        @NotBlank
-        @Size(min=3, max=20)
-        private final String challengeName;
-
-        @NotBlank
-        private final String description;
-
-        @Min(0)
-        private final Integer targetMoney;
-
-    }
 
     //createForm
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createForm")
-    public String goToCreate(){
-        System.out.println("입력됨");
-
+    public String goToCreate(Model model){
+        model.addAttribute("createForm", new CreateForm());
         return "/challenge/createForm";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("")
-    public String create(@Valid CreateForm createForm){
+    public String create(@Valid CreateForm createForm, BindingResult result){
+        if (result.hasErrors()) {
+            return "/challenge/createForm";
+        }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney());
         return "redirect:/challenges";
     }
