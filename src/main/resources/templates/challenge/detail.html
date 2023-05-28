@@ -12,7 +12,8 @@
                     <div th:text="${challenge.challengeName}"></div>
                     <div th:text="${challenge.description}"></div>
                     <div>챌린지 기간</div>
-                    <div th:text="${challenge.targetMoney}">목표금액</div>
+                    <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
+                    <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
                 </div>
 
                 <th:block th:unless="${challenge.hasSpendingHistory}">
@@ -25,7 +26,7 @@
                             <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
                                 <div class="card-body">
                                     <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>
-                                    <div th:text="${spendingHistory.getPrice}"></div>
+                                    <div th:text="${spendingHistory.getPrice + '원'}"></div>
                                     <p>날짜-시간</p>
                                     <p>사진</p>
                                     <div class="card-actions justify-end">

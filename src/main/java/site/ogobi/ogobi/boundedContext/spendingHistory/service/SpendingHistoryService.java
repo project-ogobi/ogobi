@@ -14,6 +14,9 @@ public class SpendingHistoryService {
 
     @Transactional
     public void create(Challenge challenge, String content, int price){
+
+        challenge.updateUsedMoney(challenge.getUsedMoney() + price);
+
         SpendingHistory spendingHistory = SpendingHistory.builder()
                 .content(content)
                 .price(price)

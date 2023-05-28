@@ -36,4 +36,12 @@ public class Challenge extends BaseEntity {
         return spendingHistories.size() != 0;
     }
 
+    public void updateUsedMoney(int money){
+        this.usedMoney = money;
+    }
+
+    public void updateAchievementRate(int achievementRate){
+        this.achievementRate = achievementRate;
+    }
+
 }

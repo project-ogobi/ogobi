@@ -20,12 +20,12 @@
                             </a>
                             <div th:text="${c.description}"></div>
                             <p>기간</p>
-                            <p>목표금액</p>
-                            <div th:text="${c.targetMoney}"></div>
-                            <p>총 사용금액</p>
-                            <div th:text="${c.usedMoney}"></div>
-                            <p>달성률</p>
-                            <div th:text="${c.achievementRate}"></div>
+
+                            <div th:text="${'목표금액: ' + c.targetMoney + '원'}"></div>
+
+                            <div th:text="${'총 사용금액: ' + c.usedMoney + '원'}"></div>
+
+                            <div th:text="${'달성률: ' + c.achievementRate + '%'}"></div>
                             <div class="card-actions justify-end">
                                 <button class="btn btn-primary">수정하기</button>
                             </div>
