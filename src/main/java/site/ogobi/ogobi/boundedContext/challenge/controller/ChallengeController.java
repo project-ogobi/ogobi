@@ -72,9 +72,7 @@ public class ChallengeController {
     @PostMapping("/createForm")
     public String create(@Valid CreateForm createForm){
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney());
-
-
-        return "/challenge/challengeHome";
+        return "redirect:/challenges";
     }
 
     @GetMapping("/detail") //나중에 challenge_id로 바꾸기
