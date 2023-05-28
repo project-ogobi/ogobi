@@ -2,25 +2,34 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
-    <form th:action="@{/challenges}" method="post">
+    <form role="form" th:action="@{/challenges}" method="post" th:object="${createForm}">
 
         <!-- content 시작 -->
-        <div class="container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
+        <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
             <div>
                 챌린지 작성하기
 
                 <div class="mt-4 mb-2 flex flex-col gap-2">
-                    <div>챌린지 제목</div>
-                    <input type="text" id="challengeName" name="challengeName" placeholder="Type here" class="input input-bordered input-primary w-full" />
+                    <div class="form-group">
+                        <label th:for="challengeName">챌린지 제목</label>
+                        <input type="text" th:field="*{challengeName}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    </div>
+                    <p th:if="${#fields.hasErrors('challengeName')}" th:errors="*{challengeName}" class="fieldError">Incorrect data</p>
 
-                    <div>챌린지 내용</div>
-                    <input type="text" id="description" name="description" placeholder="Type here" class="input input-bordered input-primary w-full" />
+                    <div class="form-group">
+                        <label th:for="challengeName">챌린지 내용</label>
+                        <input type="text" th:field="*{description}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    </div>
+                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
                     <div>챌린지 기간</div>
 
 
-                    <div>목표 금액</div>
-                    <input type="text" name="targetMoney" placeholder="Type here" class="input input-bordered input-primary w-full" />
+                    <div class="form-group">
+                        <label th:for="targetMoney">목표 금액</label>
+                        <input type="text" th:field="*{targetMoney}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    </div>
+                    <p th:if="${#fields.hasErrors('targetMoney')}" th:errors="*{targetMoney}" class="fieldError">Incorrect data</p>
 
                 </div>
 
@@ -28,7 +37,6 @@
                     <button type="submit" name="submit" class="btn btn-primary">등록하기</button>
                 </div>
             </div>
-
         </div>
         <!-- content 종료 -->
 
