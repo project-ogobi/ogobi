@@ -69,7 +69,7 @@ public class ChallengeController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/createForm")
+    @PostMapping("")
     public String create(@Valid CreateForm createForm){
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney());
         return "redirect:/challenges";
