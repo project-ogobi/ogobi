@@ -16,7 +16,9 @@
         <tbody>
         <tr th:each="post : ${postList}" class="hover">
             <th th:text="${post.id}"></th>
-            <td th:text="${post.subject}"></td>
+            <td>
+                <a th:href="@{|/posts/detail/${post.id}|}" th:text="${post.subject}"></a>
+            </td>
             <td th:text="${post.author}"></td>
             <td th:text="${post.createDate}"></td>
         </tr>
