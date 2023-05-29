@@ -21,6 +21,7 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 
 import java.util.List;
 
@@ -80,6 +81,24 @@ public class ChallengeController {
         return "challenge/spendingHistory";
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}/spending-history/createForm")
+    public String createSpendingHistory(@PathVariable Long challenge_id, Model model){
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        model.addAttribute("form", challenge);
+        return "challenge/createSpendingHistory";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{challenge_id}/spending-history/createForm")
+    public String createSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result, @PathVariable Long challenge_id){
+        if (result.hasErrors()) {
+            return "/challenge/createSpendingHistory";
+        }
+//        challengeService.createSpendingHistory();
+        return "redirect:/challenges/" + challenge_id;
+    }
 
 
 
