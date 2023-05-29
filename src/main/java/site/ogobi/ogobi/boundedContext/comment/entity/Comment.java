@@ -25,10 +25,4 @@ public class Comment extends BaseEntity {
     @ManyToOne
     private Post post;
 
-    @Builder
-    public Comment(String content, Post post, Member writer) {
-        this.content = content;
-        this.post = post;
-        this.writer = writer;
-    }
 }

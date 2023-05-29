@@ -9,6 +9,7 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .content(content)
                 .writer(writer)
+                .createDate(LocalDateTime.now())
                 .build();
         commentRepository.save(comment);
     }
