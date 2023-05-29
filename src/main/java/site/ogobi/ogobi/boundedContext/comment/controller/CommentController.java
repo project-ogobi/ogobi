@@ -19,9 +19,7 @@ import java.util.List;
 public class CommentController {
 
     private final Rq rq;
-
     private final CommentService commentService;
-
     private final PostService postService;
 
 
@@ -45,6 +43,5 @@ public class CommentController {
 
     }
 
-    public void deleteComment(@PathVariable Long id)
 
 }
