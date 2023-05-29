@@ -11,6 +11,7 @@ import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,15 @@ public class CommentService {
         return post.getComments();
     }
 
+    public boolean isMyComment(Member member, Comment comment) {   //댓글 작성자가 본인인지 여부 판단
+        String writer = comment.getWriter().getNickname();
+
+        if (member.getNickname().equals(writer)) {
+            return true;
+        }
+        return false;
+    }
+
     public void create(String content, Member writer) {
         Comment comment = Comment.builder()
                 .content(content)
@@ -35,4 +45,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    public Optional<Comment> findById(Long id) {
+        return commentRepository.findById(id);
+    }
 }

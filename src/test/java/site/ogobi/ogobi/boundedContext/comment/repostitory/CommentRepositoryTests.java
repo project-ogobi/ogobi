@@ -26,6 +26,7 @@ public class CommentRepositoryTests {
 
     @Test
     @DisplayName("댓글 데이터")
+    @Rollback(value = false)
     void test001() {
         Optional<Post> op = this.postRepository.findById(5L);
         assertTrue(op.isPresent());

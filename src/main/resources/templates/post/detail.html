@@ -21,7 +21,7 @@
     </div>
 
     <div>
-        <p class="m-4 p-3" th:text="${post.content}">
+        <p class="m-4 p-3" th:utext="${post.content}">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
             industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
@@ -53,8 +53,8 @@
             <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
             <button class="btn btn-active btn-primary btn-sm">수정</button>
         </div>
-        <div class="text-gray-400 text-sm">작성일자</div>
-        <div class="flex-auto">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+        <div class="text-gray-400 text-sm" th:text="${comment.createDate}">작성일자</div>
+        <div class="flex-auto" th:text="${comment.content}">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
             unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not
             only five centuries, but also the leap into electronic typesetting, remaining essentially uncha
         </div>

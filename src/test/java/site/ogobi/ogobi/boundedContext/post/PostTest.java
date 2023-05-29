@@ -23,6 +23,7 @@ class PostTest {
 
     @Test
     @DisplayName("게시글 데이터")
+    @Rollback(value = false)
     void test001() {
         Post p1 = Post.builder()
                 .subject("제목1")
