@@ -11,7 +11,7 @@
                 <div class="mt-4 mb-2 flex flex-col gap-2">
                     <div th:text="${challenge.challengeName}"></div>
                     <div th:text="${challenge.description}"></div>
-                    <div>챌린지 기간</div>
+                    <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
                     <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
                     <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
                 </div>

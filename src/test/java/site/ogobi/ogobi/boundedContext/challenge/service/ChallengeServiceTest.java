@@ -11,6 +11,8 @@ import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -38,7 +40,7 @@ class ChallengeServiceTest {
         memberRepository.save(member);
 
         //when
-        challengeService.create(member, challengeName, description, targetMoney);
+        challengeService.create(member, challengeName, description, targetMoney, LocalDate.now(), LocalDate.now());
 
         //then
         Challenge savedChallenge = challengeRepository.findById(1L).get();

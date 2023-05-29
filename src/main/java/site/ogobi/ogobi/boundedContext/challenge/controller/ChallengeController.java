@@ -60,7 +60,7 @@ public class ChallengeController {
         if (result.hasErrors()) {
             return "/challenge/createForm";
         }
-        challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney());
+        challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
         return "redirect:/challenges";
     }
 

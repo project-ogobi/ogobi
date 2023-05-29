@@ -19,7 +19,8 @@
                                 <h2 class="card-title" th:text="${c.challengeName}"></h2>
                             </a>
                             <div th:text="${c.description}"></div>
-                            <p>기간</p>
+
+                            <div th:text="${'기간: ' + c.startDate + ' ~ ' + c.endDate}"></div>
 
                             <div th:text="${'목표금액: ' + c.targetMoney + '원'}"></div>
 

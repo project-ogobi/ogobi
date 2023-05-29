@@ -8,7 +8,7 @@ import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @SuperBuilder
@@ -19,8 +19,8 @@ public class Challenge extends BaseEntity {
     private String challengeName;
     private String description;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private int targetMoney; // 목표 금액
     private int usedMoney; // 총 사용금액?
