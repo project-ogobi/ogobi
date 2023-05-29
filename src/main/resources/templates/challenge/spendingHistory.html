@@ -14,7 +14,7 @@
             <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
                 <div class="card-body">
                     <ul th:each="c: ${challenge.getSpendingHistories()}">
-                        <a th:href="@{/challenges/{id}/spending-history/createForm(id=${challenge.getId})}">
+                        <a th:href="@{/challenges/{id}/{sh_id}/createForm(id=${challenge.getId}, sh_id=${c.getId})}">
                             <h2 class="card-title" th:text="|${c.getContent} ${c.getPrice}|"></h2>
                         </a>
                     </ul>

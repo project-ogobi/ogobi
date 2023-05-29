@@ -1,13 +1,8 @@
 package site.ogobi.ogobi.boundedContext.challenge.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,17 +16,21 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
+import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/challenges")
 @RequiredArgsConstructor
+@Slf4j
 public class ChallengeController {
 
     private final Rq rq;
     private final ChallengeService challengeService;
+    private final SpendingHistoryService spendingHistoryService;
 
     //challengeHome
     @PreAuthorize("isAuthenticated()")
@@ -83,20 +82,31 @@ public class ChallengeController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/spending-history/createForm")
-    public String createSpendingHistory(@PathVariable Long challenge_id, Model model){
+    @GetMapping("/{challenge_id}/{sh_id}/createForm")
+    public String createSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-        model.addAttribute("form", challenge);
+        SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
+        // dto 객체 전환
+        SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
+                .itemName(spendingHistory.getContent())
+                .itemPrice(spendingHistory.getPrice())
+                .build();
+
+        log.info("spendingHistoryForm={}", spendingHistoryForm);
+        model.addAttribute("form", spendingHistoryForm);
+        model.addAttribute("cid", challenge_id);
+        model.addAttribute("sh_id", sh_id);
+
         return "challenge/createSpendingHistory";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{challenge_id}/spending-history/createForm")
-    public String createSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result, @PathVariable Long challenge_id){
+    @PostMapping("/{challenge_id}/{sh_id}")
+    public String createSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result, @PathVariable Long challenge_id, @PathVariable Long sh_id){
         if (result.hasErrors()) {
-            return "/challenge/createSpendingHistory";
+            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/createForm";
         }
-//        challengeService.createSpendingHistory();
+        spendingHistoryService.createSpendingHistory(form, sh_id, challenge_id);
         return "redirect:/challenges/" + challenge_id;
     }
 
