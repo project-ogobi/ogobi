@@ -36,13 +36,8 @@ public class ChallengeController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     public String home(Model model) {
-
         List<Challenge> li = rq.getMember().getChallenge();
-
-        System.out.println(li);
-
         model.addAttribute("challenge", li);
-
         return "/challenge/challengeHome";
     }
 
@@ -66,7 +61,6 @@ public class ChallengeController {
 
     @GetMapping("/detail") //나중에 challenge_id로 바꾸기
     public String showDetail(){
-
         return "/challenge/detail";
     }
 
@@ -74,9 +68,19 @@ public class ChallengeController {
     @GetMapping("/{challenge_id}")
     public String showDetailById(@PathVariable Long challenge_id, Model model){
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-
         model.addAttribute("challenge", challenge);
-
         return "challenge/detail";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}/spending-history")
+    public String spendingHistory(@PathVariable Long challenge_id, Model model){
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        model.addAttribute("challenge", challenge);
+        return "challenge/spendingHistory";
+    }
+
+
+
+
 }
