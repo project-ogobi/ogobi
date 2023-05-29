@@ -1,5 +1,6 @@
 package site.ogobi.ogobi.boundedContext.comment.service;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,4 +49,9 @@ public class CommentService {
     public Optional<Comment> findById(Long id) {
         return commentRepository.findById(id);
     }
+
+    public void deleteComment(Long id) {
+        commentRepository.deleteById(id);
+    }
+
 }

@@ -15,6 +15,7 @@ import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class CommentController {
     @PostMapping("/detail/{id}")
     public String createComment(@PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "post/create";
+            return "post/detail";
         }
 
         Post post = this.postService.getPost(id);
@@ -52,14 +53,16 @@ public class CommentController {
 
     @GetMapping("/detail/{id}/{comment_id}") // Todo delete로 바꾸기
     public void deleteComment(@PathVariable Long id, @PathVariable Long comment_id){
+        Post post = this.postService.getPost(id);
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
         if (commentService.isMyComment(member,comment)){
-
+            commentService.deleteComment(comment_id);
         }
 
     }
+
 
 
 }
