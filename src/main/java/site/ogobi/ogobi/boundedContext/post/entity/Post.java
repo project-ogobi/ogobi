@@ -1,24 +1,19 @@
 package site.ogobi.ogobi.boundedContext.post.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.comment.Comment;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Entity
+@SuperBuilder
 @NoArgsConstructor
 public class Post extends BaseEntity {
 

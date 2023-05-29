@@ -2,6 +2,7 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,9 +11,6 @@ import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
-
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
@@ -24,7 +22,7 @@ public class PostController {
 
     @GetMapping("/detail/{id}")
 //    @PreAuthorize("isAuthenticated()")  //글을 볼 수 있는지 권한확인, 로그인-> true / 로그아웃 -> false 반환
-    public String showPost(Model model, @PathVariable Long id){
+    public String showPost(Model model, @PathVariable Long id) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
 
@@ -33,9 +31,9 @@ public class PostController {
     }
 
     @GetMapping("/list")
-    public String showList(Model model) {
-        List<Post> postList = this.postService.getList();
-        model.addAttribute("postList", postList);
+    public String showList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Post> paging = this.postService.getList(page);
+        model.addAttribute("paging", paging);
         return "post/list";
     }
 

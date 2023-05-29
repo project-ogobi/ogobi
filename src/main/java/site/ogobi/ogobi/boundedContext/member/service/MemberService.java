@@ -12,6 +12,7 @@ import java.util.Optional;
 public class MemberService {
 
     private MemberRepository memberRepository;
+
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }

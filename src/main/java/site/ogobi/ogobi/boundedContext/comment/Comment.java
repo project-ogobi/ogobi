@@ -11,6 +11,6 @@ public class Comment extends BaseEntity {
 
     private String content;
 
-    @ManyToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 }
