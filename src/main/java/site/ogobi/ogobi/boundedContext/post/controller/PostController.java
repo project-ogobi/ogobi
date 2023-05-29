@@ -43,7 +43,7 @@ public class PostController {
 
     @PostMapping("/create")
     public String create(@RequestParam String subject, @RequestParam String content) {
-        // TODO 질문을 저장한다.
-        return "redirect:/posts/list"; // 질문 저장후 질문목록으로 이동
+        // TODO 게시글을 저장한다.
+        return "redirect:/posts/list"; // 저장 후 목록으로 이동
     }
 }
