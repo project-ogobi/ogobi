@@ -8,6 +8,7 @@ import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,8 @@ public class ChallengeService {
                 .targetMoney(targetMoney)
                 .usedMoney(0)
                 .achievementRate(0)
+                .createDate(LocalDateTime.now())
+                .modifyDate(LocalDateTime.now())
                 .build();
 
         challengeRepository.save(challenge);
