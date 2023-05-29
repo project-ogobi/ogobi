@@ -11,9 +11,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
+
 }
