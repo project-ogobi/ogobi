@@ -10,6 +10,8 @@ import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @SuperBuilder
@@ -18,7 +20,13 @@ public class SpendingHistory extends BaseEntity {
 
     private String content; // 작성한 내용 ex)스타벅스커피...
     private int price; //각 사용금액 ex)4500원
+    private LocalDateTime date;
+    private String description;
 
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
 }

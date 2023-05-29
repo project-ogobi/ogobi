@@ -2,6 +2,7 @@ package site.ogobi.ogobi.boundedContext.spendingHistory.form;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +14,14 @@ public class SpendingHistoryForm {
     private String itemName;
 
     @Min(0)
-    private String itemPrice;
+    private int itemPrice;
 
     @NotBlank
     private String description;
 
+    @Builder
+    public SpendingHistoryForm(String itemName, Integer itemPrice) {
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+    }
 }
