@@ -1,6 +1,7 @@
 package site.ogobi.ogobi.boundedContext.post.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Entity
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
     private Category category;
@@ -27,12 +28,6 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private List<Comment> comments;
-
-    @Builder
-    public Post(String subject, String content) {
-        this.subject = subject;
-        this.content = content;
-    }
 
     public enum Category {
         FREE,

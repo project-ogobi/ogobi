@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
@@ -11,6 +12,8 @@ import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +45,9 @@ public class PostService {
     }
 
     public Page<Post> getList(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.postRepository.findAll(pageable);
     }
 
@@ -50,6 +55,8 @@ public class PostService {
         Post p = Post.builder()
                 .subject(subject)
                 .content(content)
+                .createDate(LocalDateTime.now())
+                .modifyDate(LocalDateTime.now())
                 .build();
         postRepository.save(p);
     }
