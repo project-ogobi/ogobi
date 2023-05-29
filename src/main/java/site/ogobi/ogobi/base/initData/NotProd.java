@@ -33,8 +33,8 @@ public class NotProd {
                 challengeService.create(member2, "테스트네임1", "테스트내용1", 10000, LocalDate.of(2023,5,27), LocalDate.of(2023,5,29) );
                 challengeService.create(member2, "테스트네임2", "테스트내용2", 20000,  LocalDate.of(2023,5,27), LocalDate.of(2023,5,30));
 
-                spendingHistoryService.create(challengeService.findChallengeById(1L).get(), "커피", 4500);
-                spendingHistoryService.create(challengeService.findChallengeById(1L).get(), "점심", 8000);
+                spendingHistoryService.create(challengeService.findChallengeById(1L).get(), "커피", 4500, "설명");
+                spendingHistoryService.create(challengeService.findChallengeById(1L).get(), "점심", 8000, "설명");
             }
         };
 
