@@ -19,6 +19,10 @@ public class MemberService {
 
     @Transactional
     public Member join(String username, String password) {
+        if (memberRepository.findByUsername(username).isPresent()) {
+            return null;
+        }
+
         Member member = Member
                 .builder()
                 .username(username)
