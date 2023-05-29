@@ -15,7 +15,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PostService {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
@@ -39,7 +39,7 @@ public class PostService {
     }
 
     public List<Post> getList() {
-        return postRepository.findAll();
+        return this.postRepository.findAll();
     }
 
 }

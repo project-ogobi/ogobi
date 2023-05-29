@@ -3,9 +3,7 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
@@ -36,5 +34,16 @@ public class PostController {
         List<Post> postList = this.postService.getList();
         model.addAttribute("postList", postList);
         return "post/list";
+    }
+
+    @GetMapping("/create")
+    public String showCreate() {
+        return "post/create";
+    }
+
+    @PostMapping("/create")
+    public String create(@RequestParam String subject, @RequestParam String content) {
+        // TODO 질문을 저장한다.
+        return "redirect:/posts/list"; // 질문 저장후 질문목록으로 이동
     }
 }

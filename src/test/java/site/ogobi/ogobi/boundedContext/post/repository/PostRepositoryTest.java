@@ -21,15 +21,12 @@ class PostRepositoryTest {
                 .subject("제목1")
                 .content("내용1")
                 .build();
-        System.out.println(p1);
-
         postRepository.save(p1);
 
         Post p2 = Post.builder()
                 .subject("제목2")
                 .content("내용2")
                 .build();
-
         postRepository.save(p2);
     }
 }

@@ -3,19 +3,19 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- sbb CSS -->
+    <!-- CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 </head>
 
 <body>
     <div class="navbar bg-indigo-50">
         <div class="navbar-start">
-            <a class="btn btn-ghost text-xl">오늘의 고비</a>
+            <a th:href="@{/}" class="btn btn-ghost text-xl">오늘의 고비</a>
         </div>
         <div class="navbar-center lg:flex">
             <ul class="menu menu-horizontal px-1">
                 <li><a>챌린지</a></li>
-                <li><a>커뮤니티</a></li>
+                <li><a th:href="@{/posts/list}">커뮤니티</a></li>
                 <li><a>추천장소</a></li>
                 <li><a>프로필</a></li>
             </ul>
