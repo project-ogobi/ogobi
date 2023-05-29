@@ -3,15 +3,18 @@
 <body>
 <div layout:fragment="content">
     <h1 class="font-semibold p-3 text-center">게시글 등록</h1>
-    <form th:action="@{/posts/create}" method="post">
+    <form th:action="@{/posts/create}" th:object="${postDto}" method="post">
+        <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+        </div>
         <div class="w-11/12 mx-auto center">
-            <div class="mb-3">
-                <label for="subject" class="form-label">제목</label>
-                <input type="text" name="subject" id="subject" class="form-control w-full">
+            <div class="my-3">
+                <label for="subject" class="form-label my-3">제목</label>
+                <input type="text" th:field="*{subject}" class="form-control w-full">
             </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">내용</label>
-                <textarea name="content" id="content" class="form-control w-full" rows="10"></textarea>
+            <div class="my-3">
+                <label for="content" class="form-label my-3">내용</label>
+                <textarea th:field="*{content}" class="form-control w-full" rows="10"></textarea>
             </div>
             <input type="submit" value="등록" class="btn btn-primary my-2 float-right">
         </div>

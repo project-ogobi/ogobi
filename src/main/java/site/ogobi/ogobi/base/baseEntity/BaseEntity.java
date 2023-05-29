@@ -1,9 +1,6 @@
 package site.ogobi.ogobi.base.baseEntity;
 
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -27,6 +24,7 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createDate;
     @LastModifiedDate
     private LocalDateTime modifyDate;

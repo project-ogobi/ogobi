@@ -7,6 +7,7 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,4 +43,11 @@ public class PostService {
         return this.postRepository.findAll();
     }
 
+    public void create(String subject, String content) {
+        Post p = Post.builder()
+                .subject(subject)
+                .content(content)
+                .build();
+        postRepository.save(p);
+    }
 }

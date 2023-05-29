@@ -1,10 +1,13 @@
 package site.ogobi.ogobi.boundedContext.post.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import site.ogobi.ogobi.base.rq.Rq;
+import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
@@ -37,13 +40,16 @@ public class PostController {
     }
 
     @GetMapping("/create")
-    public String showCreate() {
+    public String showCreate(PostDto postDto) {
         return "post/create";
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam String subject, @RequestParam String content) {
-        // TODO 게시글을 저장한다.
+    public String create(@Valid PostDto postDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "post/create";
+        }
+        this.postService.create(postDto.getSubject(), postDto.getContent());
         return "redirect:/posts/list"; // 저장 후 목록으로 이동
     }
 }
