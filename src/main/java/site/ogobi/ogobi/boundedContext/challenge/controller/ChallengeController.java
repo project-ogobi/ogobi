@@ -3,14 +3,13 @@ package site.ogobi.ogobi.boundedContext.challenge.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
@@ -20,6 +19,8 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -82,8 +83,8 @@ public class ChallengeController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/{sh_id}/createForm")
-    public String createSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
+    @GetMapping("/{challenge_id}/{sh_id}/updateForm")
+    public String updateSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
         // dto 객체 전환
@@ -97,19 +98,38 @@ public class ChallengeController {
         model.addAttribute("cid", challenge_id);
         model.addAttribute("sh_id", sh_id);
 
+        return "challenge/updateSpendingHistory";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{challenge_id}/{sh_id}/updateForm")
+    public String updateSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result,
+                                        @PathVariable Long challenge_id, @PathVariable Long sh_id,
+                                        @RequestParam MultipartFile file) throws IOException {
+        if (result.hasErrors()) {
+            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
+        }
+        spendingHistoryService.updateSpendingHistory(form, sh_id);
+        return "redirect:/challenges/" + challenge_id;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}/createForm")
+    public String createSpendingHistory(Model model, @PathVariable Long challenge_id){
+        model.addAttribute("form", new SpendingHistoryForm());
         return "challenge/createSpendingHistory";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{challenge_id}/{sh_id}")
-    public String createSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result, @PathVariable Long challenge_id, @PathVariable Long sh_id){
+    @PostMapping("/{challenge_id}/createForm")
+    public String createSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result,
+                                        @PathVariable Long challenge_id,
+                                        @RequestParam MultipartFile file) throws IOException {
         if (result.hasErrors()) {
-            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/createForm";
+            return "redirect:/challenges/" + challenge_id + "/createForm";
         }
-        spendingHistoryService.createSpendingHistory(form, sh_id, challenge_id);
+        spendingHistoryService.createSpendingHistory(form, challenge_id);
         return "redirect:/challenges/" + challenge_id;
     }
-
-
 
 }
