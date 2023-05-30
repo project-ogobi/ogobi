@@ -38,10 +38,11 @@ public class PostService {
 
     public Post getPost(Long id) {
         Optional<Post> post = this.postRepository.findById(id);
-        if (post.isPresent()) {
-            return post.get();
+
+        if (! post.isPresent()) {
+            return null;
         }
-        return null;    //Todo 예외처리하기
+        return post.get();
     }
 
     public Page<Post> getList(int page) {

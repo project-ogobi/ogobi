@@ -3,10 +3,12 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
@@ -50,4 +52,7 @@ public class PostController {
         this.postService.create(postDto.getSubject(), postDto.getContent());
         return "redirect:/posts/list"; // 저장 후 목록으로 이동
     }
+
+
+
 }
