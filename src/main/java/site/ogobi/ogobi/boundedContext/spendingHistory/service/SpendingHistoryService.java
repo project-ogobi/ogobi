@@ -37,14 +37,14 @@ public class SpendingHistoryService {
     }
 
     @Transactional
-    public void createSpendingHistory(SpendingHistoryForm form, Long id, Long challenge_id) {
-        if (findSpendingHistoryById(id).isPresent()) {
-            SpendingHistory item = findSpendingHistoryById(id).get();
-            item.updateDescription(form.getDescription());
-        } else {
-            Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-            create(challenge, form.getItemName(), form.getItemPrice(), form.getDescription());
-        }
+    public void updateSpendingHistory(SpendingHistoryForm form, Long id) {
+        SpendingHistory item = findSpendingHistoryById(id).get();
+        item.update(form.getItemName(), form.getItemPrice(), form.getDescription());
+    }
 
+    @Transactional
+    public void createSpendingHistory(SpendingHistoryForm form, Long challenge_id) {
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        create(challenge, form.getItemName(), form.getItemPrice(), form.getDescription());
     }
 }

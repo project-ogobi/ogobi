@@ -14,13 +14,15 @@
             <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
                 <div class="card-body">
                     <ul th:each="c: ${challenge.getSpendingHistories()}">
-                        <a th:href="@{/challenges/{id}/{sh_id}/createForm(id=${challenge.getId}, sh_id=${c.getId})}">
+                        <a th:href="@{/challenges/{id}/{sh_id}/updateForm(id=${challenge.getId}, sh_id=${c.getId})}">
                             <h2 class="card-title" th:text="|${c.getContent} ${c.getPrice}|"></h2>
                         </a>
                     </ul>
                 </div>
             </div>
         </th:block>
+
+        <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory"  class="btn btn-primary my-3">수동 입력하기</a>
 
     </div>
     <!-- content 종료 -->
