@@ -13,7 +13,6 @@ import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.service.CommentService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
