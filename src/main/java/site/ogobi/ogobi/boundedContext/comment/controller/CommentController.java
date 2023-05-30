@@ -13,6 +13,7 @@ import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.service.CommentService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
@@ -30,11 +31,11 @@ public class CommentController {
 
 
     @PostMapping("/detail/{id}")
-    public String createComment(@PathVariable Long id, @RequestParam String content) {
+    public String createComment(@PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
         Post post = this.postService.getPost(id);
         Member writer = rq.getMember();
 
-        this.commentService.create(post, content, writer);
+        this.commentService.create(post, commentDto.getContent(), writer);
 
         return String.format("redirect:/posts/detail/%s", id);
     }

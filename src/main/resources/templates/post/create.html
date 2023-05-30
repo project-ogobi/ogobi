@@ -15,15 +15,17 @@
         </div>
         <div class="w-11/12 mx-auto center">
             <div class="flex flex-col">
-                <label for="subject" class="form-label my-3 ">제목</label>
-                <input type="text" placeholder="Type here" th:field="*{subject}" class="input input-bordered input-md w-full max-w-xs" />
+                <label for="subject" class="form-label my-3">제목</label>
+                <input type="text" placeholder="제목을 입력해주세요." th:field="*{subject}" class="input input-bordered input-md w-full" />
             </div>
             <div class="flex flex-col">
                 <label for="content" class="form-label my-3">내용</label>
                 <textarea class="summernote" placeholder="내용" th:field="*{content}"></textarea>
                 <script>
                     $('.summernote').summernote({
-                        height: 200,
+                        height: 500,
+                        minHeight : null,
+                        maxHeight : null,
                         lang: "ko-KR",
                         toolbar: [
                             // [groupName, [list of button]]
@@ -44,7 +46,7 @@
 
             </div>
             <div class="flex flex-row justify-end my-4">
-                <input type="submit" value="등록" class="btn btn-primary"/>
+                <input type="submit" value="등록" class="btn btn-outline btn-primary"/>
                 <input type="button" value="취소" class="btn btn-error mx-2" onclick="location.href='/posts/list'"/>
             </div>
 
