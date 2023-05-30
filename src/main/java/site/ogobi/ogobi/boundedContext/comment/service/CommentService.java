@@ -1,8 +1,10 @@
 package site.ogobi.ogobi.boundedContext.comment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.repository.CommentRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
@@ -54,4 +56,15 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
+    public void modifyComment(Long commentId, String content) {
+        Comment comment = findById(commentId).orElse(null);
+
+        if (comment==null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 댓글이 존재하지 않습니다.");
+        }
+
+        comment.setContent(content);
+
+        this.commentRepository.save(comment);
+    }
 }
