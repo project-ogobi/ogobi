@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,12 +24,11 @@ public class SpendingHistoryForm {
     @NotBlank
     private String description;
 
-    private String attachmentPath;
+    private List<MultipartFile> imageFiles;
 
     @Builder
-    public SpendingHistoryForm(String itemName, Integer itemPrice, String attachmentPath) {
+    public SpendingHistoryForm(String itemName, Integer itemPrice) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
-        this.attachmentPath = attachmentPath;
     }
 }

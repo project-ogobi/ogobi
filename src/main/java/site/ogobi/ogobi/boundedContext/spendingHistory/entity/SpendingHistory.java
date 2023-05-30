@@ -10,10 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
-//import site.ogobi.ogobi.boundedContext.file.UploadFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -26,9 +24,9 @@ public class SpendingHistory extends BaseEntity {
     private int price; //각 사용금액 ex)4500원
     private LocalDateTime date;
     private String description;
-//    private UploadFile imageFile;
 
-    private String attachmentPath;
+    private String uploadFileName;
+    private String uploadFileUrl;
 
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;

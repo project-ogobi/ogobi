@@ -110,6 +110,9 @@ public class ChallengeController {
             return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
         }
         spendingHistoryService.updateSpendingHistory(form, sh_id);
+
+        // TODO: 폼에서 이미지 파일들 가져와서 sh-repo 에 업데이트.
+
         return "redirect:/challenges/" + challenge_id;
     }
 
@@ -128,6 +131,9 @@ public class ChallengeController {
         if (result.hasErrors()) {
             return "redirect:/challenges/" + challenge_id + "/createForm";
         }
+
+        // TODO: 폼에서 이미지 파일들 가져와서 sh-repo 에 저장.
+
         spendingHistoryService.createSpendingHistory(form, challenge_id);
         return "redirect:/challenges/" + challenge_id;
     }
