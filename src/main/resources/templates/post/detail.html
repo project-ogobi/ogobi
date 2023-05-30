@@ -21,19 +21,7 @@
     </div>
 
     <div>
-        <p class="m-4 p-3" th:text="${post.content}">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-            electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
-            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
-            Aldus PageMaker including versions of Lorem IpsumLorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-            unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was
-            popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
-            recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-        </p>
+        <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
     <hr class="mt-5 text-gray-200">
 
@@ -43,22 +31,19 @@
     </div>
 
     <div class="flex p-3">
-        <input placeholder="Type here" class="input input-bordered w-full mx-4" name="content" id="content"/>
-        <button class="btn btn-outline btn-primary" th:action="@{|/comment/createComment/${post.id}|}" method="post">등록하기</button>
+        <form th:action="@{|/posts/detail/${post.id}|}" method="post">
+            <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." name="content" id="content"></textarea>
+            <input type="submit" value="댓글등록" class="btn btn-outline btn-primary"/>
+        </form>
     </div>
 
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
-        <span class="mr-6">작성자</span>
+        <span class="mr-6" >작성자</span>
         <div class="float-right flex-grow-0">
-            <button class="btn btn-active btn-primary mx-1 btn-sm"
-                    th:action="@{|/comment/deleteComment/${comment.id}|}" method="delete">삭제</button>
-            <button class="btn btn-active btn-primary btn-sm"
-                    th:action="@{|/comment/modifyComment/${comment.content}|}" method="put">수정</button>
+            <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
+            <button class="btn btn-active btn-primary btn-sm">수정</button>
         </div>
         <div class="text-gray-400 text-sm" th:text="${comment.createDate}">작성일자</div>
-        <div class="flex-auto" th:text="${comment.content}">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-            unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting, remaining essentially uncha
-        </div>
+        <div class="flex-auto" th:text="${comment.content}"></div>
     </div>
 </div>

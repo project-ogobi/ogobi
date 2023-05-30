@@ -1,6 +1,5 @@
 package site.ogobi.ogobi.boundedContext.comment.service;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +36,9 @@ public class CommentService {
         return false;
     }
 
-    public void create(String content, Member writer) {
+    public void create(Post post, String content, Member writer) {
         Comment comment = Comment.builder()
+                .post(post)
                 .content(content)
                 .writer(writer)
                 .createDate(LocalDateTime.now())
