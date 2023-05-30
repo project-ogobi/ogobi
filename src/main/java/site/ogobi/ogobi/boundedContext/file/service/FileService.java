@@ -1,6 +1,8 @@
 package site.ogobi.ogobi.boundedContext.file.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +33,15 @@ public class FileService {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID().toString() + "." + ext;
     }
+    public List<FileDto> uploadFiles(List<MultipartFile> multipartFiles){
 
-    public List<FileDto> uploadFiles(String filePath, List<MultipartFile> multipartFiles) {
+        return uploadFiles(multipartFiles, "sample-folder");
+    }
+
+    //NOTICE: filePath의 맨 앞에 /는 안붙여도됨. ex) spending-history/images
+    public List<FileDto> uploadFiles(List<MultipartFile> multipartFiles, String filePath) {
 
         List<FileDto> s3files = new ArrayList<>();
-        String folderName = filePath;
 
         for (MultipartFile multipartFile : multipartFiles) {
 
@@ -49,14 +55,15 @@ public class FileService {
 
             try (InputStream inputStream = multipartFile.getInputStream()) {
 
-                String keyName = folderName + "/" + uploadFileName; // ex) 구분/년/월/일/파일.확장자
+                String keyName = filePath + "/" + uploadFileName;
 
                 // S3에 폴더 및 파일 업로드
                 amazonS3Client.putObject(
-                        new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata));
+                        new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
+                                .withCannedAcl(CannedAccessControlList.PublicRead));
 
                 // S3에 업로드한 폴더 및 파일 URL
-                uploadFileUrl = "https://kr.object.ncloudstorage.com/ogobi" + keyName;
+                uploadFileUrl = "https://kr.object.ncloudstorage.com/ogobi/" + keyName;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -66,7 +73,7 @@ public class FileService {
                     FileDto.builder()
                             .originalFileName(originalFileName)
                             .uploadFileName(uploadFileName)
-                            .uploadFilePath(folderName)
+                            .uploadFilePath(filePath)
                             .uploadFileUrl(uploadFileUrl)
                             .build());
         }

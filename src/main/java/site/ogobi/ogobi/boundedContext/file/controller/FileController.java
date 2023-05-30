@@ -24,11 +24,10 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Object> uploadFiles(
-        @RequestParam(value = "filePath") String filePath,
+    public ResponseEntity<Object> uploadFilesSample(
         @RequestPart(value = "files") List<MultipartFile> multipartFiles) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(fileService.uploadFiles(filePath, multipartFiles));
+                    .body(fileService.uploadFiles(multipartFiles));
     }
 }
