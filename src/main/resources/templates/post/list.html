@@ -24,10 +24,10 @@
         </tr>
         </tbody>
     </table>
-    <a th:href="@{/posts/create}" class="btn btn-primary btn-sm my-2 mr-5 float-right">글 작성</a>
+    <a th:href="@{/posts/create}" class="btn btn-primary btn-sm my-2 mr-16 float-right">글 작성</a>
 
     <!-- 페이징 처리 시작 -->
-    <div class="btn-group pagination flex justify-center my-2">
+    <div class="btn-group pagination flex justify-center my-2 ml-16">
         <ul class="flex justify-center">
             <li class="btn page-item" th:classappend="${!paging.hasPrevious} ? 'btn-disabled'">
                 <a class="page-link" th:href="@{?page=0}">
