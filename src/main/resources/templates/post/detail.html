@@ -7,7 +7,7 @@
         <button class="btn btn-active btn-primary">수정</button>
     </div>
     <div class="p-3 m-4 text-left">
-        <h5 class="text-gray-400" th:text="${post.category}">카테고리</h5>
+        <h5 class="text-gray-400" >카테고리</h5>
         <h1 class="font-semibold text-4xl" th:text="${post.subject}">제목</h1>
         <h5 class="text-gray-400 text-sm" th:text="${post.author}">작성자</h5>
     </div>
@@ -22,6 +22,13 @@
 
     <div>
         <p class="m-4 p-3" th:utext="${post.content}"></p>
+    </div>
+    <div class="my-3 flex justify-center">
+        <a href="javascript:void(0);" class="recommend btn btn-outline btn-primary">
+            <!-- th:data-uri="@{|/answer/vote/${answer.id}|}" -->
+            추천
+            <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
+        </a>
     </div>
     <hr class="mt-5 text-gray-200">
 
