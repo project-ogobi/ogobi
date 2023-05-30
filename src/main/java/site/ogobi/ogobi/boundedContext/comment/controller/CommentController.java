@@ -37,7 +37,7 @@ public class CommentController {
     }
 
 
-    @GetMapping("/detail/{id}/{comment_id}") // Todo delete로 바꾸기
+    @GetMapping("/detail/{id}/{comment_id}")
     public void deleteComment(@PathVariable Long id, @PathVariable Long comment_id){
         Post post = this.postService.getPost(id);
         Comment comment = commentService.findById(comment_id).orElse(null);
