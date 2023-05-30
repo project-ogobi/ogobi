@@ -17,6 +17,7 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
+
     @Column(length = 20)
     private String subject;
     @Column(columnDefinition = "TEXT")
