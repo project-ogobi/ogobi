@@ -23,6 +23,8 @@ public class SpendingHistory extends BaseEntity {
     private LocalDateTime date;
     private String description;
 
+    private String attachmentPath;
+
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 

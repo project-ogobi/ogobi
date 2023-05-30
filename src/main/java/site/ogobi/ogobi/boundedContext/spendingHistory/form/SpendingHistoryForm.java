@@ -19,9 +19,12 @@ public class SpendingHistoryForm {
     @NotBlank
     private String description;
 
+    private String attachmentPath;
+
     @Builder
-    public SpendingHistoryForm(String itemName, Integer itemPrice) {
+    public SpendingHistoryForm(String itemName, Integer itemPrice, String attachmentPath) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
+        this.attachmentPath = attachmentPath;
     }
 }

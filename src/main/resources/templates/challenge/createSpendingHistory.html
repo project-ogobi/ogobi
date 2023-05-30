@@ -25,6 +25,15 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
+                <div class="form-group">
+                    <div class="form-control w-full max-w-xs">
+                        <label th:for="attachment">사진 첨부</label>
+                            <span class="label-text">최대 10MB / jpg</span>
+                        </label>
+                        <a href='/upload' target = '_blank'>업로드</a>
+                    </div>
+                </div>
+
             </div>
         </div>
 
