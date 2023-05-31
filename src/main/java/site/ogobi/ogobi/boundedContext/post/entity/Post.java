@@ -28,5 +28,12 @@ public class Post extends BaseEntity {
     private List<Comment> comments;
     @ManyToMany
     private Set<Member> like;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
+    public enum Category {
+        FREE,
+        SHARING
+    }
 }

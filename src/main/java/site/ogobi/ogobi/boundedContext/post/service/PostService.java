@@ -50,11 +50,18 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.postRepository.findAll(pageable);
     }
+    public Page<Post> getListByCategory(Post.Category category, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findByCategory(category, pageable);
+    }
 
-    public void create(String subject, String content) {
+    public void create(String subject, String content, Post.Category category) {
         Post p = Post.builder()
                 .subject(subject)
                 .content(content)
+                .category(category)
                 .createDate(LocalDateTime.now())
                 .modifyDate(LocalDateTime.now())
                 .build();
