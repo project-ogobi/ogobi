@@ -1,17 +1,19 @@
 package site.ogobi.ogobi.boundedContext.spendingHistory.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Entity
 @Getter
@@ -25,14 +27,15 @@ public class SpendingHistory extends BaseEntity {
     private LocalDateTime date;
     private String description;
 
-    private Long fileId;
+    @OneToMany(mappedBy = "spendingHistory", cascade = {ALL})
+    private List<Image> imageFiles;
 
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 
-    public void update(String content, String description, Long fileId) {
+    public void update(String content, String description, List<Image> images) {
         this.content = content;
         this.description = description;
-        this.fileId = fileId;
+        this.imageFiles = images;
     }
 }

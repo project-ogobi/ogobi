@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.repository.SpendingHistoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,7 +20,7 @@ public class SpendingHistoryService {
     private final ChallengeService challengeService;
 
     @Transactional
-    public void create(Challenge challenge, SpendingHistoryForm form, Long fileId){
+    public void create(Challenge challenge, SpendingHistoryForm form, List<Image> images){
 
         challenge.updateUsedMoney(challenge.getUsedMoney() + form.getItemPrice());
 
@@ -27,7 +29,7 @@ public class SpendingHistoryService {
                 .content(form.getItemName())
                 .price(form.getItemPrice())
                 .description(form.getDescription())
-                .fileId(fileId)
+                .imageFiles(images)
                 .build();
 
         spendingHistoryRepository.save(spendingHistory);
@@ -39,15 +41,15 @@ public class SpendingHistoryService {
 
 
     @Transactional
-    public void updateSpendingHistory(SpendingHistoryForm form, Long id, Long fileId) {
+    public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images) {
         SpendingHistory item = findSpendingHistoryById(id).orElseThrow();
-        item.update(form.getItemName(), form.getDescription(), fileId);
+        item.update(form.getItemName(), form.getDescription(), images);
     }
 
 
     @Transactional
-    public void createSpendingHistory(SpendingHistoryForm form, Long challenge_id, Long file_id) {
+    public void createSpendingHistory(SpendingHistoryForm form, Long challenge_id, List<Image> images) {
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-        create(challenge, form, file_id);
+        create(challenge, form, images);
     }
 }
