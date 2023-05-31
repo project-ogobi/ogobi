@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
+import site.ogobi.ogobi.boundedContext.member.Member;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 import java.util.List;
@@ -26,8 +28,10 @@ public class Post extends BaseEntity {
     private Member author;  //  작성한 멤버
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private List<Comment> comments;
-    @ManyToMany
-    private Set<Member> like;
+
+    @OneToMany
+    private Set<Like> like;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Category category;

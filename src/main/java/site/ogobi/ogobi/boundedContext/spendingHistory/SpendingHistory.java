@@ -13,6 +13,6 @@ public class SpendingHistory extends BaseEntity {
     private String content; // 작성한 내용 ex)스타벅스커피...
     private int price; //각 사용금액 ex)4500원
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 }

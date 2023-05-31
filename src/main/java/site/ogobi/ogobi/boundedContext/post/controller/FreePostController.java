@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
@@ -48,4 +49,7 @@ public class FreePostController {
         this.postService.create(postDto.getSubject(), postDto.getContent(), Post.Category.FREE);
         return "redirect:/posts/free/list"; // 저장 후 목록으로 이동
     }
+
+
+
 }
