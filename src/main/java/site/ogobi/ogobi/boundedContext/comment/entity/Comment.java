@@ -15,7 +15,6 @@ import site.ogobi.ogobi.boundedContext.post.entity.Post;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
-
     @Column(columnDefinition = "TEXT")
     private String content;
     @ManyToOne
