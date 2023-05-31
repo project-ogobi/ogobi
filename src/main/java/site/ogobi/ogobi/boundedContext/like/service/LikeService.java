@@ -17,7 +17,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class LikeService {
-    private final LikeController likeController;
     private final LikeRepository likeRepository;
     public void createLike(Member member, Post post) {
         Like like = Like.builder()

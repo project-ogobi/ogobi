@@ -27,16 +27,13 @@ public class Post extends BaseEntity {
     private Member author;  //  작성한 멤버
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private List<Comment> comments;
-<<<<<<< HEAD
+
     @OneToMany
     private Set<Like> like;
-=======
-    @ManyToMany
-    private Set<Member> like;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Category category;
->>>>>>> d1b9d9e90a266e12a03a12ce18e1aec460eaa14c
 
     public enum Category {
         FREE,

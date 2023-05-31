@@ -3,16 +3,10 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-<<<<<<< HEAD:src/main/java/site/ogobi/ogobi/boundedContext/post/controller/PostController.java
-import org.springframework.web.server.ResponseStatusException;
-import site.ogobi.ogobi.base.rq.Rq;
-=======
->>>>>>> d1b9d9e90a266e12a03a12ce18e1aec460eaa14c:src/main/java/site/ogobi/ogobi/boundedContext/post/controller/FreePostController.java
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
