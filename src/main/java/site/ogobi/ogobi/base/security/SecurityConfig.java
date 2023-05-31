@@ -37,28 +37,28 @@ public class SecurityConfig {
         // /login, /signup 페이지는 모두 허용, 다른 페이지는 인증된 사용자만 허용
         http
                 .authorizeHttpRequests()
-                    .requestMatchers(
-                            new AntPathRequestMatcher("/**")
-                    ).permitAll()
+                .requestMatchers(
+                        new AntPathRequestMatcher("/**")
+                ).permitAll()
                 .anyRequest().authenticated();
 
         // login 설정
         http
                 .formLogin()
-                    .loginPage("/login")    // GET: 로그인 폼을 보여줌
-                    .usernameParameter("username")	// 로그인에 필요한 아이디
-                    .passwordParameter("password")	// 로그인에 필요한 password 값
-                    .defaultSuccessUrl("/");	// 로그인에 성공하면 /로 redirect
+                .loginPage("/login")    // GET: 로그인 폼을 보여줌
+                .usernameParameter("username")    // 로그인에 필요한 아이디
+                .passwordParameter("password")    // 로그인에 필요한 password 값
+                .defaultSuccessUrl("/");    // 로그인에 성공하면 /로 redirect
         // logout 설정
         http
                 .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/");	// 로그아웃에 성공하면 /로 redirect
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");    // 로그아웃에 성공하면 /로 redirect
 
         // 이외 설정
         http
-            .userDetailsService(userDetailService())
-            .csrf(AbstractHttpConfigurer::disable);
+                .userDetailsService(userDetailService())
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
 

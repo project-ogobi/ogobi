@@ -2,7 +2,7 @@ package site.ogobi.ogobi.boundedContext.challenge.entity;
 
 import jakarta.persistence.*;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
-import site.ogobi.ogobi.boundedContext.member.Member;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.spendingHistory.SpendingHistory;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class Challenge extends BaseEntity {
     private int usedMoney; // 총 사용금액?
     private int achievementRate; // 달성률
 
-    @ManyToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @OneToMany(mappedBy = "challenge", cascade = {CascadeType.ALL})
