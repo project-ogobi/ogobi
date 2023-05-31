@@ -1,0 +1,49 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+
+        <!-- content 시작 -->
+        <div class="container flex-grow flex flex-col items-center justify-center max-w-xl mx-auto  min-w-xl">
+            <div>
+                챌린지 상세보기
+
+                <div class="mt-4 mb-2 flex flex-col gap-2">
+                    <div th:text="${challenge.challengeName}"></div>
+                    <div th:text="${challenge.description}"></div>
+                    <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
+                    <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
+                    <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
+                </div>
+
+                <th:block th:unless="${challenge.hasSpendingHistory}">
+                    <div>아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
+                </th:block>
+
+                <th:block th:if="${challenge.hasSpendingHistory}">
+                    <ul>
+                        <li th:each="spendingHistory: ${challenge.getSpendingHistories()}">
+                            <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
+                                <div class="card-body">
+                                    <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>
+                                    <div th:text="${spendingHistory.getPrice + '원'}"></div>
+                                    <p>날짜-시간</p>
+                                    <div th:text="${spendingHistory.getDescription}"></div>
+                                    <p>사진</p>
+                                    <div class="card-actions justify-end">
+                                        <button type="submit" class="btn btn-sm btn-primary">수정하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </th:block>
+
+            </div>
+            <a th:href="@{'/challenges/' + ${challenge.getId} + '/spending-history'}" id="btn-challenge-spendinghistory"  class="btn btn-primary my-3">지출내역 보기</a>
+
+        </div>
+        <!-- content 종료 -->
+
+
+</div>

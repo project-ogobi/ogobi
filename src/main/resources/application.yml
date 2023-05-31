@@ -7,25 +7,30 @@ spring:
       filter:
         enabled: true
   profiles:
-    active: dev
+    active:
     include: secret
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://127.0.0.1:3306/ogobi__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
     username: root
     password:
-
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+  s3:
+    bucket: ogobi
+
 logging:
   level:
     root: INFO
     site.ogobi.ogobi: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
+
+file:
+  upload-dir: classpath:/tmp/
