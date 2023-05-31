@@ -18,6 +18,7 @@
             <td class="font-semibold" th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
             <td>
                 <a th:href="@{|/posts/${category}/detail/${post.id}|}" th:text="${post.subject}"/>
+                <span class="font-semibold text-indigo-500 text-xs ml-2" th:if="${#lists.size(post.comments) > 0}" th:text="${#lists.size(post.comments)}"></span>
             </td>
             <td>
                 <span th:if="${post.author != null}" th:text="${post.author.nickname}"/>
