@@ -24,7 +24,7 @@
         <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
     <div class="my-3 flex justify-center">
-        <a href="javascript:void(0);" class="recommend btn btn-outline btn-primary" th:data-uri="@{|/posts/${category}/detail/${post.id}/like|}">
+        <a class="btn btn-outline btn-primary" th:href="@{|/posts/${category}/detail/${post.id}/like|}">
             추천
             <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
         </a>
@@ -36,7 +36,7 @@
         <span th:text="|${#lists.size(post.comments)}개|"></span>
     </div>
 
-    <form th:action="@{|/posts/${category}/detail/${post.id}|}" method="post" class="flex p-3">
+    <form th:action="@{|/posts/${category}/detail/${post.id}|}" method="post" class="flex p-3" th:object="${commentDto}">
         <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." name="content" id="content"></textarea>
         <input type="submit" value="댓글등록" class="btn btn-outline btn-primary"/>
     </form>
@@ -51,13 +51,3 @@
         <div class="flex-auto" th:text="${comment.content}"></div>
     </div>
 </div>
-<script layout:fragment="script" type='text/javascript'>
-    const recommend_elements = document.getElementsByClassName("recommend");
-    Array.from(recommend_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 추천하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-</script>

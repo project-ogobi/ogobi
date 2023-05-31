@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
+import site.ogobi.ogobi.boundedContext.post.entity.Post;
+import site.ogobi.ogobi.boundedContext.post.service.PostService;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
 
@@ -21,13 +23,14 @@ public class NotProd {
     CommandLineRunner initData(
             MemberService memberService,
             ChallengeService challengeService,
-            SpendingHistoryService spendingHistoryService
+            SpendingHistoryService spendingHistoryService,
+            PostService postService
     ) {
         return new CommandLineRunner() {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member member1 = memberService.join("user1", "1234", "첫번째멤버");
+                Member member1 = memberService.join("user1", "1234", "첫째멤");
                 Member member2 = memberService.join("test1", "test1", "원투");
 
                 challengeService.create(member2, "테스트네임1", "테스트내용1", 10000, LocalDate.of(2023,5,27), LocalDate.of(2023,5,29) );
@@ -45,6 +48,7 @@ public class NotProd {
 
                 spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyCoffee, null);
                 spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyLunch, null);
+
             }
         };
 

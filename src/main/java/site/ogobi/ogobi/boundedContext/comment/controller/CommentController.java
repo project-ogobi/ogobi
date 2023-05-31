@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,6 +13,7 @@ import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.service.CommentService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
@@ -26,6 +28,7 @@ public class CommentController {
 
     @PostMapping("/{category}/detail/{id}")
     public String createComment(@PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
+
         Post post = this.postService.getPost(id);
         Member writer = rq.getMember();
 
@@ -33,6 +36,7 @@ public class CommentController {
 
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
+
 
     @GetMapping("/{category}/detail/{id}/{comment_id}")
     public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {
