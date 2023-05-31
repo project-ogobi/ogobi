@@ -8,18 +8,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+<<<<<<< HEAD:src/main/java/site/ogobi/ogobi/boundedContext/post/controller/PostController.java
 import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.base.rq.Rq;
+=======
+>>>>>>> d1b9d9e90a266e12a03a12ce18e1aec460eaa14c:src/main/java/site/ogobi/ogobi/boundedContext/post/controller/FreePostController.java
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 @Controller
-@RequestMapping("/posts")
+@RequestMapping("/posts/free")
 @RequiredArgsConstructor
-public class PostController {
+public class FreePostController {
 
-    private final Rq rq;
     private final PostService postService;
 
     @GetMapping("/detail/{id}")
@@ -28,29 +30,29 @@ public class PostController {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
 
-        return "post/detail";
+        return "free_post/detail";
 
     }
 
     @GetMapping("/list")
     public String showList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Post> paging = this.postService.getList(page);
+        Page<Post> paging = this.postService.getListByCategory(Post.Category.FREE, page);
         model.addAttribute("paging", paging);
-        return "post/list";
+        return "free_post/list";
     }
 
     @GetMapping("/create")
     public String showCreate(PostDto postDto) {
-        return "post/create";
+        return "free_post/create";
     }
 
     @PostMapping("/create")
     public String create(@Valid PostDto postDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "post/create";
+            return "free_post/create";
         }
-        this.postService.create(postDto.getSubject(), postDto.getContent());
-        return "redirect:/posts/list"; // 저장 후 목록으로 이동
+        this.postService.create(postDto.getSubject(), postDto.getContent(), Post.Category.FREE);
+        return "redirect:/posts/free/list"; // 저장 후 목록으로 이동
     }
 
 

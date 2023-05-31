@@ -15,14 +15,11 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 @NoArgsConstructor
 public class Like {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = LAZY)
     private Member member;
-
     @ManyToOne(fetch = LAZY)
     private Post post;
 

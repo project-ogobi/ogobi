@@ -27,7 +27,7 @@ public class LikeService {
         likeRepository.save(like);
     }
 
-    public boolean isLiked(Long likeId) {   //  이미 좋아요를 했으면 취소 시킴
+    public boolean isLiked(Long likeId) {                //  이미 좋아요를 했으면 취소 시킴
         Like like = likeRepository.findById(likeId).orElse(null);
 
         if (like==null){
