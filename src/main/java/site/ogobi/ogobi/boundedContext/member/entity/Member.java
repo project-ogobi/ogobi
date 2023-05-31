@@ -22,9 +22,6 @@ public class Member extends BaseEntity {
     @OrderBy("id desc")
     private List<Challenge> challenge;
 
-    @OneToMany
-    private Set<Like> like;     //  Todo 중복 제거.. 가능?
-
     public boolean isAdmin() {
         return "admin".equals(username);
     }

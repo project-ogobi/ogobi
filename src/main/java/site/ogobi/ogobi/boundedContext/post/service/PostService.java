@@ -39,7 +39,7 @@ public class PostService {
     public Post getPost(Long id) {
         Optional<Post> post = this.postRepository.findById(id);
 
-        if (! post.isPresent()) {
+        if (!post.isPresent()) {
             return null;
         }
         return post.get();
