@@ -1,5 +1,6 @@
 package site.ogobi.ogobi.boundedContext.member.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +31,15 @@ public class MemberService {
         memberRepository.save(member);
 
         return member;
+        }
+
+    public Member getMember(String username) {
+        Optional<Member> member = this.memberRepository.findByUsername(username);
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            throw new NotFoundException("member not found");
+        }
+
     }
 }

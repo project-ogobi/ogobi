@@ -58,11 +58,12 @@ public class PostService {
         return postRepository.findByCategory(category, pageable);
     }
 
-    public void create(String subject, String content, Post.Category category) {
+    public void create(String subject, String content, Post.Category category, Member member) {
         Post p = Post.builder()
                 .subject(subject)
                 .content(content)
                 .category(category)
+                .author(member)
                 .createDate(LocalDateTime.now())
                 .modifyDate(LocalDateTime.now())
                 .build();

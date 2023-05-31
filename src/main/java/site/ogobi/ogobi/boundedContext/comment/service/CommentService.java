@@ -30,7 +30,7 @@ public class CommentService {
     }
 
     public boolean isMyComment(Member member, Comment comment) {   //댓글 작성자가 본인인지 여부 판단
-        String writer = comment.getWriter().getNickname();
+        String writer = comment.getAuthor().getNickname();
 
         if (member.getNickname().equals(writer)) {
             return true;
@@ -38,11 +38,11 @@ public class CommentService {
         return false;
     }
 
-    public void create(Post post, String content, Member writer) {
+    public void create(Post post, String content, Member member) {
         Comment comment = Comment.builder()
                 .post(post)
                 .content(content)
-                .writer(writer)
+                .author(member)
                 .createDate(LocalDateTime.now())
                 .build();
         commentRepository.save(comment);

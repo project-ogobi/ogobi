@@ -19,7 +19,7 @@ public class Comment extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
     @ManyToOne
-    private Member writer;
+    private Member author;
     @ManyToOne
     private Post post;
 

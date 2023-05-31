@@ -8,8 +8,8 @@
     </div>
     <div class="p-3 m-4 text-left">
         <h5 class="text-gray-400" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h5>
-        <h1 class="font-semibold text-4xl" th:text="${post.subject}">제목</h1>
-        <h5 class="text-gray-400 text-sm" th:text="${post.author}">작성자</h5>
+        <h1 class="font-semibold text-4xl my-1" th:text="${post.subject}">제목</h1>
+        <h5 class="text-gray-600 text-base" th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</h5>
     </div>
     <hr class="mt-5 text-gray-200">
 
@@ -36,13 +36,17 @@
         <span th:text="|${#lists.size(post.comments)}개|"></span>
     </div>
 
-    <form th:action="@{|/posts/${category}/detail/${post.id}|}" method="post" class="flex p-3" th:object="${commentDto}">
-        <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." name="content" id="content"></textarea>
-        <input type="submit" value="댓글등록" class="btn btn-outline btn-primary"/>
+    <!-- 댓글 등록 -->
+    <form th:action="@{|/posts/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex p-3">
+        <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+        </div>
+        <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." th:field="*{content}" name="content" id="content"></textarea>
+        <input type="submit" value="등록" class="btn btn-outline btn-primary"/>
     </form>
 
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
-        <span class="mr-6" >작성자</span>
+        <span class="mr-6 font-semibold" th:if="${comment.author != null}" th:text="${comment.author.nickname}">작성자</span>
         <div class="float-right flex-grow-0">
             <button class="btn btn-active btn-primary mx-1 btn-sm">수정</button>
             <button class="btn btn-active btn-primary btn-sm">삭제</button>
@@ -51,3 +55,13 @@
         <div class="flex-auto" th:text="${comment.content}"></div>
     </div>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    const recommend_elements = document.getElementsByClassName("recommend");
+    Array.from(recommend_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 추천하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+</script>

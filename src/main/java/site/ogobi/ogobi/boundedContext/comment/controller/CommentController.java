@@ -3,6 +3,7 @@ package site.ogobi.ogobi.boundedContext.comment.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,11 @@ import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.service.CommentService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
+import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
+
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,18 +28,21 @@ public class CommentController {
     private final Rq rq;
     private final CommentService commentService;
     private final PostService postService;
+    private final MemberService memberService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/detail/{id}")
-    public String createComment(@PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
-
+    public String createComment(Model model, @PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult, Principal principal) {
         Post post = this.postService.getPost(id);
-        Member writer = rq.getMember();
-
-        this.commentService.create(post, commentDto.getContent(), writer);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("post", post);
+            return "/post/detail";
+        }
+        Member member = this.memberService.getMember(principal.getName());
+        this.commentService.create(post, commentDto.getContent(), member);
 
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
-
 
     @GetMapping("/{category}/detail/{id}/{comment_id}")
     public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {

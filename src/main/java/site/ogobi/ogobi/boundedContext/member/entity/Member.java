@@ -11,7 +11,6 @@ import jakarta.persistence.*;
 
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
-import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
 import java.util.List;
