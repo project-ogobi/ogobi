@@ -24,10 +24,9 @@
         <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
     <div class="my-3 flex justify-center">
-        <a href="javascript:void(0);" class="recommend btn btn-outline btn-primary">
-            <!-- th:data-uri="@{|/answer/vote/${answer.id}|}" -->
+        <a href="javascript:void(0);" class="recommend btn btn-outline btn-primary" th:data-uri="@{|/posts/${category}/detail/${post.id}/like|}">
             추천
-<!--            <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>-->
+            <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
         </a>
     </div>
     <hr class="mt-5 text-gray-200">
@@ -52,3 +51,13 @@
         <div class="flex-auto" th:text="${comment.content}"></div>
     </div>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    const recommend_elements = document.getElementsByClassName("recommend");
+    Array.from(recommend_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 추천하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+</script>
