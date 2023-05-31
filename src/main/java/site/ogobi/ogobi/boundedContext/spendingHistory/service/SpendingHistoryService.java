@@ -18,15 +18,16 @@ public class SpendingHistoryService {
     private final ChallengeService challengeService;
 
     @Transactional
-    public void create(Challenge challenge, String content, int price, String description){
+    public void create(Challenge challenge, SpendingHistoryForm form, Long fileId){
 
-        challenge.updateUsedMoney(challenge.getUsedMoney() + price);
+        challenge.updateUsedMoney(challenge.getUsedMoney() + form.getItemPrice());
 
         SpendingHistory spendingHistory = SpendingHistory.builder()
-                .content(content)
-                .price(price)
                 .challenge(challenge)
-                .description(description)
+                .content(form.getItemName())
+                .price(form.getItemPrice())
+                .description(form.getDescription())
+                .fileId(fileId)
                 .build();
 
         spendingHistoryRepository.save(spendingHistory);
@@ -36,15 +37,17 @@ public class SpendingHistoryService {
         return spendingHistoryRepository.findById(id);
     }
 
-    @Transactional
-    public void updateSpendingHistory(SpendingHistoryForm form, Long id) {
-        SpendingHistory item = findSpendingHistoryById(id).get();
-        item.update(form.getItemName(), form.getItemPrice(), form.getDescription());
-    }
 
     @Transactional
-    public void createSpendingHistory(SpendingHistoryForm form, Long challenge_id) {
+    public void updateSpendingHistory(SpendingHistoryForm form, Long id, Long fileId) {
+        SpendingHistory item = findSpendingHistoryById(id).orElseThrow();
+        item.update(form.getItemName(), form.getDescription(), fileId);
+    }
+
+
+    @Transactional
+    public void createSpendingHistory(SpendingHistoryForm form, Long challenge_id, Long file_id) {
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-        create(challenge, form.getItemName(), form.getItemPrice(), form.getDescription());
+        create(challenge, form, file_id);
     }
 }

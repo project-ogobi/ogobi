@@ -25,15 +25,14 @@ public class SpendingHistory extends BaseEntity {
     private LocalDateTime date;
     private String description;
 
-    private String uploadFileName;
-    private String uploadFileUrl;
+    private Long fileId;
 
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 
-    public void update(String content, int price, String description) {
+    public void update(String content, String description, Long fileId) {
         this.content = content;
-        this.price = price;
         this.description = description;
+        this.fileId = fileId;
     }
 }
