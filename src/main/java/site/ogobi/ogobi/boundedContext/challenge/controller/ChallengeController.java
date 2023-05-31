@@ -3,24 +3,19 @@ package site.ogobi.ogobi.boundedContext.challenge.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
-import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
-import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
-import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -31,7 +26,6 @@ public class ChallengeController {
 
     private final Rq rq;
     private final ChallengeService challengeService;
-    private final SpendingHistoryService spendingHistoryService;
 
     //challengeHome
     @PreAuthorize("isAuthenticated()")
@@ -73,69 +67,5 @@ public class ChallengeController {
         return "challenge/detail";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/spending-history")
-    public String spendingHistory(@PathVariable Long challenge_id, Model model){
-        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-        model.addAttribute("challenge", challenge);
-        return "challenge/spendingHistory";
-    }
-
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/{sh_id}/updateForm")
-    public String updateSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
-        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-        SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
-        // dto 객체 전환
-        SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
-                .itemName(spendingHistory.getContent())
-                .itemPrice(spendingHistory.getPrice())
-                .build();
-
-        log.info("spendingHistoryForm={}", spendingHistoryForm);
-        model.addAttribute("form", spendingHistoryForm);
-        model.addAttribute("cid", challenge_id);
-        model.addAttribute("sh_id", sh_id);
-
-        return "challenge/updateSpendingHistory";
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{challenge_id}/{sh_id}/updateForm")
-    public String updateSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result,
-                                        @PathVariable Long challenge_id, @PathVariable Long sh_id,
-                                        @RequestParam MultipartFile file) throws IOException {
-        if (result.hasErrors()) {
-            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
-        }
-        spendingHistoryService.updateSpendingHistory(form, sh_id);
-
-        // TODO: 폼에서 이미지 파일들 가져와서 sh-repo 에 업데이트.
-
-        return "redirect:/challenges/" + challenge_id;
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/createForm")
-    public String createSpendingHistory(Model model, @PathVariable Long challenge_id){
-        model.addAttribute("form", new SpendingHistoryForm());
-        return "challenge/createSpendingHistory";
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{challenge_id}/createForm")
-    public String createSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result,
-                                        @PathVariable Long challenge_id,
-                                        @RequestParam MultipartFile file) throws IOException {
-        if (result.hasErrors()) {
-            return "redirect:/challenges/" + challenge_id + "/createForm";
-        }
-
-        // TODO: 폼에서 이미지 파일들 가져와서 sh-repo 에 저장.
-
-        spendingHistoryService.createSpendingHistory(form, challenge_id);
-        return "redirect:/challenges/" + challenge_id;
-    }
 
 }
