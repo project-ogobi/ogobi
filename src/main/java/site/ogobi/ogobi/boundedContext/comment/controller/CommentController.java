@@ -17,15 +17,14 @@ import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/posts/{category}")
+@RequestMapping("/posts")
 public class CommentController {
 
     private final Rq rq;
     private final CommentService commentService;
     private final PostService postService;
 
-
-    @PostMapping("/detail/{id}")
+    @PostMapping("/{category}/detail/{id}")
     public String createComment(@PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
         Post post = this.postService.getPost(id);
         Member writer = rq.getMember();
@@ -35,13 +34,12 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-
-    @GetMapping("/detail/{id}/{comment_id}")
-    public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id){
+    @GetMapping("/{category}/detail/{id}/{comment_id}")
+    public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
-        if (!commentService.isMyComment(member,comment)){
+        if (!commentService.isMyComment(member, comment)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
@@ -50,12 +48,12 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @PostMapping("/detail/{id}/modify/{comment_id}")
-    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, String content){
+    @PostMapping("/{category}/detail/{id}/modify/{comment_id}")
+    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, String content) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
-        if (!commentService.isMyComment(member,comment)){
+        if (!commentService.isMyComment(member, comment)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 

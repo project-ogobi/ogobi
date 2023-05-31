@@ -3,11 +3,11 @@
 
 <div layout:fragment="content" class="container my-3">
     <div class="float-right m-2 my-10">
-        <button class="btn btn-active btn-primary mx-1">삭제</button>
-        <button class="btn btn-active btn-primary">수정</button>
+        <button class="btn btn-active btn-primary mx-1">수정</button>
+        <button class="btn btn-active btn-primary">삭제</button>
     </div>
     <div class="p-3 m-4 text-left">
-        <h5 class="text-gray-400">자유 게시판</h5>
+        <h5 class="text-gray-400" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h5>
         <h1 class="font-semibold text-4xl" th:text="${post.subject}">제목</h1>
         <h5 class="text-gray-400 text-sm" th:text="${post.author}">작성자</h5>
     </div>
@@ -27,7 +27,7 @@
         <a href="javascript:void(0);" class="recommend btn btn-outline btn-primary">
             <!-- th:data-uri="@{|/answer/vote/${answer.id}|}" -->
             추천
-            <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
+<!--            <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>-->
         </a>
     </div>
     <hr class="mt-5 text-gray-200">
@@ -37,7 +37,7 @@
         <span th:text="|${#lists.size(post.comments)}개|"></span>
     </div>
 
-    <form th:action="@{|/posts/free/detail/${post.id}|}" method="post" class="flex p-3">
+    <form th:action="@{|/posts/${category}/detail/${post.id}|}" method="post" class="flex p-3">
         <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." name="content" id="content"></textarea>
         <input type="submit" value="댓글등록" class="btn btn-outline btn-primary"/>
     </form>
@@ -45,8 +45,8 @@
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
         <span class="mr-6" >작성자</span>
         <div class="float-right flex-grow-0">
-            <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
-            <button class="btn btn-active btn-primary btn-sm">수정</button>
+            <button class="btn btn-active btn-primary mx-1 btn-sm">수정</button>
+            <button class="btn btn-active btn-primary btn-sm">삭제</button>
         </div>
         <div class="text-gray-400 text-sm" th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일자</div>
         <div class="flex-auto" th:text="${comment.content}"></div>

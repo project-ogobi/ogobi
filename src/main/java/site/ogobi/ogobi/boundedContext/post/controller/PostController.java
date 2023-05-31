@@ -22,7 +22,7 @@ public class PostController {
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
-        return category + "_post/detail";
+        return "/post/detail";
     }
 
     @GetMapping("/{category}/list")
@@ -30,23 +30,23 @@ public class PostController {
         Post.Category postCategory = getCategory(category);
         Page<Post> paging = this.postService.getListByCategory(postCategory, page);
         model.addAttribute("paging", paging);
-        return category + "_post/list";
+        return "/post/list";
     }
 
     @GetMapping("/{category}/create")
     public String showCreate(Model model, @PathVariable String category, PostDto postDto) {
         model.addAttribute("category", category);
-        return category + "_post/create";
+        return "/post/create";
     }
 
     @PostMapping("/{category}/create")
     public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category) {
         if (bindingResult.hasErrors()) {
-            return category + "_post/create";
+            return "/post/create";
         }
         Post.Category postCategory = getCategory(category);
         this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory);
-        return "redirect:/posts/" + category + "/list";
+        return String.format("redirect:/posts/%s/list", category);
     }
 
     private Post.Category getCategory(String category) {
