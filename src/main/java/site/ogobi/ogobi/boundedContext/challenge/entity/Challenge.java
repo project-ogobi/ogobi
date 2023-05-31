@@ -26,7 +26,7 @@ public class Challenge extends BaseEntity {
     private int usedMoney; // 총 사용금액?
     private int achievementRate; // 달성률
 
-    @ManyToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @OneToMany(mappedBy = "challenge", cascade = {CascadeType.ALL})

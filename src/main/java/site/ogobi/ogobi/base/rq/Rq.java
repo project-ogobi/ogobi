@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.LocaleResolver;
 
-
 import java.util.Locale;
 
 @Component
