@@ -17,27 +17,25 @@ import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/posts")
+@RequestMapping("/posts/{category}")
 public class CommentController {
 
     private final Rq rq;
     private final CommentService commentService;
     private final PostService postService;
 
-
     @PostMapping("/detail/{id}")
-    public String createComment(@PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
+    public String createComment(@PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult) {
         Post post = this.postService.getPost(id);
         Member writer = rq.getMember();
 
         this.commentService.create(post, commentDto.getContent(), writer);
 
-        return String.format("redirect:/posts/detail/%s", id);
+        return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-
     @GetMapping("/detail/{id}/{comment_id}")
-    public String deleteComment(@PathVariable Long id, @PathVariable Long comment_id){
+    public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id){
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
@@ -47,11 +45,11 @@ public class CommentController {
 
         commentService.deleteComment(comment_id);
 
-        return String.format("redirect:/posts/detail/%s", id);
+        return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
     @PostMapping("/detail/{id}/modify/{comment_id}")
-    public String modifyComment(@PathVariable Long id, @PathVariable Long comment_id, String content){
+    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, String content){
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
@@ -61,7 +59,7 @@ public class CommentController {
 
         commentService.modifyComment(comment_id, content);
 
-        return String.format("redirect:/posts/detail/%s", id);
+        return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
 }
