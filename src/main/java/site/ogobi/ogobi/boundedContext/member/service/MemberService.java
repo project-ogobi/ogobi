@@ -20,7 +20,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Member join(String username, String password) {
+    public Member join(String username, String password, String nickname) {
         if (memberRepository.findByUsername(username).isPresent()) {
             return null;
         }
@@ -29,6 +29,7 @@ public class MemberService {
                 .builder()
                 .username(username)
                 .password(password)
+                .nickname(nickname)
                 .build();
         memberRepository.save(member);
 

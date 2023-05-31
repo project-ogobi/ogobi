@@ -28,8 +28,8 @@ public class NotProd {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member member1 = memberService.join("user1", "1234");
-                Member member2 = memberService.join("test1", "test1");
+                Member member1 = memberService.join("user1", "1234", "첫번째멤버");
+                Member member2 = memberService.join("test1", "test1", "원투");
 
                 challengeService.create(member2, "테스트네임1", "테스트내용1", 10000, LocalDate.of(2023,5,27), LocalDate.of(2023,5,29) );
                 challengeService.create(member2, "테스트네임2", "테스트내용2", 20000,  LocalDate.of(2023,5,27), LocalDate.of(2023,5,30));
