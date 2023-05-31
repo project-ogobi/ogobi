@@ -37,7 +37,7 @@
         <span th:text="|${#lists.size(post.comments)}개|"></span>
     </div>
 
-    <form th:action="@{|/posts/detail/${post.id}|}" method="post" class="flex p-3">
+    <form th:action="@{|/posts/free/detail/${post.id}|}" method="post" class="flex p-3">
         <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." name="content" id="content"></textarea>
         <input type="submit" value="댓글등록" class="btn btn-outline btn-primary"/>
     </form>

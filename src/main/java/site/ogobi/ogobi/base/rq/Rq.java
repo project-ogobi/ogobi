@@ -1,6 +1,6 @@
 package site.ogobi.ogobi.base.rq;
 
-import site.ogobi.ogobi.boundedContext.member.Member;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
