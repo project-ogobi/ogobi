@@ -24,7 +24,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 public class CommentController {
-
     private final Rq rq;
     private final CommentService commentService;
     private final PostService postService;
@@ -51,7 +50,7 @@ public class CommentController {
         Member member = rq.getMember();
 
         if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
         }
 
         commentService.deleteComment(comment);
@@ -59,17 +58,21 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @PostMapping("/{category}/detail/{id}/modify/{comment_id}")
+    @PostMapping("/{category}/{id}/detail/modify/{comment_id}")
     @PreAuthorize("isAuthenticated()")
-    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, String content) {
+    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, @Valid CommentDto commentDto, BindingResult bindingResult) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
-        if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        if(bindingResult.hasErrors()) {
+            return String.format("redirect:/posts/%s/detail/%s", category, id);
         }
 
-        commentService.modifyComment(comment_id, content);
+        if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+
+        commentService.modifyComment(comment, commentDto.getContent());
 
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }

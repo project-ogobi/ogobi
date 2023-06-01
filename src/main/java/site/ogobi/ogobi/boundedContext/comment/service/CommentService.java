@@ -43,9 +43,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void modifyComment(Long commentId, String content) {
-        Comment comment = findById(commentId).orElse(null);
-
+    public void modifyComment(Comment comment, String content) {
         if (comment==null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 댓글이 존재하지 않습니다.");
         }
