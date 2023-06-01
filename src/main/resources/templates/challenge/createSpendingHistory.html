@@ -1,0 +1,37 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+    <form th:action method="post" enctype="multipart/form-data" th:object="${form}">
+        <!-- content 시작 -->
+        <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
+            <div class="mt-4 mb-2 flex flex-col gap-2">
+                <div class="form-group">
+                    <label th:for="itemName">지출 품목</label>
+                    <input type="text" th:field="*{itemName}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                </div>
+                <p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="fieldError">Incorrect data</p>
+
+                <div class="form-group">
+                    <label th:for="itemPrice">지출 가격</label>
+                    <input type="text" th:field="*{itemPrice}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                </div>
+                <p th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}" class="fieldError">Incorrect data</p>
+
+                <div class="form-group">
+                    <label th:for="description">상세내역 작성</label>
+                    <input type="text" th:field="*{description}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                </div>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
+
+                <div>파일<input type="file" name="file" multiple="multiple"></div>
+            </div>
+        </div>
+
+        <div class = "flex justify-end">
+            <button type="submit" name="submit" class="btn btn-primary">등록하기</button>
+        </div>
+        <!-- content 종료 -->
+    </form>
+</div>
+

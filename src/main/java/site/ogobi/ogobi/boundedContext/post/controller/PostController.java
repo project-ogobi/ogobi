@@ -3,11 +3,16 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
@@ -20,12 +25,14 @@ import java.security.Principal;
 public class PostController {
 
     private final PostService postService;
+    private final MemberService memberService;
 
     @GetMapping("/{category}/detail/{id}")
-    public String showPost(Model model, @PathVariable String category, @PathVariable Long id) {
+    @PreAuthorize("isAuthenticated()")
+    public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
-        return category + "_post/detail";
+        return "/post/detail";
     }
 
     @GetMapping("/{category}/list")
@@ -33,23 +40,26 @@ public class PostController {
         Post.Category postCategory = getCategory(category);
         Page<Post> paging = this.postService.getListByCategory(postCategory, page);
         model.addAttribute("paging", paging);
-        return category + "_post/list";
+        return "/post/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/create")
     public String showCreate(Model model, @PathVariable String category, PostDto postDto) {
         model.addAttribute("category", category);
-        return category + "_post/create";
+        return "/post/create";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/create")
-    public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category) {
+    public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category, Principal principal) {
         if (bindingResult.hasErrors()) {
-            return category + "_post/create";
+            return "/post/create";
         }
         Post.Category postCategory = getCategory(category);
-        this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory);
-        return "redirect:/posts/" + category + "/list";
+        Member member = this.memberService.getMember(principal.getName());
+        this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory, member);
+        return String.format("redirect:/posts/%s/list", category);
     }
 
     private Post.Category getCategory(String category) {
@@ -60,4 +70,19 @@ public class PostController {
         }
         throw new IllegalArgumentException("Invalid category: " + category);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{category}/modify/{id}")
+    public String modify(@PathVariable String category, @PathVariable Long id, Principal principal, @Valid PostDto postDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/post/create";
+        }
+        Post post = this.postService.getPost(id);
+        if(!post.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        this.postService.modify(post, postDto.getSubject(), postDto.getContent());
+        return String.format("redirect:/posts/%s/detail/%s", category, id);
+    }
+
 }

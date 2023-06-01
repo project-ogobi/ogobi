@@ -75,12 +75,22 @@ public class SecurityConfig {
     public UserDetailsService userDetailService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         String rawPassword = "test1";
-        String encryptedPassword = new BCryptPasswordEncoder().encode("test1");
+        String encryptedPassword = new BCryptPasswordEncoder().encode(rawPassword);
+
         UserDetails user = User.withUsername("test1")
                 .password(encryptedPassword)
                 .roles("ADMIN")
                 .build();
         manager.createUser(user);
+
+        String rawPassword2 = "1234";
+        String encryptedPassword2 = new BCryptPasswordEncoder().encode(rawPassword2);
+        UserDetails user2 = User.withUsername("user1")
+                .password(encryptedPassword2)
+                .roles("ADMIN")
+                .build();
+        manager.createUser(user2);
+
         return manager;
     }
 

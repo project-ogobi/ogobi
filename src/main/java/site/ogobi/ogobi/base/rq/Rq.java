@@ -1,5 +1,8 @@
 package site.ogobi.ogobi.base.rq;
 
+import site.ogobi.ogobi.base.ut.Ut;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -10,10 +13,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.LocaleResolver;
-import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 
 import java.util.Locale;
+import java.util.Map;
 
 @Component
 @RequestScope
@@ -82,6 +84,11 @@ public class Rq {
         return "common/js";
     }
 
+    public String getParamsJsonStr() {
+        Map<String, String[]> parameterMap = req.getParameterMap();
+
+        return Ut.json.toStr(parameterMap);
+    }
 
     private Locale getLocale() {
         if (locale == null) locale = localeResolver.resolveLocale(req);
