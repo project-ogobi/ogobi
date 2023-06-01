@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
-import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -30,8 +31,8 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private List<Comment> comments;
-
-    @OneToMany
+  
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private Set<Like> like;
 
     @Enumerated(EnumType.STRING)
@@ -41,5 +42,11 @@ public class Post extends BaseEntity {
     public enum Category {
         FREE,
         SHARING
+    }
+
+    public void modify(String subject, String content) {
+        this.subject = subject;
+        this.content = content;
+        this.modifyDate = LocalDateTime.now(); // BaseEntity protected 확인
     }
 }

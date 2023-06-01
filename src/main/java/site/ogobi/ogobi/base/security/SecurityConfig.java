@@ -76,6 +76,7 @@ public class SecurityConfig {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         String rawPassword = "test1";
         String encryptedPassword = new BCryptPasswordEncoder().encode(rawPassword);
+
         UserDetails user = User.withUsername("test1")
                 .password(encryptedPassword)
                 .roles("ADMIN")
