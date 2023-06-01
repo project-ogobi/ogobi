@@ -24,6 +24,7 @@
         </span>
     </div>
 
+    <!-- 추천 -->
     <div>
         <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
@@ -40,6 +41,7 @@
     <div class="p-3 m-3 text-left">
         <span class="font-semibold text-xl">댓글</span>
         <span th:text="|${#lists.size(post.comments)}개|"></span>
+
     <!-- 댓글 등록 -->
         <form th:action="@{|/posts/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex-col my-6">
             <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full" role="alert" th:if="${#fields.hasAnyErrors()}">

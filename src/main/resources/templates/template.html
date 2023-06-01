@@ -4,15 +4,74 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- toastr 불러오기 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-    <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
-
     <!-- 제이쿼리 불러오기 -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <!-- toastr 불러오기 toastr가 제이쿼리를 사용 함-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
+
+    <script>
+        toastr.options = {
+            closeButton: true,
+            debug: false,
+            newestOnTop: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            preventDuplicates: false,
+            onclick: null,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "5000",
+            extendedTimeOut: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut"
+        };
+
+        function parseMsg(msg) {
+            const [pureMsg, ttl] = msg.split(";ttl=");
+
+            const currentJsUnixTimestamp = new Date().getTime();
+
+            if (ttl && parseInt(ttl) + 5000 < currentJsUnixTimestamp) {
+                return [pureMsg, false];
+            }
+
+            return [pureMsg, true];
+        }
+
+        function toastNotice(msg) {
+            const [pureMsg, needToShow] = parseMsg(msg);
+
+            if (needToShow) {
+                toastr["success"](pureMsg, "알림");
+            }
+        }
+
+        function toastWarning(msg) {
+            const [pureMsg, needToShow] = parseMsg(msg);
+
+            if (needToShow) {
+                toastr["warning"](pureMsg, "경고");
+            }
+        }
+
+        // 어떠한 기능을 살짝 늦게(0.1 초 미만)
+        function setTimeoutZero(callback) {
+            setTimeout(callback);
+        }
+    </script>
+
+    <script>
+        // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
+        const params = JSON.parse('[( ${@rq.paramsJsonStr} )]');
+    </script>
+
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
@@ -67,5 +126,36 @@
         <p>Copyright © 2023 - All right reserved by project-ogobi</p>
     </div>
 </footer>
+
+<script th:inline="javascript">
+    if (params.msg) {
+        toastNotice(params.msg[0]);
+    }
+
+    if (params.errorMsg) {
+        toastWarning(params.errorMsg[0]);
+    }
+
+    // history.back 에 의해서 돌아온 경우에 실행됨
+    // 평소에도 실행됨
+    $(window).bind("pageshow", function (event) {
+        const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
+
+        console.log(localStorageKeyAboutHistoryBackErrorMsg)
+
+        if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+            toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+            localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+        } else {
+            const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
+
+            if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+                toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+                localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+            }
+        }
+    });
+</script>
+
 </body>
 </html>

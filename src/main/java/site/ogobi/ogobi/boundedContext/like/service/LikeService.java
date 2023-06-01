@@ -16,12 +16,18 @@ import java.util.Optional;
 public class LikeService {
     private final LikeRepository likeRepository;
     public void createLike(Member member, Post post) {
+        Like liked = likeRepository.findByMember(member);
 
-        Like like = Like.builder()
-                .post(post)
-                .member(member)
-                .build();
-        likeRepository.save(like);
+        if (liked!=null && liked.getPost()==post) {
+            likeRepository.deleteById(liked.getId());   //  이미 추천을 했다면 삭제한다.
+        } else {
+            Like like = Like.builder()
+                    .post(post)
+                    .member(member)
+                    .build();
+            likeRepository.save(like);
+        }
+
     }
 
 }
