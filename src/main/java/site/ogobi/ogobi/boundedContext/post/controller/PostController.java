@@ -28,11 +28,10 @@ public class PostController {
     private final MemberService memberService;
 
     @GetMapping("/{category}/detail/{id}")
-    @PreAuthorize("isAuthenticated()")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
-        return "/post/detail";
+        return "post/detail";
     }
 
     @GetMapping("/{category}/list")
@@ -40,21 +39,21 @@ public class PostController {
         Post.Category postCategory = getCategory(category);
         Page<Post> paging = this.postService.getListByCategory(postCategory, page);
         model.addAttribute("paging", paging);
-        return "/post/list";
+        return "post/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/create")
     public String showCreate(Model model, @PathVariable String category, PostDto postDto) {
         model.addAttribute("category", category);
-        return "/post/create";
+        return "post/create";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/create")
     public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category, Principal principal) {
         if (bindingResult.hasErrors()) {
-            return "/post/create";
+            return "post/create";
         }
         Post.Category postCategory = getCategory(category);
         Member member = this.memberService.getMember(principal.getName());
@@ -73,16 +72,20 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/modify/{id}")
-    public String modify(@PathVariable String category, @PathVariable Long id, Principal principal, @Valid PostDto postDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/post/create";
-        }
+    public String showModify(@PathVariable String category, @PathVariable Long id, PostDto postDto) {
         Post post = this.postService.getPost(id);
-        if(!post.getAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-        }
-        this.postService.modify(post, postDto.getSubject(), postDto.getContent());
-        return String.format("redirect:/posts/%s/detail/%s", category, id);
+        postDto.setSubject(post.getSubject());
+        postDto.setContent(post.getContent());
+        return "post/create";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{category}/modify/{id}")
+    public String modify(@PathVariable String category, @PathVariable Long id, Principal principal, @Valid PostDto postDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "post/create";
+        }
+        this.postService.modify(id, postDto.getSubject(), postDto.getContent(), principal.getName());
+        return String.format("redirect:/posts/%s/detail/%s", category, id);
+    }
 }

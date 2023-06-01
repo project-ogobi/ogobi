@@ -11,7 +11,7 @@
     <h1 class="font-semibold p-3 text-center">게시글 등록</h1>
     <form th:object="${postDto}" method="post">
         <!-- CSRF 토큰 추가 -->
-<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold" role="alert" th:if="${#fields.hasAnyErrors()}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>

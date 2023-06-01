@@ -57,8 +57,7 @@ public class SecurityConfig {
 
         // 이외 설정
         http
-                .userDetailsService(userDetailService())
-                .csrf(AbstractHttpConfigurer::disable);
+                .userDetailsService(userDetailService());
 
         return http.build();
 

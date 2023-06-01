@@ -36,7 +36,7 @@ public class CommentController {
         Post post = this.postService.getPost(id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", post);
-            return "/post/detail";
+            return "post/detail";
         }
         Member member = this.memberService.getMember(principal.getName());
         this.commentService.create(post, commentDto.getContent(), member);
