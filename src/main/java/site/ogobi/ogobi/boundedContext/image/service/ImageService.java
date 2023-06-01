@@ -79,4 +79,19 @@ public class ImageService {
 
         return s3files;
     }
+
+    public String deleteUploadedFile(String fileUrl) {
+
+        try {
+            if (amazonS3Client.doesObjectExist(bucketName, fileUrl)) {
+                amazonS3Client.deleteObject(bucketName, fileUrl);
+                return "success";
+            } else {
+                return "file not found";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error occurred";
+        }
+    }
 }
