@@ -35,6 +35,7 @@ public class SpendingHistoryController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}/{sh_id}/updateForm")
     public String updateSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
 
         // dto 객체 전환
@@ -56,7 +57,8 @@ public class SpendingHistoryController {
             return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
         }
 
-        List<Image> imageFiles = imageService.uploadFiles(file, "spending-history/images");
+        String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);
+        List<Image> imageFiles = imageService.uploadFiles(file, filePath);
         spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles);
 
         return "redirect:/challenges/" + challenge_id;
@@ -78,18 +80,9 @@ public class SpendingHistoryController {
             return "redirect:/challenges/" + challenge_id + "/createForm";
         }
 
-        List<Image> imageFiles = imageService.uploadFiles(file, "spending-history/images");
+        String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);
+        List<Image> imageFiles = imageService.uploadFiles(file, filePath);
         spendingHistoryService.createSpendingHistory(form, challenge_id, imageFiles);
         return "redirect:/challenges/" + challenge_id;
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/{sh_id}/delete")
-    public String deleteSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id){
-        spendingHistoryService.delete(sh_id);
-
-        return "redirect:/challenges/" + challenge_id;
-    }
-
-
 }

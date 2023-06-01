@@ -32,7 +32,7 @@ public class ImageService {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID().toString() + "." + ext;
     }
-    public List<Image> uploadFiles(List<MultipartFile> multipartFiles){
+    public List<Image> uploadFilesSample(List<MultipartFile> multipartFiles){
 
         return uploadFiles(multipartFiles, "sample-folder");
     }
@@ -64,27 +64,27 @@ public class ImageService {
                 // S3에 업로드한 폴더 및 파일 URL
                 uploadFileUrl = "https://kr.object.ncloudstorage.com/ogobi/" + keyName;
 
+                s3files.add(
+                        Image.builder()
+                                .originalFileName(originalFileName)
+                                .uploadFileName(uploadFileName)
+                                .uploadFilePath(keyName)
+                                .uploadFileUrl(uploadFileUrl)
+                                .build());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            s3files.add(
-                    Image.builder()
-                            .originalFileName(originalFileName)
-                            .uploadFileName(uploadFileName)
-                            .uploadFilePath(filePath)
-                            .uploadFileUrl(uploadFileUrl)
-                            .build());
         }
 
         return s3files;
     }
 
-    public String deleteUploadedFile(String fileUrl) {
+    public String deleteUploadedFile(String filePath) {
 
         try {
-            if (amazonS3Client.doesObjectExist(bucketName, fileUrl)) {
-                amazonS3Client.deleteObject(bucketName, fileUrl);
+            if (amazonS3Client.doesObjectExist(bucketName, filePath)) {
+                amazonS3Client.deleteObject(bucketName, filePath);
                 return "success";
             } else {
                 return "file not found";
