@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.like.service.LikeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
@@ -16,6 +17,8 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 public class LikeController {
+
+    private final Rq rq;
     private final LikeService likeService;
     private final PostService postService;
     private final MemberService memberService;
@@ -26,6 +29,10 @@ public class LikeController {
         String memberName = principal.getName();
         Member member = memberService.findByUsername(memberName).orElse(null);
         Post post = postService.findById(id).orElse(null);
+
+        if(member.getUsername().equals(post.getAuthor().getUsername())){    //본인 글에는 추천을 할 수 없다.
+            return rq.historyBack("본인의 글은 추천할 수 없습니다.");
+        }
 
         this.likeService.createLike(member, post);
 

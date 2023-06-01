@@ -14,22 +14,24 @@
     <hr class="mt-5 text-gray-200">
 
     <div class="text-right m-2">
-        <h5 class="text-gray-400 text-sm"
-            th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}">작성날짜</h5>
-        <span th:if="${post.modifyDate != null}">
-            <h5 class="text-gray-400 text-sm"th:text="${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}">
-            수정날짜</h5></span>
+        <h5 class="text-gray-400 text-sm" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}">
+            작성날짜
+        </h5>
+        <span th:if="${post.modifyDate == null}">
+            <h5 class="text-gray-400 text-sm" th:text="${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}">
+            수정날짜
+            </h5>
+        </span>
     </div>
 
     <div>
         <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
     <div class="my-3 flex justify-center">
-        <a class="btn btn-outline btn-primary" href="javascript:;"
-           onclick="if ( confirm('정말로 추천하시겠습니까?') ) $(this).next().submit();">
+        <form class="btn btn-outline btn-primary" th:action="@{|/posts/${category}/detail/${id}/like|}" href="javascript:;" onclick="if ( confirm('정말로 추천하시겠습니까?') ) $(this).next().submit();">
             추천
             <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
-        </a>
+        </form>
     </div>
     <hr class="mt-5 text-gray-200">
 
@@ -37,7 +39,7 @@
         <span class="font-semibold text-xl">댓글</span>
         <span th:text="|${#lists.size(post.comments)}개|"></span>
     <!-- 댓글 등록 -->
-        <form th:action="@{|/posts/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex-col p-3">
+        <form th:action="@{|/posts/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex-col my-6">
             <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full" role="alert" th:if="${#fields.hasAnyErrors()}">
                 <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
             </div>
