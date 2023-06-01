@@ -3,6 +3,8 @@
   const localStorageKeyAboutHistoryBackMsg = /*[[${localStorageKeyAboutHistoryBackMsg}]]*/ null;
   const historyBackMsg = /*[[${historyBackMsg}]]*/ null;
 
+  console.log(localStorageKeyAboutHistoryBackMsg)
+  console.log(historyBackMsg)
   if (localStorageKeyAboutHistoryBackMsg && localStorageKeyAboutHistoryBackMsg.trim().length > 0) {
     localStorage.setItem(localStorageKeyAboutHistoryBackMsg, historyBackMsg);
   }

@@ -16,8 +16,6 @@ import java.util.Optional;
 public class LikeService {
     private final LikeRepository likeRepository;
     public void createLike(Member member, Post post) {
-        post.getLike().add(member);
-        member.getLike().add(post);
 
         Like like = Like.builder()
                 .post(post)

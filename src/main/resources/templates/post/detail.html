@@ -28,9 +28,11 @@
         <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
     <div class="my-3 flex justify-center">
-        <form class="btn btn-outline btn-primary" th:action="@{|/posts/${category}/detail/${id}/like|}" href="javascript:;" onclick="if ( confirm('정말로 추천하시겠습니까?') ) $(this).next().submit();">
-            추천
-            <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
+        <form href="javascript:;" onsubmit="if ( confirm('정말로 추천하시겠습니까?') ) $(this).next().submit();" th:action="@{|/posts/${category}/detail/${id}/like|}" method="post">
+            <button class="btn btn-outline btn-primary">
+                추천
+                <span class="badge ml-1" th:text="|${#lists.size(post.like)}개|"></span>
+            </button>
         </form>
     </div>
     <hr class="mt-5 text-gray-200">
@@ -53,8 +55,9 @@
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
         <span class="mr-6 font-semibold" th:if="${comment.author != null}" th:text="${comment.author.nickname}">작성자</span>
         <div class="float-right flex-grow-0">
-            <button class="btn btn-active btn-primary mx-1 btn-sm">수정</button>
-            <button class="btn btn-active btn-primary btn-sm" >삭제</button>
+                <button class="btn btn-active btn-primary mx-1 btn-sm">수정</button>
+                <button class="btn btn-active btn-primary btn-sm" >삭제</button>
+            </span>
         </div>
         <div class="text-gray-400 text-sm" th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일자</div>
         <div class="flex-auto" th:text="${comment.content}"></div>

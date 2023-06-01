@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
 import java.util.List;
@@ -30,9 +31,6 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;
-
-    @OneToMany
-    private Set<Post> like;     //  Todo 중복 제거.. 가능?
 
     public boolean isAdmin() {
         return "admin".equals(username);

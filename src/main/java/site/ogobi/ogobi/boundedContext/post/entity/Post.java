@@ -27,8 +27,8 @@ public class Post extends BaseEntity {
     private Member author;  //  작성자
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private List<Comment> comments;
-    @OneToMany
-    private Set<Member> like;
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
+    private Set<Like> like;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

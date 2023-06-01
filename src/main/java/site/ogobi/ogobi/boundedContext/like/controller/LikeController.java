@@ -3,6 +3,8 @@ package site.ogobi.ogobi.boundedContext.like.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.like.service.LikeService;
@@ -24,8 +26,8 @@ public class LikeController {
     private final MemberService memberService;
 
 
-    @GetMapping("/{category}/detail/{id}/like")
-    public String like(String category, Long id, Principal principal){
+    @PostMapping("/{category}/detail/{id}/like")
+    public String like(@PathVariable String category, @PathVariable Long id, Principal principal){
         String memberName = principal.getName();
         Member member = memberService.findByUsername(memberName).orElse(null);
         Post post = postService.findById(id).orElse(null);
