@@ -44,13 +44,13 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @GetMapping("/{category}/{id}/detail/{comment_id}")
+    @PostMapping("/{category}/{id}/detail/{comment_id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
-        if (commentService.isMyComment(member, comment)) {
+        if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
@@ -65,7 +65,7 @@ public class CommentController {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
-        if (!commentService.isMyComment(member, comment)) {
+        if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 

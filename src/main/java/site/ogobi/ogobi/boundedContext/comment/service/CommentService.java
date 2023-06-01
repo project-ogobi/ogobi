@@ -23,15 +23,6 @@ public class CommentService {
     private final Rq rq;
     private final CommentRepository commentRepository;
 
-    public boolean isMyComment(Member member, Comment comment) {   //댓글 작성자가 본인인지 여부 판단
-        String writer = comment.getAuthor().getNickname();
-
-        if (member.getNickname().equals(writer)) {
-            return false;
-        }
-        return true;
-    }
-
     public void create(Post post, String content, Member member) {
         Comment comment = Comment.builder()
                 .post(post)
@@ -46,10 +37,12 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
+    @Transactional
     public void deleteComment(Comment comment) {
         commentRepository.delete(comment);
     }
 
+    @Transactional
     public void modifyComment(Long commentId, String content) {
         Comment comment = findById(commentId).orElse(null);
 
