@@ -7,10 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.image.entity.Image;
+import site.ogobi.ogobi.boundedContext.image.repository.ImageRepository;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.repository.SpendingHistoryRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class SpendingHistoryService {
     private final SpendingHistoryRepository spendingHistoryRepository;
     private final ChallengeService challengeService;
+    private final ImageRepository imageRepository;
 
     @Transactional
     public void create(Challenge challenge, SpendingHistoryForm form, List<Image> images){
@@ -32,7 +35,7 @@ public class SpendingHistoryService {
                 .description(form.getDescription())
                 .build();
 
-        spendingHistory.updateImages(images);
+        update(spendingHistory, form, images);
         spendingHistoryRepository.save(spendingHistory);
     }
 
@@ -44,8 +47,7 @@ public class SpendingHistoryService {
     @Transactional
     public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images) {
         SpendingHistory item = findSpendingHistoryById(id).orElseThrow();
-        item.update(form.getItemName(), form.getDescription());
-        item.updateImages(images);
+        update(item, form, images);
     }
 
 
@@ -61,5 +63,23 @@ public class SpendingHistoryService {
                 .itemPrice(spendingHistory.getPrice())
                 .build();
         return spendingHistoryForm;
+    }
+
+    @Transactional
+    public void update(SpendingHistory item, SpendingHistoryForm form, List<Image> images) {
+        item.setContent(form.getItemName());
+        item.setDescription(form.getDescription());
+
+        if (item.getImageFiles() != null && item.getImageFiles().size() > 0) {
+            for (Image imageFile : item.getImageFiles()) {
+                imageRepository.delete(imageFile);
+            }
+            item.setImageFiles(new ArrayList<>());
+        }
+        item.setImageFiles(images);
+
+        for (Image image : images) {
+            image.setSpendingHistory(item);
+        }
     }
 }

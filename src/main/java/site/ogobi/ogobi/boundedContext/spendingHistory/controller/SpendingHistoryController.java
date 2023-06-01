@@ -57,7 +57,7 @@ public class SpendingHistoryController {
             return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
         }
 
-        List<Image> imageFiles = imageService.uploadFiles(file);
+        List<Image> imageFiles = imageService.uploadFiles(file, "spending-history/images");
         spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles);
 
         return "redirect:/challenges/" + challenge_id;
@@ -79,7 +79,7 @@ public class SpendingHistoryController {
             return "redirect:/challenges/" + challenge_id + "/createForm";
         }
 
-        List<Image> imageFiles = imageService.uploadFiles(file);
+        List<Image> imageFiles = imageService.uploadFiles(file, "spending-history/images");
         spendingHistoryService.createSpendingHistory(form, challenge_id, imageFiles);
         return "redirect:/challenges/" + challenge_id;
     }
