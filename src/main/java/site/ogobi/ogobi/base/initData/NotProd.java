@@ -15,7 +15,6 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistorySe
 import java.time.LocalDate;
 
 @Configuration
-@Profile({"dev", "test"})
 public class NotProd {
 
     @Bean

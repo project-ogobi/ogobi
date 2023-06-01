@@ -29,7 +29,14 @@
                                     <div th:text="${spendingHistory.getPrice + '원'}"></div>
                                     <p>날짜-시간</p>
                                     <div th:text="${spendingHistory.getDescription}"></div>
-                                    <p>사진</p>
+
+                                    <div th:text="${spendingHistory.getId()}"></div>
+                                    <div th:text="${spendingHistory.getImageFiles().size()}"></div>
+
+                                    <div th:each="image: ${spendingHistory.getImageFiles()}">
+                                        <div th:text="${image.getUploadFileUrl}"></div>
+                                    </div>
+
                                     <div class="card-actions justify-end">
                                         <button type="submit" class="btn btn-sm btn-primary">수정하기</button>
                                     </div>

@@ -19,6 +19,7 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistorySe
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/challenges")
@@ -69,6 +70,12 @@ public class SpendingHistoryController {
 
         List<Image> imageFiles = imageService.uploadFiles(file);
         spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles);
+
+        log.info("images={}", imageFiles.get(0).getUploadFileUrl());
+        SpendingHistory sh = spendingHistoryService.findSpendingHistoryById(sh_id).get();
+        log.info("spendingHistoryImages={}", sh.getImageFiles().get(0).getUploadFileUrl());
+        log.info("sh_id={}", sh_id);
+        log.info("spendingHistoryImageSize={}", sh.getImageFiles().size());
 
         return "redirect:/challenges/" + challenge_id;
     }

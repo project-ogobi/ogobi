@@ -13,6 +13,7 @@ import static jakarta.persistence.FetchType.*;
 @NoArgsConstructor
 @Entity
 @Getter
+@Setter
 public class Image extends BaseEntity {
 
     private String originalFileName;
