@@ -26,6 +26,7 @@ public class PostController {
     private final MemberService memberService;
 
     @GetMapping("/{category}/detail/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);

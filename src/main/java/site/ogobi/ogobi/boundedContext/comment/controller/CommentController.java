@@ -45,6 +45,7 @@ public class CommentController {
     }
 
     @GetMapping("/{category}/detail/{id}/{comment_id}")
+    @PreAuthorize("isAuthenticated()")
     public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
@@ -59,6 +60,7 @@ public class CommentController {
     }
 
     @PostMapping("/{category}/detail/{id}/modify/{comment_id}")
+    @PreAuthorize("isAuthenticated()")
     public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, String content) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();

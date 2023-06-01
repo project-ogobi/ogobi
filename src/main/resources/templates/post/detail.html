@@ -16,52 +16,45 @@
     <div class="text-right m-2">
         <h5 class="text-gray-400 text-sm"
             th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}">작성날짜</h5>
-        <h5 class="text-gray-400 text-sm"
-            th:text="${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}">수정날짜</h5>
+        <span th:if="${post.modifyDate != null}">
+            <h5 class="text-gray-400 text-sm"th:text="${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}">
+            수정날짜</h5></span>
     </div>
 
     <div>
         <p class="m-4 p-3" th:utext="${post.content}"></p>
     </div>
     <div class="my-3 flex justify-center">
-        <a class="btn btn-outline btn-primary" th:href="@{|/posts/${category}/detail/${post.id}/like|}">
+        <a class="btn btn-outline btn-primary" href="javascript:;"
+           onclick="if ( confirm('정말로 추천하시겠습니까?') ) $(this).next().submit();">
             추천
             <span class="badge badge-error ml-1" th:text="|${#lists.size(post.like)}개|"></span>
         </a>
     </div>
     <hr class="mt-5 text-gray-200">
 
-    <div class="p-3 m-4 text-left">
+    <div class="p-3 m-3 text-left">
         <span class="font-semibold text-xl">댓글</span>
         <span th:text="|${#lists.size(post.comments)}개|"></span>
-    </div>
-
     <!-- 댓글 등록 -->
-    <form th:action="@{|/posts/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex p-3">
-        <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-        </div>
-        <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." th:field="*{content}" name="content" id="content"></textarea>
-        <input type="submit" value="등록" class="btn btn-outline btn-primary"/>
-    </form>
+        <form th:action="@{|/posts/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex-col p-3">
+            <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full" role="alert" th:if="${#fields.hasAnyErrors()}">
+                <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+            </div>
+            <div class="flex">
+                <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." th:field="*{content}" name="content" id="content"></textarea>
+                <input type="submit" value="등록" class="btn btn-outline btn-primary"/>
+            </div>
+        </form>
+    </div>
 
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
         <span class="mr-6 font-semibold" th:if="${comment.author != null}" th:text="${comment.author.nickname}">작성자</span>
         <div class="float-right flex-grow-0">
             <button class="btn btn-active btn-primary mx-1 btn-sm">수정</button>
-            <button class="btn btn-active btn-primary btn-sm">삭제</button>
+            <button class="btn btn-active btn-primary btn-sm" >삭제</button>
         </div>
         <div class="text-gray-400 text-sm" th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}">작성일자</div>
         <div class="flex-auto" th:text="${comment.content}"></div>
     </div>
 </div>
-<script layout:fragment="script" type='text/javascript'>
-    const recommend_elements = document.getElementsByClassName("recommend");
-    Array.from(recommend_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 추천하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-</script>
