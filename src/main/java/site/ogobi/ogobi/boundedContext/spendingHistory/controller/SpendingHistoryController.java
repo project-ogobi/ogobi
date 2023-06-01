@@ -33,14 +33,6 @@ public class SpendingHistoryController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{challenge_id}/spending-history")
-    public String spendingHistory(@PathVariable Long challenge_id, Model model){
-        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
-        model.addAttribute("challenge", challenge);
-        return "challenge/spendingHistory";
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}/{sh_id}/updateForm")
     public String updateSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
