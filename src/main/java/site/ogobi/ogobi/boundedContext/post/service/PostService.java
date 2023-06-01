@@ -13,7 +13,6 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,5 +77,14 @@ public class PostService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         post.modify(subject, content);
+    }
+
+    @Transactional
+    public void delete(Long postId, String username) {
+        Post post = getPost(postId);
+        if (!post.getAuthor().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        postRepository.delete(post);
     }
 }

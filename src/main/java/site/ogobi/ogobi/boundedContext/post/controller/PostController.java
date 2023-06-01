@@ -3,13 +3,11 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
@@ -87,5 +85,12 @@ public class PostController {
         }
         this.postService.modify(id, postDto.getSubject(), postDto.getContent(), principal.getName());
         return String.format("redirect:/posts/%s/detail/%s", category, id);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{category}/delete/{id}")
+    public String delete(@PathVariable String category, @PathVariable Long id, Principal principal) {
+        this.postService.delete(id, principal.getName());
+        return String.format("redirect:/posts/%s/list", category);
     }
 }
