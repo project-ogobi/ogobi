@@ -28,7 +28,9 @@
 
                             <div th:text="${'달성률: ' + c.achievementRate + '%'}"></div>
                             <div class="card-actions justify-end">
-                                <button class="btn btn-primary">수정하기</button>
+                                <a th:href="@{/challenges/{id}/update(id=${c.getId})}">
+                                    <button class="btn btn-primary">수정하기</button>
+                                </a>
                             </div>
                         </div>
                     </div>

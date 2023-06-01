@@ -67,5 +67,35 @@ public class ChallengeController {
         return "challenge/detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/update")
+    public String goToUpdate(Model model, @PathVariable Long id){
+
+        Challenge c = challengeService.findChallengeById(id).orElseThrow();
+
+        CreateForm updateForm = new CreateForm();
+        updateForm.formBuilder(c.getChallengeName(),
+                c.getDescription(),
+                c.getTargetMoney(),
+                c.getStartDate(),
+                c.getEndDate());
+
+        model.addAttribute("updateForm", updateForm);
+        model.addAttribute("updateId", id);
+        return "/challenge/updateForm";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}")
+    public String update(@Valid CreateForm updateForm, @PathVariable Long id, BindingResult result){
+        if (result.hasErrors()) {
+            return "/challenge/updateForm";
+        }
+        if(!challengeService.canUpdate(rq.getMember(), id)){
+            return "";//"올바르지 않은 접근 처리";
+        }
+        challengeService.update(rq.getMember(), updateForm, id);
+        return "redirect:/challenges";
+    }
 
 }
