@@ -45,13 +45,10 @@ public class SpendingHistoryController {
     public String updateSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id, Model model){
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
-        // dto 객체 전환
-        SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
-                .itemName(spendingHistory.getContent())
-                .itemPrice(spendingHistory.getPrice())
-                .build();
 
-        log.info("spendingHistoryForm={}", spendingHistoryForm);
+        // dto 객체 전환
+        SpendingHistoryForm spendingHistoryForm = spendingHistoryService.buildSpendingHistoryForm(spendingHistory);
+
         model.addAttribute("form", spendingHistoryForm);
         model.addAttribute("cid", challenge_id);
         model.addAttribute("sh_id", sh_id);
@@ -70,15 +67,6 @@ public class SpendingHistoryController {
 
         List<Image> imageFiles = imageService.uploadFiles(file);
         spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles);
-
-        log.info("images={}", imageFiles.get(0).getUploadFileUrl());
-        SpendingHistory sh = spendingHistoryService.findSpendingHistoryById(sh_id).get();
-        SpendingHistory sh2 = spendingHistoryService.findSpendingHistoryById(2L).get();
-
-//        log.info("spendingHistoryImages={}", sh.getImageFiles().get(0).getUploadFileUrl());
-        log.info("sh_id={}", sh_id);
-        log.info("spendingHistoryImageSize={}", sh.getImageFiles().size());
-        log.info("spendingHistoryImageSize={}", sh2.getImageFiles().size());
 
         return "redirect:/challenges/" + challenge_id;
     }

@@ -54,4 +54,12 @@ public class SpendingHistoryService {
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         create(challenge, form, images);
     }
+
+    public SpendingHistoryForm buildSpendingHistoryForm(SpendingHistory spendingHistory) {
+        SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
+                .itemName(spendingHistory.getContent())
+                .itemPrice(spendingHistory.getPrice())
+                .build();
+        return spendingHistoryForm;
+    }
 }
