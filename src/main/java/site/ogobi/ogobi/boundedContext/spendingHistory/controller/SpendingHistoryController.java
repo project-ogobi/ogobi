@@ -73,9 +73,12 @@ public class SpendingHistoryController {
 
         log.info("images={}", imageFiles.get(0).getUploadFileUrl());
         SpendingHistory sh = spendingHistoryService.findSpendingHistoryById(sh_id).get();
-        log.info("spendingHistoryImages={}", sh.getImageFiles().get(0).getUploadFileUrl());
+        SpendingHistory sh2 = spendingHistoryService.findSpendingHistoryById(2L).get();
+
+//        log.info("spendingHistoryImages={}", sh.getImageFiles().get(0).getUploadFileUrl());
         log.info("sh_id={}", sh_id);
         log.info("spendingHistoryImageSize={}", sh.getImageFiles().size());
+        log.info("spendingHistoryImageSize={}", sh2.getImageFiles().size());
 
         return "redirect:/challenges/" + challenge_id;
     }

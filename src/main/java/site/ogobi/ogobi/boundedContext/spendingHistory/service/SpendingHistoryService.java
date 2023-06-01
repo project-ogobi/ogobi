@@ -30,9 +30,9 @@ public class SpendingHistoryService {
                 .content(form.getItemName())
                 .price(form.getItemPrice())
                 .description(form.getDescription())
-                .imageFiles(images)
                 .build();
 
+        spendingHistory.updateImages(images);
         spendingHistoryRepository.save(spendingHistory);
     }
 
@@ -44,7 +44,8 @@ public class SpendingHistoryService {
     @Transactional
     public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images) {
         SpendingHistory item = findSpendingHistoryById(id).orElseThrow();
-        item.update(form.getItemName(), form.getDescription(), images);
+        item.update(form.getItemName(), form.getDescription());
+        item.updateImages(images);
     }
 
 

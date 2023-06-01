@@ -11,6 +11,7 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.image.entity.Image;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -28,14 +29,23 @@ public class SpendingHistory extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "spendingHistory", cascade = {ALL})
-    private List<Image> imageFiles;
+    private List<Image> imageFiles = new ArrayList<>();
 
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 
-    public void update(String content, String description, List<Image> images) {
+    public void update(String content, String description) {
         this.content = content;
         this.description = description;
+    }
+
+    public void updateImages(List<Image> images) {
+        if (this.imageFiles != null) {
+            this.imageFiles.clear();
+        }
+        for (Image image : images) {
+            image.setSpendingHistory(this);
+        }
         this.imageFiles = images;
     }
 }
