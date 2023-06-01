@@ -82,4 +82,10 @@ public class SpendingHistoryService {
             image.setSpendingHistory(item);
         }
     }
+
+    @Transactional
+    public void delete(Long sh_id) {
+        SpendingHistory item = spendingHistoryRepository.findById(sh_id).orElseThrow();
+        spendingHistoryRepository.delete(item);
+    }
 }
