@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
-public class CommentRepositoryTests {
+public class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;

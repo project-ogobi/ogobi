@@ -5,10 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
-import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
+import site.ogobi.ogobi.boundedContext.post.entity.Post;
+import site.ogobi.ogobi.boundedContext.post.service.PostService;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
 
@@ -22,14 +23,15 @@ public class NotProd {
     CommandLineRunner initData(
             MemberService memberService,
             ChallengeService challengeService,
-            SpendingHistoryService spendingHistoryService
+            SpendingHistoryService spendingHistoryService,
+            PostService postService
     ) {
         return new CommandLineRunner() {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member member1 = memberService.join("user1", "1234");
-                Member member2 = memberService.join("test1", "test1");
+                Member member1 = memberService.join("user1", "1234", "첫째멤");
+                Member member2 = memberService.join("test1", "test1", "원투");
 
                 challengeService.create(member2, "테스트네임1", "테스트내용1", 10000, LocalDate.of(2023,5,27), LocalDate.of(2023,5,29) );
                 challengeService.create(member2, "테스트네임2", "테스트내용2", 20000,  LocalDate.of(2023,5,27), LocalDate.of(2023,5,30));
@@ -46,8 +48,8 @@ public class NotProd {
 
                 spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyCoffee, null);
                 spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyLunch, null);
+
             }
         };
-
     }
 }
