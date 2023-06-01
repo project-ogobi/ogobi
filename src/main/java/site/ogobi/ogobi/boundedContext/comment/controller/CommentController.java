@@ -44,17 +44,17 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @GetMapping("/{category}/detail/{id}/{comment_id}")
+    @GetMapping("/{category}/{id}/detail/{comment_id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {
         Comment comment = commentService.findById(comment_id).orElse(null);
         Member member = rq.getMember();
 
-        if (!commentService.isMyComment(member, comment)) {
+        if (commentService.isMyComment(member, comment)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
-        commentService.deleteComment(comment_id);
+        commentService.deleteComment(comment);
 
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
