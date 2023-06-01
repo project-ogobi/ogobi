@@ -3,11 +3,13 @@ package site.ogobi.ogobi.boundedContext.post.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
@@ -68,4 +70,19 @@ public class PostController {
         }
         throw new IllegalArgumentException("Invalid category: " + category);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{category}/modify/{id}")
+    public String modify(@PathVariable String category, @PathVariable Long id, Principal principal, @Valid PostDto postDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/post/create";
+        }
+        Post post = this.postService.getPost(id);
+        if(!post.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        this.postService.modify(post, postDto.getSubject(), postDto.getContent());
+        return String.format("redirect:/posts/%s/detail/%s", category, id);
+    }
+
 }

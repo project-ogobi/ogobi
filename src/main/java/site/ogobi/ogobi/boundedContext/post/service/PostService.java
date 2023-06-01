@@ -58,6 +58,7 @@ public class PostService {
         return postRepository.findByCategory(category, pageable);
     }
 
+    @Transactional
     public void create(String subject, String content, Post.Category category, Member member) {
         Post p = Post.builder()
                 .subject(subject)
@@ -65,9 +66,13 @@ public class PostService {
                 .category(category)
                 .author(member)
                 .createDate(LocalDateTime.now())
-                .modifyDate(LocalDateTime.now())
                 .build();
         postRepository.save(p);
     }
 
+    @Transactional
+    public void modify(Post post, String subject, String content) {
+        post.modify(subject, content);
+        this.postRepository.save(post);
+    }
 }

@@ -9,11 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,4 +43,18 @@ public class Member extends BaseEntity {
         return challenge.size() != 0;
     }
 
+    // 스프링 시큐리티 규격
+    public List<? extends GrantedAuthority> getGrantedAuthorities() {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+        // 모든 멤버는 member 권한을 가진다.
+        grantedAuthorities.add(new SimpleGrantedAuthority("member"));
+
+        // username이 admin이면 추가로 admin 권한을 가진다.
+        if (isAdmin()) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
+        }
+
+        return grantedAuthorities;
+    }
 }
