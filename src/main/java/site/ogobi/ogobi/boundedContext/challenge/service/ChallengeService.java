@@ -1,14 +1,17 @@
 package site.ogobi.ogobi.boundedContext.challenge.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,5 +41,29 @@ public class ChallengeService {
 
     public Optional<Challenge> findChallengeById(Long id) {
         return challengeRepository.findById(id);
+    }
+
+    @Transactional
+    public void update(Member member, @Valid CreateForm updateForm, Long id) {
+        Challenge challenge = challengeRepository.findById(id).orElseThrow();
+
+        challenge.updateBasicInfo(updateForm.getChallengeName(),
+                updateForm.getDescription(),
+                updateForm.getStartDate(),
+                updateForm.getEndDate(),
+                updateForm.getTargetMoney());
+
+        System.out.println("###cid=" + challenge.getId());
+        System.out.println("###ccreatedate=" + challenge.getCreateDate());
+
+        challengeRepository.save(challenge);
+    }
+
+    public boolean canUpdate(Member member, Long challenge_id) {
+
+        for (Challenge challenge : member.getChallenge()) {
+            if (Objects.equals(challenge.getId(), challenge_id)) return true;
+        }
+        return false;
     }
 }

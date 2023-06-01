@@ -29,4 +29,11 @@ public class CreateForm{
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate endDate;
 
+    public void formBuilder(String challengeName, String description, Integer targetMoney, LocalDate startDate, LocalDate endDate) {
+        this.challengeName = challengeName;
+        this.description = description;
+        this.targetMoney = targetMoney;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

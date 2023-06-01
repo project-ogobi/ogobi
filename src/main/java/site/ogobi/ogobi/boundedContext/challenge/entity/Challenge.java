@@ -44,4 +44,12 @@ public class Challenge extends BaseEntity {
         this.achievementRate = achievementRate;
     }
 
+    public void updateBasicInfo(String challengeName, String description, LocalDate startDate, LocalDate endDate, int targetMoney){
+        this.challengeName = challengeName;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.targetMoney = targetMoney;
+    }
+
 }
