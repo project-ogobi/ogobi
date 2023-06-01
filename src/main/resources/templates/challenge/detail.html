@@ -30,11 +30,8 @@
                                     <p>날짜-시간</p>
                                     <div th:text="${spendingHistory.getDescription}"></div>
 
-                                    <div th:text="${spendingHistory.getId()}"></div>
-                                    <div th:text="${spendingHistory.getImageFiles().size()}"></div>
-
                                     <div th:each="image: ${spendingHistory.getImageFiles()}">
-                                        <div th:text="${image.getUploadFileUrl}"></div>
+                                        <img th:src="${image.getUploadFileUrl}"/>
                                     </div>
 
                                     <div class="card-actions justify-end">
