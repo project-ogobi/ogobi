@@ -64,8 +64,18 @@ public class ChallengeService {
         return false;
     }
 
-    public String makeFilePathWithChallengeId(Long id){
+    public String makeFilePathWithChallengeId(Long id) {
         Long memberId = challengeRepository.findById(id).orElseThrow().getMember().getId();
         return "challenge/" + memberId + "/images";
+    }
+
+    @Transactional
+    public void deleteById(Member member, Long id) {
+
+        Challenge challenge = challengeRepository.findById(id).orElseThrow();
+
+        if(Objects.equals(member.getId(), challenge.getMember().getId())){
+            challengeRepository.delete(challenge);
+        }
     }
 }

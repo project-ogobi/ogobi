@@ -7,16 +7,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/challenges")
@@ -95,6 +94,15 @@ public class ChallengeController {
             return "";//"올바르지 않은 접근 처리";
         }
         challengeService.update(rq.getMember(), updateForm, id);
+        return "redirect:/challenges";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}")
+    public String deleteById(@PathVariable Long id){
+        //TODO: 정말 삭제하시겠습니까? 추가하기
+
+        challengeService.deleteById(rq.getMember(), id);
         return "redirect:/challenges";
     }
 
