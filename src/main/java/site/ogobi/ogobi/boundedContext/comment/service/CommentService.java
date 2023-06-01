@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.repository.CommentRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
@@ -19,9 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CommentService {
-
+    private final Rq rq;
     private final CommentRepository commentRepository;
-
     private final PostService postService;
 
     public List<Comment> getCommentList(Long id) {
@@ -54,6 +54,7 @@ public class CommentService {
 
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
+
     }
 
     public void modifyComment(Long commentId, String content) {

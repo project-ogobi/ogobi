@@ -40,4 +40,5 @@ public class LikeController {
 
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
+
 }
