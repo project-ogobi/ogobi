@@ -100,15 +100,15 @@ public class PostController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @GetMapping("/main")
-    public String showMain(){
-        return "/post/main";
-    }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/delete/{id}")
     public String delete(@PathVariable String category, @PathVariable Long id, Principal principal) {
         this.postService.delete(id, principal.getName());
         return String.format("redirect:/posts/%s/list", category);
+    }
+
+    @GetMapping("/main")
+    public String showMain(){
+        return "post/main";
     }
 }
