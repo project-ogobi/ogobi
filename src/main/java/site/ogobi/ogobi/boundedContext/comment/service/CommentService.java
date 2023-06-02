@@ -20,7 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CommentService {
-    private final Rq rq;
     private final CommentRepository commentRepository;
 
     public void create(Post post, String content, Member member) {

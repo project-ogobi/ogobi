@@ -6,4 +6,5 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Like findByMember(Member member);
+
 }

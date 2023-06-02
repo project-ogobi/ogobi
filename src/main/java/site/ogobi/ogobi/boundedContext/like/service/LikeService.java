@@ -30,4 +30,8 @@ public class LikeService {
 
     }
 
+    public Like findByMember(Member member){
+        return likeRepository.findByMember(member);
+    }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import site.ogobi.ogobi.base.rq.Rq;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.like.service.LikeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
@@ -40,5 +41,6 @@ public class LikeController {
 
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
+
 
 }

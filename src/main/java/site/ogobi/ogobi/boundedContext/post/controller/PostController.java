@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
+import site.ogobi.ogobi.boundedContext.like.service.LikeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
@@ -21,14 +24,24 @@ import java.security.Principal;
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
-
+    private final Rq rq;
     private final PostService postService;
     private final MemberService memberService;
+    private final LikeService likeService;
 
     @GetMapping("/{category}/detail/{id}")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
         Post post = postService.getPost(id);
+        Member member = rq.getMember();
+        Like like = likeService.findByMember(member);
+
+        boolean isLiked = false;
+        if (like != null && like.getPost()==post){
+            isLiked = true;
+        }
+
         model.addAttribute("post", post);
+        model.addAttribute("isLiked", isLiked);
         return "post/detail";
     }
 

@@ -22,7 +22,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/posts")
+@RequestMapping("/comments")
 public class CommentController {
     private final Rq rq;
     private final CommentService commentService;
@@ -43,10 +43,10 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @PostMapping("/{category}/{id}/detail/{comment_id}")
+    @DeleteMapping("/{category}/{id}/detail/{commentId}")
     @PreAuthorize("isAuthenticated()")
-    public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id) {
-        Comment comment = commentService.findById(comment_id).orElse(null);
+    public String deleteComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long commentId) {
+        Comment comment = commentService.findById(commentId).orElse(null);
         Member member = rq.getMember();
 
         if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
@@ -58,10 +58,28 @@ public class CommentController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
-    @PostMapping("/{category}/{id}/detail/modify/{comment_id}")
     @PreAuthorize("isAuthenticated()")
-    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long comment_id, @Valid CommentDto commentDto, BindingResult bindingResult) {
-        Comment comment = commentService.findById(comment_id).orElse(null);
+    @GetMapping("/{category}/{id}/detail/{commentId}")
+    public String modify(@PathVariable String category, @PathVariable Long id, @PathVariable Long commentId, @Valid CommentDto commentDto, BindingResult bindingResult) {
+        Comment comment = commentService.findById(commentId).orElse(null);
+        Member member = rq.getMember();
+
+        if(bindingResult.hasErrors()) {
+            return String.format("redirect:/posts/%s/detail/%s", category, id);
+        }
+
+        if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+
+        commentDto.setContent(comment.getContent());
+        return String.format("redirect:/comments/%s/%s/detail/modify/%s", category, id, commentId);
+    }
+
+    @PostMapping("/{category}/{id}/detail/{commentId}/modify")
+    @PreAuthorize("isAuthenticated()")
+    public String modifyComment(@PathVariable String category, @PathVariable Long id, @PathVariable Long commentId, @Valid CommentDto commentDto, BindingResult bindingResult) {
+        Comment comment = commentService.findById(commentId).orElse(null);
         Member member = rq.getMember();
 
         if(bindingResult.hasErrors()) {
