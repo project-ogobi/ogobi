@@ -6,9 +6,9 @@
         <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-active btn-primary mx-1"
            sec:authorize="isAuthenticated()"
            th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">수정</a>
-        <a href="javascript:void(0);" th:data-uri="@{|/posts/${category}/delete/${post.id}|}" class="delete btn btn-active btn-primary"
-           sec:authorize="isAuthenticated()"
-           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">삭제</a>
+        <a href="javascript:void(0);" th:data-uri="@{|/posts/${category}/delete/${post.id}|}" class="delete btn btn-active btn-primary" sec:authorize="isAuthenticated()"
+           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
+           onclick="if(confirm('정말로 삭제하시겠습니까?')) { location.href = this.dataset.uri; }">삭제</a>
     </div>
     <div class="p-3 m-4 text-left">
         <h5 class="text-gray-400" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h5>
@@ -76,14 +76,4 @@
         <div class="flex-auto" th:text="${comment.content}"></div>
     </div>
 </div>
-<script layout:fragment="script" type='text/javascript'>
-    const delete_elements = document.getElementsByClassName("delete");
-    Array.from(delete_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 삭제하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-</script>
 </html>
