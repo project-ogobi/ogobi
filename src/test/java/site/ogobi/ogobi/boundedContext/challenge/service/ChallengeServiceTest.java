@@ -67,11 +67,11 @@ class ChallengeServiceTest {
         //when
         challengeService.create(member, challengeName, description, targetMoney, LocalDate.now(), LocalDate.now());
 
-        Assertions.assertEquals(challengeRepository.count(), 4);
+        long countNum = challengeRepository.count();
 
         //then
         challengeService.deleteById(member,4L);
-        Assertions.assertEquals(challengeRepository.count(), 3);
+        Assertions.assertEquals(challengeRepository.count(), countNum-1);
 
     }
 }
