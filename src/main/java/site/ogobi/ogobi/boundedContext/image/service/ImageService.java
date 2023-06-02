@@ -40,6 +40,10 @@ public class ImageService {
     //NOTICE: filePath의 맨 앞에 /는 안붙여도됨. ex) spending-history/images
     public List<Image> uploadFiles(List<MultipartFile> multipartFiles, String filePath) {
 
+        if (multipartFiles.get(0).getOriginalFilename().length() == 0) {
+            return new ArrayList<>();
+        }
+
         List<Image> s3files = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles) {
