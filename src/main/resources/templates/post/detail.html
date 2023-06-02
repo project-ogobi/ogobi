@@ -1,15 +1,5 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
-<script>
-    function comment_Dto(content) {
-        if (content.length == 0) {
-            toastWarning('내용을 입력해주세요.');
-            comment_Dto.content.focus();
-
-            return;
-        }
-    }
-</script>
 
 <div layout:fragment="content" class="container my-3">
     <div class="float-right m-2 my-10">
@@ -59,10 +49,10 @@
         <!-- 댓글 등록 -->
         <form th:action="@{|/comments/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post" class="flex-col my-6">
             <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full" role="alert" th:if="${#fields.hasAnyErrors()}">
-                <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+                <div th:each="err : ${#fields.allErrors()}" onsubmit="comment_Dto()" />
             </div>
             <div class="flex">
-                <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." th:field="*{content}" name="content" id="content"></textarea>
+                <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요." th:field="*{content}" onsubmit="comment_Dto()"></textarea>
                 <input type="submit" value="등록" class="btn btn-active btn-primary"/>
             </div>
         </form>
@@ -106,6 +96,14 @@
             th.innerText = "수정";
         } else {
             th.innerText = "취소";
+        }
+    }
+    function comment_Dto(content) {
+        if (content.length == 0) {
+        toastWarning('내용을 입력해주세요.');
+        comment_Dto.content.focus();
+
+        return;
         }
     }
     </script>
