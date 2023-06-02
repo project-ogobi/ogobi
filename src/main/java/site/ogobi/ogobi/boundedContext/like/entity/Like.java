@@ -14,6 +14,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @SuperBuilder
 @NoArgsConstructor
+@Table(name = "likes")
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

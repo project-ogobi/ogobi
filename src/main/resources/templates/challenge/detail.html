@@ -16,6 +16,8 @@
                     <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
                 </div>
 
+                <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
+
                 <th:block th:unless="${challenge.hasSpendingHistory}">
                     <div>아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
                 </th:block>
@@ -29,10 +31,20 @@
                                     <div th:text="${spendingHistory.getPrice + '원'}"></div>
                                     <p>날짜-시간</p>
                                     <div th:text="${spendingHistory.getDescription}"></div>
-                                    <p>사진</p>
-                                    <div class="card-actions justify-end">
-                                        <button type="submit" class="btn btn-sm btn-primary">수정하기</button>
+
+                                    <div th:each="image: ${spendingHistory.getImageFiles()}">
+                                        <img th:src="${image.getUploadFileUrl}"/>
                                     </div>
+
+                                    <div class="card-actions justify-end">
+                                        <a th:href="@{/challenges/{id}/{sh_id}/updateForm(id=${challenge.getId}, sh_id=${spendingHistory.getId})}"
+                                           id="btn-challenge-spendingHistory-update" class="btn btn-sm btn-primary">수정</a>
+
+                                        <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
+                                            <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary">삭제</button>
+                                        </form>
+                                    </div>
+
                                 </div>
                             </div>
                         </li>
@@ -40,7 +52,6 @@
                 </th:block>
 
             </div>
-            <a th:href="@{'/challenges/' + ${challenge.getId} + '/spending-history'}" id="btn-challenge-spendinghistory"  class="btn btn-primary my-3">지출내역 보기</a>
 
         </div>
         <!-- content 종료 -->

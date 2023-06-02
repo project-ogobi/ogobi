@@ -1,0 +1,61 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+    <form role="form" th:action="@{/challenges/{id}(id=${updateId})}" method="post" th:object="${updateForm}">
+
+        <!-- content 시작 -->
+        <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
+            <div>
+                챌린지 작성하기
+
+                <div class="mt-4 mb-2 flex flex-col gap-2">
+                    <div class="form-group">
+                        <label th:for="challengeName">챌린지 제목</label>
+                        <input type="text" th:field="*{challengeName}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    </div>
+                    <p th:if="${#fields.hasErrors('challengeName')}" th:errors="*{challengeName}" class="fieldError">Incorrect data</p>
+
+                    <div class="form-group">
+                        <label th:for="challengeName">챌린지 내용</label>
+                        <input type="text" th:field="*{description}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    </div>
+                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
+
+                    <div>챌린지 기간</div>
+                    <p>시작날짜: <input type="text" th:field="*{startDate}" id="startdatepicker" class="border border-primary rounded-md text-center"></p>
+                    <p>종료날짜: <input type="text" th:field="*{endDate}" id="enddatepicker" class="border border-primary rounded-md text-center"></p>
+                    <script>
+                        $( function() {
+                            $( "#startdatepicker" ).datepicker({
+                                changeMonth: true,
+                                changeYear: true
+                            });
+                        } );
+                        $( function() {
+                            $( "#enddatepicker" ).datepicker({
+                                changeMonth: true,
+                                changeYear: true
+                            });
+                        } );
+                    </script>
+
+                    <div class="form-group">
+                        <label th:for="targetMoney">목표 금액</label>
+                        <input type="text" th:field="*{targetMoney}" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    </div>
+                    <p th:if="${#fields.hasErrors('targetMoney')}" th:errors="*{targetMoney}" class="fieldError">Incorrect data</p>
+
+                </div>
+
+                <div class = "flex justify-end">
+                    <button type="submit" name="submit" class="btn btn-primary">수정하기</button>
+                </div>
+            </div>
+        </div>
+        <!-- content 종료 -->
+
+
+    </form>
+</div>
+
