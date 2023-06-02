@@ -85,4 +85,9 @@ public class PostController {
         return String.format("redirect:/posts/%s/detail/%s", category, id);
     }
 
+    @GetMapping("/main")
+    public String showMain(){
+        return "/post/main";
+    }
+
 }
