@@ -23,7 +23,7 @@
         <h5 class="text-gray-400 text-sm" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}">
             작성날짜
         </h5>
-        <div th:if="${post.modifyDate != null}" class="text-gray-400 text-sm">
+        <div th:if="${post.modifyDate != null && post.modifyDate != post.createDate}" class="text-gray-400 text-sm">
             <div th:text="|(수정) ${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}|"></div>
         </div>
     </div>
@@ -69,15 +69,19 @@
         <div class="float-right flex-grow-0 flex-row flex">
             <th:block th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}">
                 <button class="btn btn-outline btn-primary mx-1 btn-sm" onclick="$(this).parent().nextAll('form:first').toggleClass('hidden'); textToggle(this);">수정</button>
-                <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{|/posts/${category}/${post.id}/detail/${comment.id}|}" method="post"
+                <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}|}" method="post"
                       th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}">
-                    <input type="hidden" name="method" value="DELETE">
+                    <input type="hidden" name="_method" value="delete">
                     <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
                 </form>
             </th:block>
         </div>
         <div class="text-gray-400 text-sm"
-             th:text="${#temporals.format(comment.createDate,'yyyy-MM-dd HH:mm')}">작성일자</div>
+             th:text="${#temporals.format(comment.createDate,'yyyy-MM-dd HH:mm')}">작성일자
+            <div th:if="${post.modifyDate != null && post.modifyDate != post.createDate}" class="text-gray-400 text-sm">
+                <div th:text="|/(수정) ${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')}|"></div>
+            </div>
+        </div>
         <div class="flex-auto" th:text="${comment.content}"></div>
         <form th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}/modify|}" method="post" class="hidden flex-col my-6">
             <div class="flex">
