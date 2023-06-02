@@ -48,6 +48,5 @@ public class Post extends BaseEntity {
     public void modify(String subject, String content) {
         this.subject = subject;
         this.content = content;
-        this.modifyDate = LocalDateTime.now(); // BaseEntity protected 확인
     }
 }
