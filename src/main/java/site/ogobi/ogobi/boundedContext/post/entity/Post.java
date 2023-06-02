@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
 
@@ -47,6 +48,7 @@ public class Post extends BaseEntity {
     public void modify(String subject, String content) {
         this.subject = subject;
         this.content = content;
-        this.modifyDate = LocalDateTime.now(); // BaseEntity protected 확인
     }
+
+
 }

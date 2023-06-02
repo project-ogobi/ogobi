@@ -7,7 +7,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   mvc:
-    hiddenmethod:
+    hidden-method:
       filter:
         enabled: true
   profiles:
@@ -20,7 +20,7 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true

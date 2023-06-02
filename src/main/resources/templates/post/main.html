@@ -1,0 +1,36 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+
+<div layout:fragment="content" class="container my-3">
+    <h1 class="font-semibold p-3 text-center text-lg">게시판 HOME</h1>
+
+    <!--   카드 시작 -->
+    <div class="carousel w-full">
+        <div id="item1" class="carousel-item w-full">
+            <div>인기 글1</div>
+        </div>
+
+        <div id="item2" class="carousel-item w-full">
+            <div>인기 글2</div>
+        </div>
+
+        <div id="item3" class="carousel-item w-full">
+            <div>인기 글3</div>
+        </div>
+
+        <div id="item4" class="carousel-item w-full">
+            <div>인기 글4</div>
+        </div>
+    </div>
+    <!--   카드 끝 -->
+
+    <!--   번호 -->
+    <div class="flex justify-center w-full py-2 gap-2">
+        <a href="#item1" class="btn btn-xs">1</a>
+        <a href="#item2" class="btn btn-xs">2</a>
+        <a href="#item3" class="btn btn-xs">3</a>
+        <a href="#item4" class="btn btn-xs">4</a>
+    </div>
+
+</div>

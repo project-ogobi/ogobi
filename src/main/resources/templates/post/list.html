@@ -2,15 +2,15 @@
 <head></head>
 <body>
 <div layout:fragment="content" class="overflow-x-auto">
-    <h1 class="font-semibold p-3 text-center" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h1>
-    <table class="table w-11/12 table-auto mx-auto">
+    <h1 class="font-semibold p-3 text-center text-lg" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h1>
+    <table class="table w-full table-auto mx-auto">
         <!-- head -->
         <thead class="border-purple-800">
         <tr>
             <th></th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일시</th>
+            <th class="text-base">제목</th>
+            <th class="text-base">작성자</th>
+            <th class="text-base">작성일시</th>
         </tr>
         </thead>
         <tbody>
