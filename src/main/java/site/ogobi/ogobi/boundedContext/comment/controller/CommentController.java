@@ -33,10 +33,12 @@ public class CommentController {
     @PostMapping("/{category}/detail/{id}")
     public String createComment(Model model, @PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult, Principal principal) {
         Post post = this.postService.getPost(id);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", post);
             return "post/detail";
         }
+
         Member member = this.memberService.getMember(principal.getName());
         this.commentService.create(post, commentDto.getContent(), member);
 
