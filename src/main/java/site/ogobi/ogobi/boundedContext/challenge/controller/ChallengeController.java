@@ -61,7 +61,12 @@ public class ChallengeController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}")
     public String showDetailById(@PathVariable Long challenge_id, Model model){
+
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        if(!Objects.equals(rq.getMember().getId(), challenge.getMember().getId())){
+            return "error";
+        }
+
         model.addAttribute("challenge", challenge);
         return "challenge/detail";
     }
@@ -71,6 +76,10 @@ public class ChallengeController {
     public String goToUpdate(Model model, @PathVariable Long id){
 
         Challenge c = challengeService.findChallengeById(id).orElseThrow();
+
+        if(!Objects.equals(rq.getMember().getId(), c.getMember().getId())){
+            return "error";
+        }
 
         CreateForm updateForm = new CreateForm();
         updateForm.formBuilder(c.getChallengeName(),
