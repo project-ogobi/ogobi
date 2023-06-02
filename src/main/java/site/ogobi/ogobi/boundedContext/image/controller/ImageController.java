@@ -15,18 +15,4 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ImageController {
-    private final ImageService imageService;
-
-    @GetMapping("/upload")
-    public String getUpload(){
-        return "upload";
-    }
-
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadFilesSample(
-        @RequestPart(value = "files") List<MultipartFile> multipartFiles) {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(imageService.uploadFiles(multipartFiles));
-    }
 }

@@ -52,7 +52,7 @@ public class NotProd {
                         .originalFileName("test1.png")
                         .uploadFileName("uploadTest1.png")
                         .uploadFilePath("sample")
-                        .uploadFileUrl("https://kr.object.ncloudstorage.com/ogobi/sample-folder/4548981b-505e-44d9-93de-586be91ee9ee.png")
+                        .uploadFileUrl("https://kr.object.ncloudstorage.com/ogobi/challenge/2/images/f57bd32c-9722-489d-bdce-b10be9f3616f.jpg")
                         .build();
                 List<Image> sampleImage = new ArrayList<>();
                 sampleImage.add(image);
@@ -61,7 +61,7 @@ public class NotProd {
                         .originalFileName("test2.png")
                         .uploadFileName("uploadTest2.png")
                         .uploadFilePath("sample")
-                        .uploadFileUrl("https://kr.object.ncloudstorage.com/ogobi/sample-folder/7c11096b-1c41-43ef-9bc1-f1ae3843e71a.png")
+                        .uploadFileUrl("https://kr.object.ncloudstorage.com/ogobi/challenge/2/images/23271811-e1b8-4200-a09c-3e682536aa76.jpg")
                         .build();
                 List<Image> sampleImage2 = new ArrayList<>();
                 sampleImage2.add(image2);

@@ -53,9 +53,6 @@ public class ChallengeService {
                 updateForm.getEndDate(),
                 updateForm.getTargetMoney());
 
-        System.out.println("###cid=" + challenge.getId());
-        System.out.println("###ccreatedate=" + challenge.getCreateDate());
-
         challengeRepository.save(challenge);
     }
 
@@ -65,5 +62,20 @@ public class ChallengeService {
             if (Objects.equals(challenge.getId(), challenge_id)) return true;
         }
         return false;
+    }
+
+    public String makeFilePathWithChallengeId(Long id) {
+        Long memberId = challengeRepository.findById(id).orElseThrow().getMember().getId();
+        return "challenge/" + memberId + "/images";
+    }
+
+    @Transactional
+    public void deleteById(Member member, Long id) {
+
+        Challenge challenge = challengeRepository.findById(id).orElseThrow();
+
+        if(Objects.equals(member.getId(), challenge.getMember().getId())){
+            challengeRepository.delete(challenge);
+        }
     }
 }

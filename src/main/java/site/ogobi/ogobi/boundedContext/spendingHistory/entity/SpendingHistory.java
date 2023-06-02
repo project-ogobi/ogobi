@@ -34,23 +34,4 @@ public class SpendingHistory extends BaseEntity {
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 
-    public void update(String content, String description) {
-        this.content = content;
-        this.description = description;
-    }
-
-    // 연관관계 매핑
-    public void updateImages(List<Image> images) {
-        if (this.imageFiles != null && this.imageFiles.size() > 0) {
-            for (Image imageFile : imageFiles) {
-                imageFile.setSpendingHistory(null);
-            }
-            this.imageFiles.clear();
-        }
-        this.imageFiles = images;
-
-        for (Image image : images) {
-            image.setSpendingHistory(this);
-        }
-    }
 }

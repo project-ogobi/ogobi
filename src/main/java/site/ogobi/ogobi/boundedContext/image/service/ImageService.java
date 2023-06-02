@@ -32,13 +32,17 @@ public class ImageService {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID().toString() + "." + ext;
     }
-    public List<Image> uploadFiles(List<MultipartFile> multipartFiles){
+    public List<Image> uploadFilesSample(List<MultipartFile> multipartFiles){
 
         return uploadFiles(multipartFiles, "sample-folder");
     }
 
     //NOTICE: filePath의 맨 앞에 /는 안붙여도됨. ex) spending-history/images
     public List<Image> uploadFiles(List<MultipartFile> multipartFiles, String filePath) {
+
+        if (multipartFiles.get(0).getOriginalFilename().length() == 0) {
+            return new ArrayList<>();
+        }
 
         List<Image> s3files = new ArrayList<>();
 
@@ -64,19 +68,34 @@ public class ImageService {
                 // S3에 업로드한 폴더 및 파일 URL
                 uploadFileUrl = "https://kr.object.ncloudstorage.com/ogobi/" + keyName;
 
+                s3files.add(
+                        Image.builder()
+                                .originalFileName(originalFileName)
+                                .uploadFileName(uploadFileName)
+                                .uploadFilePath(keyName)
+                                .uploadFileUrl(uploadFileUrl)
+                                .build());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            s3files.add(
-                    Image.builder()
-                            .originalFileName(originalFileName)
-                            .uploadFileName(uploadFileName)
-                            .uploadFilePath(filePath)
-                            .uploadFileUrl(uploadFileUrl)
-                            .build());
         }
 
         return s3files;
+    }
+
+    public String deleteUploadedFile(String filePath) {
+
+        try {
+            if (amazonS3Client.doesObjectExist(bucketName, filePath)) {
+                amazonS3Client.deleteObject(bucketName, filePath);
+                return "success";
+            } else {
+                return "file not found";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error occurred";
+        }
     }
 }

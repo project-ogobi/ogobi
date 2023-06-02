@@ -39,6 +39,10 @@
                                     <div class="card-actions justify-end">
                                         <a th:href="@{/challenges/{id}/{sh_id}/updateForm(id=${challenge.getId}, sh_id=${spendingHistory.getId})}"
                                            id="btn-challenge-spendingHistory-update" class="btn btn-sm btn-primary">수정</a>
+
+                                        <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
+                                            <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary">삭제</button>
+                                        </form>
                                     </div>
 
                                 </div>
