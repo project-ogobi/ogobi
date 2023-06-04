@@ -96,14 +96,15 @@ public class PostService {
     public List<Post> bestPostList() {
         List<Post> sortLike = postRepository.findAll(Sort.by(Sort.Direction.DESC, "like"));
         LocalDate oneWeekAgo = LocalDate.now().minus(7, ChronoUnit.DAYS);   //  오늘부터 7일 전
-        List<Post> periodPosts = null; //  7일 전에 올라온 게시글 중 추천 수가 가장 높은 게시글을 담을 리스트
+        List<Post> periodPosts = new ArrayList<>(); //  7일 전에 올라온 게시글 중 추천 수가 가장 높은 게시글을 담을 리스트
 
         for (Post post:sortLike) {
-            if (post.getCreateDate().isAfter(oneWeekAgo.atStartOfDay())){   //  오늘부터 7일 이내에 작성된 게시글이라면
-                periodPosts.add(post);
+            if (post.getCreateDate().isAfter(oneWeekAgo.atStartOfDay())){
+                periodPosts.add(post);    //  오늘부터 7일 이내에 작성된 게시글이라면 리스트에 추가
             }
         }
-        int count = Math.min(periodPosts.size(), 5); //  5개만 넘긴다, 5개 미만이면 다 넘긴다.
+        
+        int count = Math.min(periodPosts.size(), 5); //  5개나, 5개 미만이면 다 넘긴다.
 
         return periodPosts.subList(0, count);
     }
