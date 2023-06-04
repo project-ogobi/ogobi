@@ -19,6 +19,7 @@ import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
@@ -108,7 +109,10 @@ public class PostController {
     }
 
     @GetMapping("/main")
-    public String showMain(){
+    public String showMain(Model model){
+        List<Post> bestPosts = postService.bestPostList();
+
+        model.addAttribute("bestPosts",bestPosts);
         return "post/main";
     }
 }

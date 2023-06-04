@@ -1,6 +1,8 @@
 package site.ogobi.ogobi.boundedContext.post.service;
 
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,8 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,5 +90,21 @@ public class PostService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         postRepository.delete(post);
+    }
+
+
+    public List<Post> bestPostList() {
+        List<Post> sortLike = postRepository.findAll(Sort.by(Sort.Direction.DESC, "like"));
+        LocalDate oneWeekAgo = LocalDate.now().minus(7, ChronoUnit.DAYS);   //  오늘부터 7일 전
+        List<Post> periodPosts = null; //  7일 전에 올라온 게시글 중 추천 수가 가장 높은 게시글을 담을 리스트
+
+        for (Post post:sortLike) {
+            if (post.getCreateDate().isAfter(oneWeekAgo.atStartOfDay())){   //  오늘부터 7일 이내에 작성된 게시글이라면
+                periodPosts.add(post);
+            }
+        }
+        int count = Math.min(periodPosts.size(), 5); //  5개만 넘긴다, 5개 미만이면 다 넘긴다.
+
+        return periodPosts.subList(0, count);
     }
 }
