@@ -23,22 +23,6 @@ public class MemberService {
         return memberRepository.findByUsername(username);
     }
 
-    @Transactional
-    public Member join(String username, String password, String nickname) {
-        if (memberRepository.findByUsername(username).isPresent()) {
-            return null;
-        }
-        Member member = Member
-                .builder()
-                .username(username)
-                .password(password)
-                .nickname(nickname)
-                .build();
-        memberRepository.save(member);
-
-        return member;
-        }
-
     public Member getMember(String username) {
         Optional<Member> member = this.memberRepository.findByUsername(username);
         if (member.isPresent()) {
