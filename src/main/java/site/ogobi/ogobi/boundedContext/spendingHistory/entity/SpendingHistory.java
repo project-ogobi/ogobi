@@ -25,7 +25,6 @@ public class SpendingHistory extends BaseEntity {
 
     private String content; // 작성한 내용 ex)스타벅스커피...
     private int price; //각 사용금액 ex)4500원
-    private LocalDateTime date;
     private String description;
 
     @OneToMany(mappedBy = "spendingHistory", cascade = {ALL})
