@@ -20,6 +20,7 @@ import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/posts")
@@ -34,7 +35,7 @@ public class PostController {
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
         Post post = postService.getPost(id);
         Member member = rq.getMember();
-        Like like = likeService.findByMember(member);
+        Like like = likeService.findByMemberIdAndPostId(member.getId(), id).orElse(null);
 
         boolean isLiked = false;
         if (like != null && like.getPost()==post){
