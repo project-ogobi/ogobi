@@ -10,7 +10,7 @@
         <div id="item1" class="carousel-item w-full flex justify-center" th:each="post : ${bestPosts}">
             <div class="bg-indigo-200 rounded-lg w-5/6 h-5/6 p-4 flex-col flex">
                 <div class="font-semibold text-2xl mb-4" th:text="${post.subject}">제목</div>
-                <span class="h-16" th:utext="${post.content}" th:style="'text-overflow: ellipsis; overflow: hidden;'">내용</span>
+                <span class="h-16" th:text="${#strings.length(post.content) &gt; 90 ? #strings.substring(post.content, 0, 90) + '...' : post.content}">내용</span>
                 <div class="items-end justify-end text-right">보러가기>> </div>
             </div>
         </div>
