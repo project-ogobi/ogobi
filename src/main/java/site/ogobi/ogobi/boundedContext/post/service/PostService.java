@@ -1,8 +1,6 @@
 package site.ogobi.ogobi.boundedContext.post.service;
 
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +34,7 @@ public class PostService {
     public Post getPost(Long id) {
         Optional<Post> post = this.postRepository.findById(id);
 
-        if (! post.isPresent()) {
+        if (!post.isPresent()) {
             return null;
         }
         return post.get();
@@ -70,7 +68,7 @@ public class PostService {
     @Transactional
     public void modify(Long postId, String subject, String content, String username) {
         Post post = getPost(postId);
-        if(!post.getAuthor().getUsername().equals(username)) {
+        if (!post.getAuthor().getUsername().equals(username)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         post.modify(subject, content);
@@ -85,25 +83,23 @@ public class PostService {
         postRepository.delete(post);
     }
 
-<<<<<<< HEAD
-
     public List<Post> bestPostList() {
         List<Post> sortLike = postRepository.findAll(Sort.by(Sort.Direction.DESC, "like"));
         LocalDate oneWeekAgo = LocalDate.now().minus(7, ChronoUnit.DAYS);   //  오늘부터 7일 전
         List<Post> periodPosts = new ArrayList<>(); //  7일 전에 올라온 게시글 중 추천 수가 가장 높은 게시글을 담을 리스트
 
-        for (Post post:sortLike) {
-            if (post.getCreateDate().isAfter(oneWeekAgo.atStartOfDay())){
+        for (Post post : sortLike) {
+            if (post.getCreateDate().isAfter(oneWeekAgo.atStartOfDay())) {
                 periodPosts.add(post);    //  오늘부터 7일 이내에 작성된 게시글이라면 리스트에 추가
             }
         }
-        
+
         int count = Math.min(periodPosts.size(), 5); //  5개나, 5개 미만이면 다 넘긴다.
 
         return periodPosts.subList(0, count);
-=======
+    }
+
     public String makeFilePathWithPostId(Long postId) {
         return "post/" + postId + "/images";
->>>>>>> yeonan
     }
 }
