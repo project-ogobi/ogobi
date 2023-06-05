@@ -9,3 +9,8 @@ html > body {
     font-family: "NanumSquareNeo-Variable";
     text-underline-position: under;
 }
+
+body[data-theme='dark'] {
+    color: #000000;
+    background-color: hsl(var(--b2,var(--b1)));
+}

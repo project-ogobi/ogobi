@@ -1,5 +1,6 @@
 <html layout:decorate="~{template}">
 
+
 <div layout:fragment="content" class="overflow-x-auto">
     <h1 class="font-semibold p-3 text-center text-lg">My Page</h1>
     <!-------------- 프로필 -------------->
@@ -8,7 +9,6 @@
             <h1 class="font-semibold p-2 text-center text-lg">내 정보</h1>
             <div class="text-center mb-4 text-gray-600" th:text="|${member.nickname}님 안녕하세요.|">
             </div>
-            <hr class="text-indigo-200 mb-4">
 
 <!-------------------- 메뉴 -------------------->
             <div class="flex-col flex">
@@ -45,7 +45,10 @@
                         달성한 챌린지
                     </div>
                     <div class="collapse-content">
-                        <p>내용물</p>
+                        <div th:each="challenge : ${successList}">
+                            <div th:if="${#lists.size(successList)==0}">완료된 챌린지가 없습니다.</div>
+                            <div th:text="${challenge.challengeName}">제목</div>
+                        </div>
                     </div>
                 </div>
                 <div class="collapse bg-indigo-50">
@@ -54,10 +57,16 @@
                         설정
                     </div>
                     <div class="collapse-content">
-                        <p>내용물</p>
+                        <div class="form-control w-52">
+                            <label class="cursor-pointer label" th:onclick="darkMode()">
+                                <span class="label-text">다크모드</span>
+                                <input type="checkbox" class="toggle toggle-primary"/>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
