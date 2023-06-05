@@ -1,0 +1,63 @@
+<html layout:decorate="~{template}">
+
+<div layout:fragment="content" class="overflow-x-auto">
+    <h1 class="font-semibold p-3 text-center text-lg">My Page</h1>
+    <!-------------- 프로필 -------------->
+    <div class="flex-col flex justify-center items-center">
+        <div class="card card-compact w-3/5 bg-indigo-100 shadow-lg mb-8 p-6">
+            <h1 class="font-semibold p-2 text-center text-lg">내 정보</h1>
+            <div class="text-center mb-4 text-gray-600" th:text="|${member.nickname}님 안녕하세요.|">
+            </div>
+            <hr class="text-indigo-200 mb-4">
+
+<!-------------------- 메뉴 -------------------->
+            <div class="flex-col flex">
+                <div class="collapse bg-indigo-50">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        지출 그래프
+                    </div>
+                    <div class="collapse-content">
+                        <p>내용물</p>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-50">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        획득한 칭호
+                    </div>
+                    <div class="collapse-content">
+                        <p>내용물</p>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-50">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        도전중인 챌린지
+                    </div>
+                    <div class="collapse-content">
+                        <p>내용물</p>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-50">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        달성한 챌린지
+                    </div>
+                    <div class="collapse-content">
+                        <p>내용물</p>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-50">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        설정
+                    </div>
+                    <div class="collapse-content">
+                        <p>내용물</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
