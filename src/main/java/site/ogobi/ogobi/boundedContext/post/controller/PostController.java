@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
@@ -66,7 +67,11 @@ public class PostController {
     @PostMapping("/{category}/create")
     public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category, Principal principal) {
         if (bindingResult.hasErrors()) {
-            return "post/create";
+            StringBuilder errorMessage = new StringBuilder();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMessage.append(error.getDefaultMessage()).append("<br>");
+            }
+            return rq.historyBack(errorMessage.toString());
         }
         Post.Category postCategory = getCategory(category);
         Member member = this.memberService.getMember(principal.getName());
