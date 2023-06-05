@@ -73,11 +73,10 @@
                             processData : false,
                             contentType: false,    // 필수
                             cache: false,
-                            success : function(data) {
-                                console.log("sucesssssssssss");
+                            success : function(image) {
+                                $(editor).summernote('insertImage', image.uploadFileUrl);
                             },
                             error : function(data){
-                                console.log(data);
                             }
                         });
 

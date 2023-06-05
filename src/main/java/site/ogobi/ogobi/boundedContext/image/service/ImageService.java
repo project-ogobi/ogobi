@@ -1,6 +1,7 @@
 package site.ogobi.ogobi.boundedContext.image.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -62,7 +63,8 @@ public class ImageService {
 
                 // S3에 폴더 및 파일 업로드
                 amazonS3Client.putObject(
-                        new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata));
+                        new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
+                                .withCannedAcl(CannedAccessControlList.PublicRead)); // TODO : POST 이미지 업로드 CDN 설정?
 
 
                 // S3에 업로드한 폴더 및 파일 URL
