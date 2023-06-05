@@ -9,12 +9,12 @@
 
         <div class="bg-indigo-200 rounded-2xl p-4 h-auto">
             <div class="flex w-full">
-                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-30 rounded-box place-items-center">
+                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
                     <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
                     <div th:text="${challenge.description}"></div>
                 </div>
                 <div class="divider divider-horizontal"></div>
-                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-30 rounded-box place-items-left p-1">
+                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-left p-1">
                     <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
                     <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
                     <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
@@ -25,7 +25,7 @@
             <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-2">+ 직접 입력하기</a>
         </div>
         <th:block th:unless="${challenge.hasSpendingHistory}">
-            <div>아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
+            <div class="text-center">아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
         </th:block>
 
         <th:block th:if="${challenge.hasSpendingHistory}">
