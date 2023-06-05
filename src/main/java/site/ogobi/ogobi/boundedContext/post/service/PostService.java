@@ -87,4 +87,8 @@ public class PostService {
         }
         postRepository.delete(post);
     }
+
+    public String makeFilePathWithPostId(Long postId) {
+        return "post/" + postId + "/images";
+    }
 }

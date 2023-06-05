@@ -40,7 +40,8 @@ public class SecurityConfig {
                 .requestMatchers(
                         new AntPathRequestMatcher("/**")
                 ).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
+
 
         // login 설정
         http

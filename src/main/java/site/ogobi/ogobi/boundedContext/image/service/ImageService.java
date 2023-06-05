@@ -62,8 +62,8 @@ public class ImageService {
 
                 // S3에 폴더 및 파일 업로드
                 amazonS3Client.putObject(
-                        new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
-                                .withCannedAcl(CannedAccessControlList.PublicRead));
+                        new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata));
+
 
                 // S3에 업로드한 폴더 및 파일 URL
                 uploadFileUrl = "https://kr.object.ncloudstorage.com/ogobi/" + keyName;
