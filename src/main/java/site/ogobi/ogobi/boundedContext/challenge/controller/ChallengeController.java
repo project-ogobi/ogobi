@@ -12,7 +12,6 @@ import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
-import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 import java.util.List;
 import java.util.Objects;

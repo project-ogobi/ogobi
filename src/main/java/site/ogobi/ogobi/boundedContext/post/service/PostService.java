@@ -85,6 +85,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
+<<<<<<< HEAD
 
     public List<Post> bestPostList() {
         List<Post> sortLike = postRepository.findAll(Sort.by(Sort.Direction.DESC, "like"));
@@ -100,5 +101,9 @@ public class PostService {
         int count = Math.min(periodPosts.size(), 5); //  5개나, 5개 미만이면 다 넘긴다.
 
         return periodPosts.subList(0, count);
+=======
+    public String makeFilePathWithPostId(Long postId) {
+        return "post/" + postId + "/images";
+>>>>>>> yeonan
     }
 }

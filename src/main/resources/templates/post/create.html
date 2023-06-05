@@ -1,10 +1,13 @@
 <html layout:decorate="~{template}">
+
+
 <head>
     <!-- summernote -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.js"></script>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
 </head>
 <body>
 <div layout:fragment="content">
@@ -25,7 +28,7 @@
             </div>
             <div class="flex flex-col">
                 <label for="content" class="form-label my-3">내용</label>
-                <textarea class="summernote" placeholder="내용" th:field="*{content}"></textarea>
+                <textarea class="form-control hidden summernote" th:field="*{content}"></textarea>
                 <script>
                     $('.summernote').summernote({
                         height: 500,
@@ -41,12 +44,43 @@
                             ['table', ['table']],
                             ['para', ['ul', 'ol', 'paragraph']],
                             ['height', ['height']],
-                            ['insert',['picture','link','video']],
-                            ['view', ['fullscreen', 'help']]
+                            ['insert',['picture']],
+                            ['view', ['codeview', 'help']]
                         ],
                         fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-                        fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+                        fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+                        // 이미지 첨부
+                        callbacks:{
+                            onImageUpload: function(files){
+                                sendFile(files[0], this);
+                            }
+                        }
                     });
+                    function sendFile(file, editor){
+                        const data = new FormData();
+                        data.append("file", file);
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+
+                        $.ajax({
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            data : data,
+                            type : "POST",
+                            url : "/insert-image",
+                            enctype : 'multipart/form-data',
+                            processData : false,
+                            contentType: false,    // 필수
+                            cache: false,
+                            success : function(image) {
+                                $(editor).summernote('insertImage', image.uploadFileUrl);
+                            },
+                            error : function(data){
+                            }
+                        });
+
+                    }
                 </script>
             </div>
             <div class="flex flex-row justify-end my-4">
