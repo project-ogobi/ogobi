@@ -117,8 +117,10 @@ public class PostController {
     @GetMapping("/main")
     public String showMain(Model model){
         List<Post> bestPosts = postService.bestPostList();
+        List<Post> resentPostList = postService.resentPostList();
 
-        model.addAttribute("bestPosts",bestPosts);
+        model.addAttribute("bestPosts", bestPosts);
+        model.addAttribute("resentPostList", resentPostList);
         return "post/main";
     }
 }

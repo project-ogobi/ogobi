@@ -99,7 +99,10 @@ public class PostService {
         return periodPosts.subList(0, count);
     }
 
-    public String makeFilePathWithPostId(Long postId) {
-        return "post/" + postId + "/images";
+    public List<Post> resentPostList() {
+        List<Post> sortDate = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
+        int count = Math.min(sortDate.size(), 10);
+
+        return sortDate.subList(0, count);
     }
 }

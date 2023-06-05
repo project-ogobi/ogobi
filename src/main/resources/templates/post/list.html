@@ -5,8 +5,8 @@
     <h1 class="font-semibold p-3 text-center text-lg" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h1>
     <table class="table w-full table-auto mx-auto">
         <!-- head -->
-        <thead class="border-purple-800">
-        <tr style="text-align: center;">
+        <thead>
+        <tr style="text-align: center">
             <th></th>
             <th class="text-base">제목</th>
             <th class="text-base">작성자</th>
@@ -14,16 +14,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="hover" th:each="post, loop : ${paging}">
+        <tr class="hover" style="text-align: center" th:each="post, loop : ${paging}">
             <td class="font-semibold" th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
-            <td>
+            <td style="text-align: start">
                 <a th:href="@{|/posts/${category}/detail/${post.id}|}" th:text="${post.subject}"/>
                 <span class="font-semibold text-indigo-500 text-xs ml-2" th:if="${#lists.size(post.comments) > 0}" th:text="${#lists.size(post.comments)}"></span>
             </td>
-            <td style="text-align: center;">
+            <td>
                 <span th:if="${post.author != null}" th:text="${post.author.nickname}"/>
             </td>
-            <td style="text-align: center;" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
     </table>
