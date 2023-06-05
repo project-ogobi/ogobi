@@ -41,6 +41,8 @@ public class SpendingHistoryController {
         // dto 객체 전환
         SpendingHistoryForm spendingHistoryForm = spendingHistoryService.buildSpendingHistoryForm(spendingHistory);
 
+        List<Image> Images = spendingHistory.getImageFiles();
+        model.addAttribute("presentImages", Images);
         model.addAttribute("form", spendingHistoryForm);
         model.addAttribute("cid", challenge_id);
         model.addAttribute("sh_id", sh_id);

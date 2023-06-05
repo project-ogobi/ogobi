@@ -24,7 +24,29 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
-                <div>파일<input type="file" name="file" multiple="multiple"></div>
+                <div id="preview">선택파일 미리보기</div>
+
+                <div><input type="file" name="file" id="image" multiple="multiple"></div>
+
+                <script>
+                    document.getElementById("image").addEventListener("change", function() {
+                        var previewContainer = document.getElementById("preview");
+                        previewContainer.innerHTML = "선택파일 미리보기"; // 기존 미리보기 이미지 제거
+
+                        var files = Array.from(this.files);
+
+                        files.forEach(function(file) {
+                            var reader = new FileReader();
+
+                            reader.onload = function(e) {
+                                var imageElement = "<img src='" + e.target.result + "' style='width: 300px'>";
+                                previewContainer.innerHTML += imageElement;
+                            };
+
+                            reader.readAsDataURL(file);
+                        });
+                    });
+                </script>
             </div>
         </div>
 

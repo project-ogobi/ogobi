@@ -1,6 +1,13 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
+<head>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
 <!--    <form role="form" th:action="@{/challenges/{id}/{sh_id}(id=${cid}, sh_id=${sh_id})}" method="post" th:object="${form}">-->
     <form th:action method="post" enctype="multipart/form-data" th:object="${form}">
@@ -26,7 +33,56 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
-                <div>파일<input type="file" name="file" multiple="multiple"></div>
+                <!-- 현재 이미지 -->
+                <div>현재 첨부된 이미지</div>
+                <div>
+                    <div th:each="image, imageIndex: ${presentImages}" class="my-3">
+                        <div class="card w-96 bg-base-100 shadow-xl">
+                            <div class="card-body">
+                                <img th:src="${image.uploadFileUrl}" id="image-${imageIndex}">
+
+                                <div class="card-actions justify-end">
+                                    <button type="button" class="btn" onclick="deleteImage([[${imageIndex}]], '${image.id}')">재업로드</button>
+                                    <button type="button" class="btn" onclick="deleteImage([[${imageIndex}]], '${image.id}')">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function deleteImage(imageIndex, imageId) {
+                        // AJAX 요청을 통해 서버로 이미지 ID를 전달하여 삭제합니다.
+                        // 이미지 ID를 사용하여 서버에서 해당 이미지를 식별하고 삭제하는 로직을 구현해야 합니다.
+                        // TODO: 아무일도 안 일어남. 고쳐야됨.
+                        console.log(imageIndex);
+
+                        // AJAX 요청 생성
+                        $.ajax({
+                            url: "/delete-image", // 적절한 엔드포인트와 경로를 사용해야 합니다.
+                            type: "DELETE",
+                            beforeSend: function(xhr) {
+                                const header = $("meta[name='_csrf_header']").attr('content');
+                                const token = $("meta[name='_csrf']").attr('content');
+                                xhr.setRequestHeader(header, token);
+                            },
+                            success: function() {
+                                // 이미지 삭제 요청이 성공한 경우
+                                var imageElement = $("#image-" + imageIndex);
+                                imageElement.hide(); // 이미지를 화면에서 숨깁니다.
+                            },
+                            error: function() {
+                                // 이미지 삭제 요청이 실패한 경우
+                                console.error("이미지 삭제 요청에 실패했습니다.");
+                            }
+                        });
+                    }
+                </script>
+
+                <div>새 이미지 추가하기</div>
+                <div>
+                    <input type="file" name="file" multiple="multiple">
+                </div>
 
             </div>
         </div>
