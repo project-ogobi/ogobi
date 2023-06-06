@@ -107,7 +107,7 @@ public class PostService {
         return sortDate.subList(0, count);
     }
 
-    public void saveSharePost(Challenge challenge){
+    public void saveSharePost(Challenge challenge) {
         Post sharePost = Post.builder()
                 .subject(challenge.getChallengeName())
                 .createDate(LocalDateTime.now())
@@ -117,5 +117,11 @@ public class PostService {
                 .build();
 
         postRepository.save(sharePost);
+    }
+
+    @Transactional
+    public void addView(Long postId) {
+        Post post = getPost(postId);
+        post.addViewCount();
     }
 }
