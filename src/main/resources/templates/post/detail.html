@@ -18,7 +18,12 @@
             <span th:text="${post.author.nickname}">작성자</span>
             <span class="text-sm" style="float: right">
             <i class="fa-solid fa-eye"></i><span>&nbsp;</span>
-            <span th:text="${post.view}">조회수</span></span>
+            <span th:text="${post.view}">조회수</span><span>&nbsp;&nbsp;&nbsp;</span>
+            <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
+            <span th:text=${#lists.size(post.like)}>추천수</span><span>&nbsp;&nbsp;&nbsp;</span>
+            <i class="fa-solid fa-comment"></i><span>&nbsp;</span>
+            <span th:text="${#lists.size(post.comments)}">댓글수</span>
+            </span>
         </h5>
     </div>
     <hr class="text-gray-200">
@@ -38,21 +43,14 @@
         <form th:data-submit-message="${isLiked} ? '취소하시겠습니까?' : '추천하시겠습니까?'"
               onsubmit="return confirm($(this).attr('data-submit-message'));"
               th:action="@{|/posts/${category}/detail/${id}/like|}" method="post">
-            <button th:if="${isLiked}" class="btn btn-error">
-                추천
-                <span class="ml-1" th:text="|${#lists.size(post.like)}개|"></span>
-            </button>
-            <button th:if="${!isLiked}" class="btn btn-outline btn-primary">
-                추천
-                <span class="ml-1" th:text="|${#lists.size(post.like)}개|"></span>
-            </button>
+            <button th:if="${isLiked}" class="btn btn-error" th:text="추천"></button>
+            <button th:if="${!isLiked}" class="btn btn-outline btn-primary" th:text="추천"></button>
         </form>
     </div>
     <hr class="mt-5 text-gray-200">
 
     <div class="p-3 m-3 text-left">
         <span class="font-semibold text-xl">댓글</span>
-        <span th:text="|${#lists.size(post.comments)}개|"></span>
 
         <!-- 댓글 등록 -->
         <form th:action="@{|/comments/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post"

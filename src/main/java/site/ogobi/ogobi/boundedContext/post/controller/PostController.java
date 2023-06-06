@@ -71,7 +71,7 @@ public class PostController {
             this.postService.incleaseView(id);
             Cookie newCookie = new Cookie("postView", "[" + id + "]");
             newCookie.setPath("/");
-            newCookie.setMaxAge(60 * 60 * 24); // 쿠키 유효기간 (1일)
+            newCookie.setMaxAge(60 * 60 * 24);
             response.addCookie(newCookie);
         }
 
