@@ -75,10 +75,13 @@
 <!--    다크모드-->
     <script>
         function darkMode(){
-            if(document.getElementById('mode').dataset-theme === 'light'){
-                document.getElementById('mode').dataset-theme === 'dark'
+            console.log("찍히나요?")
+            const body = document.querySelector('body');
+
+            if(body.id === 'light'){
+                document.querySelector('body').setAttribute("id", "dark");
             } else {
-                document.getElementById('mode').dataset-theme === 'light'
+                document.querySelector('body').setAttribute("id", "light");
             }
         }
     </script>
@@ -87,7 +90,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 </head>
 
-<body data-theme="light" id="mode">
+<body id="light">
 
 <div class="navbar max-w-2xl mx-auto bg-indigo-50 sticky top-0 z-50 rounded-2xl">
     <div class="navbar-start">
@@ -127,7 +130,7 @@
 
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 <!--    <th:block th:fragment="content"></th:block>-->
-<div class="max-w-2xl mx-auto">
+<div class="max-w-2xl min-h-screen mx-auto">
     <div layout:fragment="content"></div>
 </div>
 <!-- 기본 템플릿 안에 삽입될 내용 End -->

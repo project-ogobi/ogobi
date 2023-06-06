@@ -10,7 +10,6 @@ import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.List;
 public class MemberController {
 
     private final Rq rq;
-    private final MemberService memberService;
     private final ChallengeService challengeService;
 
     @GetMapping("/home")
@@ -33,10 +31,10 @@ public class MemberController {
         return "mypage/home";
     }
 
-    @GetMapping("/closed")
-    public String closedChallenge(Model model){
+    @GetMapping("/success")
+    public String succeedChallenge(Model model){
         Member member = rq.getMember();
-        List<Challenge> challengeList = challengeService.findAll();
+        List<Challenge> challengeList = challengeService.findByMember(member);
         List<Challenge> successList = new ArrayList<>();
 
         for (Challenge ch:challengeList) {
