@@ -10,7 +10,7 @@ html > body {
     text-underline-position: under;
 }
 
-body[data-theme='dark'] {
-    color: #000000;
-    background-color: hsl(var(--b2,var(--b1)));
+body[id='dark'] {
+    color: #898989;
+    background-color: #020202;
 }

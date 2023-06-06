@@ -98,4 +98,8 @@ public class ChallengeService {
     public List<Challenge> findAll() {
         return challengeRepository.findAll();
     }
+
+    public List<Challenge> findByMember(Member member) {
+        return challengeRepository.findByMember(member);
+    }
 }
