@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +104,18 @@ public class PostService {
     public List<Post> resentPostList() {
         List<Post> sortDate = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
         int count = Math.min(sortDate.size(), 10);
-
         return sortDate.subList(0, count);
+    }
+
+    public void saveSharePost(Challenge challenge){
+        Post sharePost = Post.builder()
+                .subject(challenge.getChallengeName())
+                .createDate(LocalDateTime.now())
+                .content(challenge.getDescription())
+                .author(challenge.getMember())
+                .category(Post.Category.valueOf("SHARING"))
+                .build();
+
+        postRepository.save(sharePost);
     }
 }

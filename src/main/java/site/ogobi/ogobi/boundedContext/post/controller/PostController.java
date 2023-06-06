@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import site.ogobi.ogobi.base.rq.Rq;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.like.service.LikeService;
@@ -31,6 +33,7 @@ public class PostController {
     private final PostService postService;
     private final MemberService memberService;
     private final LikeService likeService;
+    private final ChallengeService challengeService;
 
     @GetMapping("/{category}/detail/{id}")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
@@ -122,5 +125,15 @@ public class PostController {
         model.addAttribute("bestPosts", bestPosts);
         model.addAttribute("resentPostList", resentPostList);
         return "post/main";
+    }
+
+    @PostMapping("/share/{id}")
+    public String sharing(Model model, @PathVariable Long id){
+        Challenge challenge = challengeService.findChallengeById(id).orElse(null);
+
+        postService.saveSharePost(challenge);
+
+        model.addAttribute("challenge", challenge);
+        return "post/share";
     }
 }
