@@ -68,38 +68,35 @@
     </div>
 
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
-        <span class="mr-6 font-semibold" th:if="${comment.author != null}"
-              th:text="${comment.author.nickname}">작성자</span>
+        <div class="flex justify-between mb-1">
+            <span class="mr-6 font-semibold" th:if="${comment.author != null}"
+                  th:text="${comment.author.nickname}">작성자</span>
+            <div class="text-gray-400 text-sm p-1" th:if="${comment.modifyDate == comment.createDate}"
+                 th:text="${#temporals.format(comment.createDate,'yyyy-MM-dd HH:mm')}"></div>
+            <div class="text-gray-400 text-sm p-1" th:if="${comment.modifyDate != comment.createDate}"
+                 th:text="|${#temporals.format(comment.modifyDate,'yyyy-MM-dd HH:mm')} (수정됨)|"></div>
+        </div>
 
-        <!-- 댓글 수정, 삭제 -->
-        <div class="float-right flex-grow-0 flex-row flex">
-            <th:block
-                    th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}">
+        <!-- 수정, 삭제 버튼 -->
+        <div class="flex items-end justify-end mb-1">
+            <th:block th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}">
                 <button class="btn btn-outline btn-primary mx-1 btn-sm"
-                        onclick="$(this).parent().nextAll('form:first').toggleClass('hidden'); textToggle(this);">수정
-                </button>
-                <form href="javascript:;" onsubmit="return ( confirm('정말로 삭제하시겠습니까?') ); $(this).next().submit();"
+                        onclick="$(this).parent().nextAll('form:first').toggleClass('hidden'); textToggle(this);">수정</button>
+                <form href="javascript:;" onsubmit="return (confirm('정말로 삭제하시겠습니까?')); $(this).next().submit();"
                       th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}|}" method="post">
                     <input type="hidden" name="_method" value="delete">
                     <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
                 </form>
             </th:block>
         </div>
-
-        <!-- 댓글 작성날짜 -->
-        <div class="text-gray-400 text-sm text-right mt-2" th:if="${comment.modifyDate == comment.createDate}"
-             th:text="${#temporals.format(comment.createDate,'yy.MM.dd HH:mm')}"></div>
-        <div th:if="${comment.modifyDate != comment.createDate}" class="text-gray-400 text-sm text-right mt-2">
-            <div th:text="|${#temporals.format(comment.modifyDate,'yy.MM.dd HH:mm')}(수정 됨)|"></div>
-        </div>
-
-        <!-- 댓글 수정 -->
+        <!-- 댓글 내용 -->
         <div class="flex-auto" th:text="${comment.content}"></div>
+        <!-- 댓글 수정 폼 -->
         <form th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}/modify|}" method="post"
               class="hidden flex-col my-6">
-            <div class="flex">
-                <textarea class="textarea textarea-primary w-full mx-4 h-1" name="content"
-                          th:utext="${comment.content}"></textarea>
+            <div class="flex items-end justify-between">
+        <textarea class="textarea textarea-primary w-full mx-4 h-1" name="content"
+                  th:utext="${comment.content}"></textarea>
                 <input type="submit" value="수정" class="btn btn-outline btn-primary mx-1 btn-sm"/>
             </div>
         </form>
