@@ -23,6 +23,8 @@
         </div>
         <div class="flex items-center justify-center">
             <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-2">+ 직접 입력하기</a>
+
+            <a th:href="@{/posts/share/{id}(id=${challenge.getId})}" class="btn btn-primary btn-outline mx-2">공유하기</a>
         </div>
         <th:block th:unless="${challenge.hasSpendingHistory}">
             <div class="text-center">아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
