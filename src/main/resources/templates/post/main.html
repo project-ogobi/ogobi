@@ -13,7 +13,7 @@
                 <span class="h-16"
                       th:utext="${#strings.length(post.content) &gt; 90 ? #strings.substring(post.content, 0, 90) + '...' : post.content}">내용</span>
                 <div class="items-end justify-end text-right"><a
-                        th:href="@{/posts/{category}/detail/{id}(id=${post.id}, category=${post.category})}">보러가기>></a>
+                        th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}">보러가기>></a>
                 </div>
             </div>
         </div>
@@ -30,27 +30,22 @@
     <!-- 선 추가 -->
     <hr class="my-5 border-gray-300">
     <h1 class="font-semibold text-center text-lg mb-3">최근 게시글</h1>
-    <table class="table w-full table-auto mx-auto mb-5">
-        <thead>
-        <tr style="text-align: center">
-            <th class="text-base">게시판</th>
-            <th class="text-base">제목</th>
-            <th class="text-base">작성자</th>
-            <th class="text-base">작성일시</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="hover" style="text-align: center" th:each="post : ${resentPostList}">
-            <td class="font-semibold" th:text="${post.getCategory().toString().toLowerCase() eq 'free' ? '자유' : '공유'}"></td>
-            <td style="text-align: start">
-                <a th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}" th:text="${post.subject}"/>
-                <span class="font-semibold text-indigo-500 text-xs ml-2" th:if="${#lists.size(post.comments) > 0}" th:text="${#lists.size(post.comments)}"></span>
-            </td>
-            <td style="text-align: center;">
-                <span th:if="${post.author != null}" th:text="${post.author.nickname}"/>
-            </td>
-            <td style="text-align: center;" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <style>
+        .collapse:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    <div class="collapse collapse-open border border-base-300 bg-base-100 rounded-box mb-1"
+         th:each="post : ${resentPostList}">
+        <a class="collapse-title text-xl font-medium"
+           th:text="|[${post.getCategory().toString().toLowerCase() eq 'free' ? '자유 게시판' : '공유 게시판'}] ${post.subject}|"
+           th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}"></a>
+        <div class="collapse-content" th:utext="${post.content}"></div>
+    </div>
+    <!-- 게시글이 없을 때 메시지 출력 -->
+    <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-xl mb-2 p-5" th:if="${#lists.isEmpty(resentPostList)}">
+        게시글이 없습니다.
+    </div>
+
 </div>
+</html>
