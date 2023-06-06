@@ -47,7 +47,6 @@
                                 </div>
                             </div>
                         </div>
-                        <pre th:text="${imageIndex.index}"></pre>
                     </div>
                 </div>
 
@@ -69,14 +68,16 @@
                             beforeSend: function(xhr) {
                                 xhr.setRequestHeader(header, token);
                             },
-                            url: '/upload-image', // 파일 업로드 처리를 수행하는 URL로 수정해야 합니다.
+                            url: '/update-image/' + id, // 파일 업로드 처리를 수행하는 URL로 수정해야 합니다.
                             method: 'POST', // 요청 방식을 POST로 설정합니다.
                             data: formData, // FormData를 전달합니다.
-                            contentType: false, // 컨텐츠 타입을 false로 설정하여 기본값을 무시합니다.
-                            processData: false, // 데이터 처리를 jQuery가 아닌 FormData에 위임합니다.
+                            enctype : 'multipart/form-data',
+                            processData : false,
+                            contentType: false,    // 필수
+                            cache: false,
                             success: function(response) {
                                 // 요청이 성공적으로 처리되면, 새로운 이미지 URL을 받아와서 화면에 업데이트합니다.
-                                $('#image-' + index).attr('src', response.imageUrl);
+                                $('#image-' + index).attr('src', response);
                             },
                             error: function(xhr, status, error) {
                                 // 요청이 실패한 경우 에러 처리를 수행합니다.
@@ -116,6 +117,7 @@
             </div>
         </div>
 
+        <!-- TODO: 등록하기 버튼을 눌렀을때 업데이트가 반영이 안됨. form으로 변경점을 안넘겨주기때문. 폼에서 변경된 점을 넘겨주어야함.-->
         <div class = "flex justify-end">
             <button type="submit" name="submit" class="btn btn-primary">등록하기</button>
         </div>

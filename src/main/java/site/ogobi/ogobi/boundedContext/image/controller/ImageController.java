@@ -17,19 +17,17 @@ public class ImageController {
     private final ImageService imageService;
 
     @DeleteMapping(value ="/delete-image/{id}")
-    public ResponseEntity<String> deleteImage(@PathVariable Long id){
+    public ResponseEntity<Long> deleteImage(@PathVariable Long id){
 
-        imageService.deleteUploadedFileById(id);
-        String deleteNum = "deleted";
+        Long deleteNum = imageService.deleteUploadedFileById(id);
         return ResponseEntity.ok(deleteNum);
     }
 
-    @PostMapping("/reload-image/{id}")
-    public ResponseEntity<String> reloadImage(@PathVariable Long id){
+    @PostMapping("/update-image/{id}")
+    public ResponseEntity<String> reloadImage(@RequestParam("file") MultipartFile multipartFiles, @PathVariable Long id){
         //수정
-        imageService.updateImage();
-        String deleteNum = "updated";
-        return ResponseEntity.ok(deleteNum);
+        String fileUrl = imageService.updateSpendingHistoryImage(multipartFiles, id);
+        return ResponseEntity.ok(fileUrl);
     }
 
 

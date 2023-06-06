@@ -103,7 +103,7 @@ public class ImageService {
     }
 
     @Transactional
-    public String deleteUploadedFileById(Long id) {
+    public Long deleteUploadedFileById(Long id) {
 
         String filePath = imageRepository.findById(id).orElseThrow().getUploadFilePath();
 
@@ -111,9 +111,40 @@ public class ImageService {
 
         imageRepository.deleteById(id);
 
-        return id +"";
+        return id;
     }
 
-    public void updateImage() {
+    @Transactional
+    public String updateSpendingHistoryImage(MultipartFile multipartFile, Long id) {
+
+        Image image = imageRepository.findById(id).orElseThrow();
+
+        Long challengeId = image.getSpendingHistory().getChallenge().getId();
+
+        String filePath = "challenge/" + challengeId + "/images";
+
+        Image newImage = uploadFiles(List.of(multipartFile), filePath).get(0);
+
+        updateImage(image, newImage);
+
+        imageRepository.save(image);
+
+        return image.getUploadFileUrl();
+    }
+
+    private Image updateImage(Image image, Image newImage) {
+        if (newImage.getOriginalFileName() != null) {
+            image.setOriginalFileName(newImage.getOriginalFileName());
+        }
+        if (newImage.getUploadFileName() != null){
+            image.setUploadFileName(newImage.getUploadFileName());
+        }
+        if (newImage.getUploadFilePath() != null){
+            image.setUploadFilePath(newImage.getUploadFilePath());
+        }
+        if (newImage.getUploadFileUrl() != null){
+            image.setUploadFileUrl(newImage.getUploadFileUrl());
+        }
+        return image;
     }
 }
