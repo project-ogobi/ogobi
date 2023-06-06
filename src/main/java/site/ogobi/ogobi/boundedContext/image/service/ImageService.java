@@ -7,8 +7,10 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import site.ogobi.ogobi.boundedContext.image.entity.Image;
+import site.ogobi.ogobi.boundedContext.image.repository.ImageRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class ImageService {
 
     private final AmazonS3Client amazonS3Client;
+    private final ImageRepository imageRepository;
 
     @Value("${spring.s3.bucket}")
     private String bucketName;
@@ -97,5 +100,20 @@ public class ImageService {
             e.printStackTrace();
             return "error occurred";
         }
+    }
+
+    @Transactional
+    public String deleteUploadedFileById(Long id) {
+
+        String filePath = imageRepository.findById(id).orElseThrow().getUploadFilePath();
+
+        deleteUploadedFile(filePath);
+
+        imageRepository.deleteById(id);
+
+        return id +"";
+    }
+
+    public void updateImage() {
     }
 }

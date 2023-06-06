@@ -2,10 +2,10 @@
       layout:decorate="~{template}">
 
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <meta name="_csrf" th:content="${_csrf.token}">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
@@ -39,41 +39,70 @@
                     <div th:each="image, imageIndex: ${presentImages}" class="my-3">
                         <div class="card w-96 bg-base-100 shadow-xl">
                             <div class="card-body">
-                                <img th:src="${image.uploadFileUrl}" id="image-${imageIndex}">
-
+                                <img th:src="${image.uploadFileUrl}" th:id="'image-' + ${imageIndex.index}">
                                 <div class="card-actions justify-end">
-                                    <button type="button" class="btn" onclick="deleteImage([[${imageIndex}]], '${image.id}')">재업로드</button>
-                                    <button type="button" class="btn" onclick="deleteImage([[${imageIndex}]], '${image.id}')">삭제</button>
+                                    <input type="file" th:id="'image-file-' + ${imageIndex}" style="display: none" th:attr="onchange=|uploadImage(this, '${imageIndex.index}', '${image.id}')|">
+                                    <label th:for="'image-file-' + ${imageIndex}" class="btn">재업로드</label>
+                                    <button type="button" class="btn" th:attr="onclick=|deleteImage('${imageIndex.index}', '${image.id}')|">삭제</button>
                                 </div>
                             </div>
                         </div>
+                        <pre th:text="${imageIndex.index}"></pre>
                     </div>
                 </div>
 
-                <script>
-                    function deleteImage(imageIndex, imageId) {
-                        // AJAX 요청을 통해 서버로 이미지 ID를 전달하여 삭제합니다.
-                        // 이미지 ID를 사용하여 서버에서 해당 이미지를 식별하고 삭제하는 로직을 구현해야 합니다.
-                        // TODO: 아무일도 안 일어남. 고쳐야됨.
-                        console.log(imageIndex);
+                <script th:inline="javascript">
+                    /* 타임리프 변수를 JavaScript 변수로 전달하기 위해 th:inline 속성을 사용합니다. */
 
-                        // AJAX 요청 생성
+                    function uploadImage(input, index, id) {
+                        var file = input.files[0]; // 선택한 파일을 가져옵니다.
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+
+                        // 파일 업로드 AJAX 요청을 보냅니다.
+                        var formData = new FormData();
+                        formData.append('file', file); // FormData에 파일을 추가합니다.
+                        formData.append('index', index);
+                        formData.append('id', id);
+
                         $.ajax({
-                            url: "/delete-image", // 적절한 엔드포인트와 경로를 사용해야 합니다.
-                            type: "DELETE",
                             beforeSend: function(xhr) {
-                                const header = $("meta[name='_csrf_header']").attr('content');
-                                const token = $("meta[name='_csrf']").attr('content');
                                 xhr.setRequestHeader(header, token);
                             },
-                            success: function() {
-                                // 이미지 삭제 요청이 성공한 경우
-                                var imageElement = $("#image-" + imageIndex);
-                                imageElement.hide(); // 이미지를 화면에서 숨깁니다.
+                            url: '/upload-image', // 파일 업로드 처리를 수행하는 URL로 수정해야 합니다.
+                            method: 'POST', // 요청 방식을 POST로 설정합니다.
+                            data: formData, // FormData를 전달합니다.
+                            contentType: false, // 컨텐츠 타입을 false로 설정하여 기본값을 무시합니다.
+                            processData: false, // 데이터 처리를 jQuery가 아닌 FormData에 위임합니다.
+                            success: function(response) {
+                                // 요청이 성공적으로 처리되면, 새로운 이미지 URL을 받아와서 화면에 업데이트합니다.
+                                $('#image-' + index).attr('src', response.imageUrl);
                             },
-                            error: function() {
-                                // 이미지 삭제 요청이 실패한 경우
-                                console.error("이미지 삭제 요청에 실패했습니다.");
+                            error: function(xhr, status, error) {
+                                // 요청이 실패한 경우 에러 처리를 수행합니다.
+                                console.log(error);
+                            }
+                        });
+                    }
+
+                    function deleteImage(index, id) {
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+                        // 이미지 삭제 AJAX 요청을 보냅니다.
+                        $.ajax({
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            url: '/delete-image/' + id,
+                            type: 'DELETE',
+                            contentType: "application/json; charset=utf-8",
+                            success: function(response) {
+                                // 요청이 성공적으로 처리되면, 해당 이미지를 화면에서 제거합니다.
+                                $('#image-' + index).closest('.card').remove();
+                            },
+                            error: function(xhr, status, error) {
+                                // 요청이 실패한 경우 에러 처리를 수행합니다.
+                                console.log(error);
                             }
                         });
                     }

@@ -16,10 +16,19 @@ import java.util.List;
 public class ImageController {
     private final ImageService imageService;
 
-    @DeleteMapping("/delete-image")
-    public ResponseEntity<String> deleteImage(){
-        //삭제 로직
+    @DeleteMapping(value ="/delete-image/{id}")
+    public ResponseEntity<String> deleteImage(@PathVariable Long id){
+
+        imageService.deleteUploadedFileById(id);
         String deleteNum = "deleted";
+        return ResponseEntity.ok(deleteNum);
+    }
+
+    @PostMapping("/reload-image/{id}")
+    public ResponseEntity<String> reloadImage(@PathVariable Long id){
+        //수정
+        imageService.updateImage();
+        String deleteNum = "updated";
         return ResponseEntity.ok(deleteNum);
     }
 
