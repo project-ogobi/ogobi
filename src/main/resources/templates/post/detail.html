@@ -2,7 +2,7 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="container my-3">
-    <div class="float-right m-2 my-10">
+    <div class="float-right m-2 mt-10">
         <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-active btn-primary mx-1"
            sec:authorize="isAuthenticated()"
            th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">수정</a>

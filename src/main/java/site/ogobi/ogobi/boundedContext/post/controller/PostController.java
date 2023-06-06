@@ -1,5 +1,6 @@
 package site.ogobi.ogobi.boundedContext.post.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -44,7 +45,32 @@ public class PostController {
         if (like != null && like.getPost()==post){
             isLiked = true;
         }
-        postService.addView(id);
+
+        // 조회수 중복 방지
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("["+ id.toString() +"]")) {
+                this.postService.incleaseView(id);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24); // 쿠키 유효기간 (1일)
+                response.addCookie(oldCookie);
+            }
+        } else {
+            this.postService.incleaseView(id);
+            Cookie newCookie = new Cookie("postView", "[" + id + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24); // 쿠키 유효기간 (1일)
+            response.addCookie(newCookie);
+        }
 
         model.addAttribute("post", post);
         model.addAttribute("isLiked", isLiked);
@@ -104,7 +130,11 @@ public class PostController {
     @PostMapping("/{category}/modify/{id}")
     public String modify(@PathVariable String category, @PathVariable Long id, Principal principal, @Valid PostDto postDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "post/create";
+            StringBuilder errorMessage = new StringBuilder();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMessage.append(error.getDefaultMessage()).append("<br>");
+            }
+            return rq.historyBack(errorMessage.toString());
         }
         this.postService.modify(id, postDto.getSubject(), postDto.getContent(), principal.getName());
         return String.format("redirect:/posts/%s/detail/%s", category, id);

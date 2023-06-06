@@ -13,7 +13,6 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
