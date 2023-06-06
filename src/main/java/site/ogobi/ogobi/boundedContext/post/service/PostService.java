@@ -1,5 +1,8 @@
 package site.ogobi.ogobi.boundedContext.post.service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +17,9 @@ import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,5 +110,11 @@ public class PostService {
         int count = Math.min(sortDate.size(), 10);
 
         return sortDate.subList(0, count);
+    }
+
+    @Transactional
+    public void addView(Long postId) {
+        Post post = getPost(postId);
+        post.addViewCount();
     }
 }

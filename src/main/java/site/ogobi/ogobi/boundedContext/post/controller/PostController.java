@@ -1,5 +1,7 @@
 package site.ogobi.ogobi.boundedContext.post.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,7 +35,7 @@ public class PostController {
     private final LikeService likeService;
 
     @GetMapping("/{category}/detail/{id}")
-    public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto) {
+    public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto, HttpServletRequest request, HttpServletResponse response) {
         Post post = postService.getPost(id);
         Member member = rq.getMember();
         Like like = likeService.findByMemberIdAndPostId(member.getId(), id).orElse(null);
@@ -42,6 +44,7 @@ public class PostController {
         if (like != null && like.getPost()==post){
             isLiked = true;
         }
+        postService.addView(id);
 
         model.addAttribute("post", post);
         model.addAttribute("isLiked", isLiked);

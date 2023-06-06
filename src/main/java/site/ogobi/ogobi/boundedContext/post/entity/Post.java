@@ -40,6 +40,9 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private Category category;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
+
     public enum Category {
         FREE,
         SHARING
@@ -50,5 +53,8 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
+    public void addViewCount() {
+        this.view++;
+    }
 
 }
