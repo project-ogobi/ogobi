@@ -3,6 +3,7 @@ package site.ogobi.ogobi.boundedContext.challenge.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
@@ -23,8 +24,10 @@ public class Challenge extends BaseEntity {
     private LocalDate endDate;
 
     private int targetMoney; // 목표 금액
-    private int usedMoney; // 총 사용금액?
+    private int usedMoney; // 현재까지 사용한 금액
     private int achievementRate; // 달성률
+    @Setter
+    private boolean success;    //  성공 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;

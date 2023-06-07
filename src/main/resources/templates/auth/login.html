@@ -2,7 +2,7 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="container my-3">
-    <form th:action="@{/login}" method="post">
+    <form th:action="@{/auth/login}" method="post">
         <div th:if="${param.error}">
             <div class="alert alert-danger">
                 사용자 아이디 또는 비밀번호가 일치하지 않습니다.
@@ -16,7 +16,11 @@
             <label for="password" class="form-label">비밀번호</label>
             <input type="password" name="password" id="password" class="form-control">
         </div>
-        <button type="submit" class="btn btn-md btn-outline btn-primary">로그인</button>
+        <button type="submit" class="btn btn-md btn-primary">로그인</button>
+
+        <hr style="border: none; border-top: 1px solid darkslategrey; margin: 10px 0;">
+        <a th:href="@{/auth/signup}" style="color: lightblue; text-decoration: underline; margin-right: 10px">회원가입</a>
+        <a th:href="@{/auth/findpw}" style="color: lightblue; text-decoration: underline;">비밀번호 찾기</a>
     </form>
 </div>
 

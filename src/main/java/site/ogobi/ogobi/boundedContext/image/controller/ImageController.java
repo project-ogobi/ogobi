@@ -1,32 +1,59 @@
 package site.ogobi.ogobi.boundedContext.image.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
+import site.ogobi.ogobi.boundedContext.image.response.ImageResponse;
 import site.ogobi.ogobi.boundedContext.image.service.ImageService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ImageController {
+
     private final ImageService imageService;
 
-    @GetMapping("/upload")
-    public String getUpload(){
-        return "upload";
+
+    @Value("${spring.s3.bucket}")
+    private String bucketName;
+
+    @PostMapping(value = "/insert-image")
+    public ResponseEntity<ImageResponse> insertImage(@RequestParam("file") MultipartFile multipartFile) {
+        // https://kr.object.ncloudstorage.com/ogobi/post/UUID.jpg
+
+        List<MultipartFile> multipartFiles = List.of(multipartFile);
+        Image image = imageService.uploadFiles(multipartFiles, "post").get(0);
+
+        ImageResponse imageResponse = ImageResponse.builder()
+                .originalFileName(image.getOriginalFileName())
+                .uploadFileName(image.getUploadFileName())
+                .uploadFilePath(image.getUploadFilePath())
+                .uploadFileUrl(image.getUploadFileUrl())
+                .build();
+        // 200
+        return ResponseEntity.ok(imageResponse);
+    }
+  
+    @DeleteMapping(value ="/delete-image/{id}")
+    public ResponseEntity<Long> deleteImage(@PathVariable Long id){
+
+        Long deleteNum = imageService.deleteUploadedFileById(id);
+        return ResponseEntity.ok(deleteNum);
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadFilesSample(
-        @RequestPart(value = "files") List<MultipartFile> multipartFiles) {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(imageService.uploadFiles(multipartFiles));
+    @PostMapping("/update-image/{id}")
+    public ResponseEntity<String> reloadImage(@RequestParam("file") MultipartFile multipartFiles, @PathVariable Long id){
+        //수정
+        String fileUrl = imageService.updateSpendingHistoryImage(multipartFiles, id);
+        return ResponseEntity.ok(fileUrl);
     }
+
 }

@@ -23,10 +23,9 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 public class SpendingHistory extends BaseEntity {
 
-    private String content; // 작성한 내용 ex)스타벅스커피...
+    private String content; // 지출내역 품목
     private int price; //각 사용금액 ex)4500원
-    private LocalDateTime date;
-    private String description;
+    private String description; // 작성한 내용 ex)스타벅스커피...
 
     @OneToMany(mappedBy = "spendingHistory", cascade = {ALL})
     private List<Image> imageFiles = new ArrayList<>();
@@ -34,23 +33,4 @@ public class SpendingHistory extends BaseEntity {
     @ManyToOne(fetch= FetchType.LAZY)
     private Challenge challenge;
 
-    public void update(String content, String description) {
-        this.content = content;
-        this.description = description;
-    }
-
-    // 연관관계 매핑
-    public void updateImages(List<Image> images) {
-        if (this.imageFiles != null && this.imageFiles.size() > 0) {
-            for (Image imageFile : imageFiles) {
-                imageFile.setSpendingHistory(null);
-            }
-            this.imageFiles.clear();
-        }
-        this.imageFiles = images;
-
-        for (Image image : images) {
-            image.setSpendingHistory(this);
-        }
-    }
 }

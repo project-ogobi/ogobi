@@ -1,3 +1,16 @@
+server:
+  shutdown: graceful
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
 spring:
   servlet:
     multipart:
@@ -7,17 +20,14 @@ spring:
     hidden-method:
       filter:
         enabled: true
-  profiles:
-    active: dev
-    include: secret
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/ogobi__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: root
-    password:
+    url: jdbc:mariadb://172.17.0.1:3306/ogobi__prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: ogobilocal
+    password: 1234
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true

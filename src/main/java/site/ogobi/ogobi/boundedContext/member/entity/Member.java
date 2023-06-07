@@ -30,6 +30,7 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String username; // 진짜 로그인할때 쓰는 아이디
     private String password;
+    private String email;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
