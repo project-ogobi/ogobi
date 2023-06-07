@@ -39,7 +39,7 @@ public class AuthController {
             return "redirect:/auth/signup";
         }
         authService.signUp(signUp);
-        return "redirect:/";
+        return "redirect:/auth/login";
     }
 
 }
