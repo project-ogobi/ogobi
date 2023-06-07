@@ -103,7 +103,7 @@ public class PostService {
 
     public List<Post> resentPostList() {
         List<Post> sortDate = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
-        int count = Math.min(sortDate.size(), 10);
+        int count = Math.min(sortDate.size(), 5);
         return sortDate.subList(0, count);
     }
 
