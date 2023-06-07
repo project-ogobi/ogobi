@@ -107,18 +107,6 @@ public class PostService {
         return sortDate.subList(0, count);
     }
 
-    public void saveSharePost(Challenge challenge) {
-        Post sharePost = Post.builder()
-                .subject(challenge.getChallengeName())
-                .createDate(LocalDateTime.now())
-                .content(challenge.getDescription())
-                .author(challenge.getMember())
-                .category(Post.Category.valueOf("SHARING"))
-                .build();
-
-        postRepository.save(sharePost);
-    }
-
     @Transactional
     public int incleaseView(Long postId) {
         return this.postRepository.incleaseView(postId);

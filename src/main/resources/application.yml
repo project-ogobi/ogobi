@@ -1,3 +1,6 @@
+server:
+  port: 8111
+
 spring:
   servlet:
     multipart:

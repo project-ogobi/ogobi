@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
@@ -23,5 +24,8 @@ public class Like {
     private Member member;
     @ManyToOne(fetch = LAZY)
     private Post post;
+
+    @ManyToOne(fetch = LAZY)
+    private Challenge challenge;
 
 }
