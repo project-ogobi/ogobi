@@ -22,14 +22,10 @@
             </div>
         </div>
         <div class="flex items-center justify-center">
-            <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-2">+ 직접 입력하기</a>
+            <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
 
             <a th:href="@{/posts/share/{id}(id=${challenge.getId})}" class="btn btn-primary btn-outline mx-2">공유하기</a>
         </div>
-        <th:block th:unless="${challenge.hasSpendingHistory}">
-            <div class="text-center">아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
-        </th:block>
-
         <th:block th:if="${challenge.hasSpendingHistory}">
             <div class="flex items-center justify-center" th:each="spendingHistory: ${challenge.getSpendingHistories()}">
                 <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 object-center">
@@ -47,7 +43,7 @@
                             <a th:href="@{/challenges/{id}/{sh_id}/updateForm(id=${challenge.getId}, sh_id=${spendingHistory.getId})}"
                                id="btn-challenge-spendingHistory-update" class="btn btn-sm btn-primary">수정</a>
 
-                            <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
+                            <form href="javascript:;" onsubmit="return confirm('정말로 삭제하시겠습니까?')" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
                                 <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary">삭제</button>
                             </form>
                         </div>
@@ -58,6 +54,5 @@
     </div>
 
 <!-- content 종료 -->
-
 
 </div>

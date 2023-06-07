@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.image.response.ImageResponse;
 import site.ogobi.ogobi.boundedContext.image.service.ImageService;
-import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.util.List;
 
@@ -19,7 +20,6 @@ import java.util.List;
 public class ImageController {
 
     private final ImageService imageService;
-    private final PostService postService;
 
 
     @Value("${spring.s3.bucket}")
@@ -41,4 +41,19 @@ public class ImageController {
         // 200
         return ResponseEntity.ok(imageResponse);
     }
+  
+    @DeleteMapping(value ="/delete-image/{id}")
+    public ResponseEntity<Long> deleteImage(@PathVariable Long id){
+
+        Long deleteNum = imageService.deleteUploadedFileById(id);
+        return ResponseEntity.ok(deleteNum);
+    }
+
+    @PostMapping("/update-image/{id}")
+    public ResponseEntity<String> reloadImage(@RequestParam("file") MultipartFile multipartFiles, @PathVariable Long id){
+        //수정
+        String fileUrl = imageService.updateSpendingHistoryImage(multipartFiles, id);
+        return ResponseEntity.ok(fileUrl);
+    }
+
 }

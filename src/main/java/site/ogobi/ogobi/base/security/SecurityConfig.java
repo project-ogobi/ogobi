@@ -40,20 +40,21 @@ public class SecurityConfig {
                 .requestMatchers(
                         new AntPathRequestMatcher("/**")
                 ).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
+
 
 
         // login 설정
         http
                 .formLogin()
-                .loginPage("/login")    // GET: 로그인 폼을 보여줌
+                .loginPage("/auth/login")    // GET: 로그인 폼을 보여줌
                 .usernameParameter("username")    // 로그인에 필요한 아이디
                 .passwordParameter("password")    // 로그인에 필요한 password 값
                 .defaultSuccessUrl("/");    // 로그인에 성공하면 /로 redirect
         // logout 설정
         http
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/");    // 로그아웃에 성공하면 /로 redirect
 
         // 이외 설정

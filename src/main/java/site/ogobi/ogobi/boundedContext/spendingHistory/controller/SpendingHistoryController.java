@@ -41,6 +41,8 @@ public class SpendingHistoryController {
         // dto 객체 전환
         SpendingHistoryForm spendingHistoryForm = spendingHistoryService.buildSpendingHistoryForm(spendingHistory);
 
+        List<Image> Images = spendingHistory.getImageFiles();
+        model.addAttribute("presentImages", Images);
         model.addAttribute("form", spendingHistoryForm);
         model.addAttribute("cid", challenge_id);
         model.addAttribute("sh_id", sh_id);
@@ -89,8 +91,11 @@ public class SpendingHistoryController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}/{sh_id}/delete")
     public String deleteSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id){
-        spendingHistoryService.delete(sh_id);
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
+        challenge.updateUsedMoney(challenge.getUsedMoney() - spendingHistory.getPrice());
 
+        spendingHistoryService.delete(sh_id);
         return "redirect:/challenges/" + challenge_id;
     }
 }

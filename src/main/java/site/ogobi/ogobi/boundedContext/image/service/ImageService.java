@@ -8,8 +8,10 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import site.ogobi.ogobi.boundedContext.image.entity.Image;
+import site.ogobi.ogobi.boundedContext.image.repository.ImageRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class ImageService {
 
     private final AmazonS3Client amazonS3Client;
+    private final ImageRepository imageRepository;
 
     @Value("${spring.s3.bucket}")
     private String bucketName;
@@ -99,5 +102,51 @@ public class ImageService {
             e.printStackTrace();
             return "error occurred";
         }
+    }
+
+    @Transactional
+    public Long deleteUploadedFileById(Long id) {
+
+        String filePath = imageRepository.findById(id).orElseThrow().getUploadFilePath();
+
+        deleteUploadedFile(filePath);
+
+        imageRepository.deleteById(id);
+
+        return id;
+    }
+
+    @Transactional
+    public String updateSpendingHistoryImage(MultipartFile multipartFile, Long id) {
+
+        Image image = imageRepository.findById(id).orElseThrow();
+
+        Long challengeId = image.getSpendingHistory().getChallenge().getId();
+
+        String filePath = "challenge/" + challengeId + "/images";
+
+        Image newImage = uploadFiles(List.of(multipartFile), filePath).get(0);
+
+        updateImage(image, newImage);
+
+        imageRepository.save(image);
+
+        return image.getUploadFileUrl();
+    }
+
+    private Image updateImage(Image image, Image newImage) {
+        if (newImage.getOriginalFileName() != null) {
+            image.setOriginalFileName(newImage.getOriginalFileName());
+        }
+        if (newImage.getUploadFileName() != null){
+            image.setUploadFileName(newImage.getUploadFileName());
+        }
+        if (newImage.getUploadFilePath() != null){
+            image.setUploadFilePath(newImage.getUploadFilePath());
+        }
+        if (newImage.getUploadFileUrl() != null){
+            image.setUploadFileUrl(newImage.getUploadFileUrl());
+        }
+        return image;
     }
 }

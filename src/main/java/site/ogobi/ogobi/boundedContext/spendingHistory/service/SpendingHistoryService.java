@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SpendingHistoryService {
@@ -27,7 +28,6 @@ public class SpendingHistoryService {
 
     @Transactional
     public void create(Challenge challenge, SpendingHistoryForm form, List<Image> images){
-
         challenge.updateUsedMoney(challenge.getUsedMoney() + form.getItemPrice());
 
         SpendingHistory spendingHistory = SpendingHistory.builder()

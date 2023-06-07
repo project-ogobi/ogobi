@@ -24,7 +24,7 @@ public class Challenge extends BaseEntity {
     private LocalDate endDate;
 
     private int targetMoney; // 목표 금액
-    private int usedMoney; // 총 사용금액?
+    private int usedMoney; // 현재까지 사용한 금액
     private int achievementRate; // 달성률
     @Setter
     private boolean success;    //  성공 여부
