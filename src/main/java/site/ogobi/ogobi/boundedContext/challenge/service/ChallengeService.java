@@ -2,8 +2,11 @@ package site.ogobi.ogobi.boundedContext.challenge.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
@@ -11,13 +14,15 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
-
+    private final Rq rq;
     private final ChallengeRepository challengeRepository;
 
     @Transactional
@@ -77,5 +82,24 @@ public class ChallengeService {
         if(Objects.equals(member.getId(), challenge.getMember().getId())){
             challengeRepository.delete(challenge);
         }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public boolean isSuccess(Long id){
+        LocalDateTime today = LocalDateTime.now();
+        Challenge challenge = challengeRepository.findById(id).orElse(null);
+
+        if (challenge.getEndDate().isAfter(ChronoLocalDate.from(today))){
+            challenge.setSuccess(true);
+        }
+        return false;
+    }
+
+    public List<Challenge> findAll() {
+        return challengeRepository.findAll();
+    }
+
+    public List<Challenge> findByMember(Member member) {
+        return challengeRepository.findByMember(member);
     }
 }

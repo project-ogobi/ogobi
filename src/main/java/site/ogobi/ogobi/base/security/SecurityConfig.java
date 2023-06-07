@@ -42,6 +42,7 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().permitAll();
 
+
         // login 설정
         http
                 .formLogin()
