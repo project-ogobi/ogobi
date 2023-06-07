@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,4 +42,19 @@ public class ImageController {
         // 200
         return ResponseEntity.ok(imageResponse);
     }
+  
+    @DeleteMapping(value ="/delete-image/{id}")
+    public ResponseEntity<Long> deleteImage(@PathVariable Long id){
+
+        Long deleteNum = imageService.deleteUploadedFileById(id);
+        return ResponseEntity.ok(deleteNum);
+    }
+
+    @PostMapping("/update-image/{id}")
+    public ResponseEntity<String> reloadImage(@RequestParam("file") MultipartFile multipartFiles, @PathVariable Long id){
+        //수정
+        String fileUrl = imageService.updateSpendingHistoryImage(multipartFiles, id);
+        return ResponseEntity.ok(fileUrl);
+    }
+
 }

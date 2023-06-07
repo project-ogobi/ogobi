@@ -1,6 +1,13 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+</head>
+
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
 <!--    <form role="form" th:action="@{/challenges/{id}/{sh_id}(id=${cid}, sh_id=${sh_id})}" method="post" th:object="${form}">-->
     <form th:action method="post" enctype="multipart/form-data" th:object="${form}">
@@ -26,11 +33,91 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
-                <div>파일<input type="file" name="file" multiple="multiple"></div>
+                <!-- 현재 이미지 -->
+                <div>현재 첨부된 이미지</div>
+                <div>
+                    <div th:each="image, imageIndex: ${presentImages}" class="my-3">
+                        <div class="card w-96 bg-base-100 shadow-xl">
+                            <div class="card-body">
+                                <img th:src="${image.uploadFileUrl}" th:id="'image-' + ${imageIndex.index}">
+                                <div class="card-actions justify-end">
+                                    <input type="file" th:id="'image-file-' + ${imageIndex}" style="display: none" th:attr="onchange=|uploadImage(this, '${imageIndex.index}', '${image.id}')|">
+                                    <label th:for="'image-file-' + ${imageIndex}" class="btn">재업로드</label>
+                                    <button type="button" class="btn" th:attr="onclick=|deleteImage('${imageIndex.index}', '${image.id}')|">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script th:inline="javascript">
+                    /* 타임리프 변수를 JavaScript 변수로 전달하기 위해 th:inline 속성을 사용합니다. */
+
+                    function uploadImage(input, index, id) {
+                        var file = input.files[0]; // 선택한 파일을 가져옵니다.
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+
+                        // 파일 업로드 AJAX 요청을 보냅니다.
+                        var formData = new FormData();
+                        formData.append('file', file); // FormData에 파일을 추가합니다.
+                        formData.append('index', index);
+                        formData.append('id', id);
+
+                        $.ajax({
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            url: '/update-image/' + id, // 파일 업로드 처리를 수행하는 URL로 수정해야 합니다.
+                            method: 'POST', // 요청 방식을 POST로 설정합니다.
+                            data: formData, // FormData를 전달합니다.
+                            enctype : 'multipart/form-data',
+                            processData : false,
+                            contentType: false,    // 필수
+                            cache: false,
+                            success: function(response) {
+                                // 요청이 성공적으로 처리되면, 새로운 이미지 URL을 받아와서 화면에 업데이트합니다.
+                                $('#image-' + index).attr('src', response);
+                            },
+                            error: function(xhr, status, error) {
+                                // 요청이 실패한 경우 에러 처리를 수행합니다.
+                                console.log(error);
+                            }
+                        });
+                    }
+
+                    function deleteImage(index, id) {
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+                        // 이미지 삭제 AJAX 요청을 보냅니다.
+                        $.ajax({
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            url: '/delete-image/' + id,
+                            type: 'DELETE',
+                            contentType: "application/json; charset=utf-8",
+                            success: function(response) {
+                                // 요청이 성공적으로 처리되면, 해당 이미지를 화면에서 제거합니다.
+                                $('#image-' + index).closest('.card').remove();
+                            },
+                            error: function(xhr, status, error) {
+                                // 요청이 실패한 경우 에러 처리를 수행합니다.
+                                console.log(error);
+                            }
+                        });
+                    }
+                </script>
+
+                <div>새 이미지 추가하기</div>
+                <div>
+                    <input type="file" name="file" multiple="multiple">
+                </div>
 
             </div>
         </div>
 
+        <!-- TODO: 등록하기 버튼을 눌렀을때 업데이트가 반영이 안됨. form으로 변경점을 안넘겨주기때문. 폼에서 변경된 점을 넘겨주어야함.-->
         <div class = "flex justify-end">
             <button type="submit" name="submit" class="btn btn-outline btn-primary">수정하기</button>
         </div>
