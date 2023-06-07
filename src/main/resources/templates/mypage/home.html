@@ -1,0 +1,74 @@
+<html layout:decorate="~{template}">
+
+
+<div layout:fragment="content" class="overflow-x-auto">
+    <h1 class="font-semibold p-3 text-center text-lg">My Page</h1>
+    <!-------------- 프로필 -------------->
+    <div class="flex-col flex justify-center items-center">
+        <div class="card card-compact w-3/5 bg-indigo-200 shadow-lg mb-8 p-6">
+            <h1 class="font-semibold p-2 text-center text-lg">내 정보</h1>
+            <div class="text-center mb-4 text-gray-600" th:text="|${member.nickname}님 안녕하세요.|"></div>
+
+<!-------------------- 메뉴 -------------------->
+            <div class="flex-col flex">
+                <div class="collapse bg-indigo-100">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        지출 그래프
+                    </div>
+                    <div class="collapse-content bg-indigo-50">
+                        <div class="font-semibold">내용물</div>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-100">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        획득한 칭호
+                    </div>
+                    <div class="collapse-content bg-indigo-50">
+                        <div class="font-semibold">내용물</div>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-100">
+                    <input type="checkbox"/>
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        도전중인 챌린지
+                    </div>
+                    <div class="collapse-content bg-indigo-50">
+                        <div th:each="challenge : ${runningChallengeList}" class="mt-2 p-1">
+<!--                            <div class="font-semibold" th:if="${#lists.size(successList)==0}">진행 중인 챌린지가 없습니다.</div>-->
+                            <a th:text="${challenge.challengeName}" th:href="@{/challenges/{id}(id=${challenge.id})}" class="font-semibold text-indigo-900">챌린지 제목</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-100">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        달성한 챌린지
+                    </div>
+                    <div class="collapse-content bg-indigo-50">
+                        <div th:each="challenge : ${successList}">
+                            <div class="font-semibold" th:if="${#lists.size(successList)==0}">완료된 챌린지가 없습니다.</div>
+                            <div class="font-semibold" th:text="${challenge.challengeName}">제목</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse bg-indigo-100">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-xl font-medium font-semibold">
+                        설정
+                    </div>
+                    <div class="collapse-content bg-indigo-50">
+                        <div class="form-control">
+                            <label class="cursor-pointer label mt-2" th:onclick="darkMode()">
+                                <span class="label-text font-semibold">다크모드</span>
+                                <input type="checkbox" class="toggle toggle-primary" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

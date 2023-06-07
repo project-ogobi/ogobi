@@ -33,10 +33,12 @@ public class CommentController {
     @PostMapping("/{category}/detail/{id}")
     public String createComment(Model model, @PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult, Principal principal) {
         Post post = this.postService.getPost(id);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", post);
-            return "post/detail";
+            return rq.historyBack("내용을 적어주세요.");
         }
+
         Member member = this.memberService.getMember(principal.getName());
         this.commentService.create(post, commentDto.getContent(), member);
 
@@ -69,7 +71,7 @@ public class CommentController {
         }
 
         if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+            return rq.historyBack("수정 권한이 없습니다.");
         }
 
         commentDto.setContent(comment.getContent());
@@ -87,7 +89,7 @@ public class CommentController {
         }
 
         if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+            return rq.historyBack("수정 권한이 없습니다.");
         }
 
         commentService.modifyComment(comment, commentDto.getContent());

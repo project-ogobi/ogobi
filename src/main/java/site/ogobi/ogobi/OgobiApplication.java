@@ -11,5 +11,4 @@ public class OgobiApplication {
     public static void main(String[] args) {
         SpringApplication.run(OgobiApplication.class, args);
     }
-
 }
