@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,9 @@ public class PostController {
     private final LikeService likeService;
     private final ChallengeService challengeService;
 
+
     @GetMapping("/{category}/detail/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto, HttpServletRequest request, HttpServletResponse response) {
         Post post = postService.getPost(id);
         Member member = rq.getMember();
@@ -77,6 +80,10 @@ public class PostController {
 
         model.addAttribute("post", post);
         model.addAttribute("isLiked", isLiked);
+
+        if (category.equals("sharing")){
+            return "post/share";
+        }
         return "post/detail";
     }
 
@@ -91,13 +98,26 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/create")
     public String showCreate(Model model, @PathVariable String category, PostDto postDto) {
+        Member member = rq.getMember();
+        List<Challenge> challengeList = challengeService.findByMember(member);
+
+        if (challengeList.isEmpty()){
+            return rq.historyBack("공유할 챌린지가 없습니다.");
+        }
+
         model.addAttribute("category", category);
+        model.addAttribute("challengeList", challengeList);
+
+        if (category.equals("sharing")){
+            return "post/share_create";
+        }
         return "post/create";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/create")
     public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category, Principal principal) {
+
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -108,6 +128,7 @@ public class PostController {
         Post.Category postCategory = getCategory(category);
         Member member = this.memberService.getMember(principal.getName());
         this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory, member);
+
         return String.format("redirect:/posts/%s/list", category);
     }
 
@@ -160,13 +181,4 @@ public class PostController {
         return "post/main";
     }
 
-    @PostMapping("/share/{id}")
-    public String sharing(Model model, @PathVariable Long id){
-        Challenge challenge = challengeService.findChallengeById(id).orElse(null);
-
-        postService.saveSharePost(challenge);
-
-        model.addAttribute("challenge", challenge);
-        return "post/share";
-    }
 }

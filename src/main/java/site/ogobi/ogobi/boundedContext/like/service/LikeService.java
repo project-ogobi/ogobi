@@ -33,4 +33,5 @@ public class LikeService {
         return likeRepository.findByMemberIdAndPostId(memberId, postId);
     }
 
+
 }

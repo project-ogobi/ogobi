@@ -15,6 +15,7 @@ import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +32,11 @@ public class LikeController {
     public String like(@PathVariable String category, @PathVariable Long id, Principal principal){
         String memberName = principal.getName();
         Member member = memberService.findByUsername(memberName).orElse(null);
+
+        if(member==null){
+            return rq.historyBack("로그인을 하고 이용해주세요.");
+        }
+
         Post post = postService.findById(id).orElse(null);
 
         if(member.getUsername().equals(post.getAuthor().getUsername())){    //본인 글에는 추천을 할 수 없다.

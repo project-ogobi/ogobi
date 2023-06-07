@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
@@ -22,5 +23,7 @@ public class Comment extends BaseEntity {
     private Member author;
     @ManyToOne
     private Post post;
+    @ManyToOne
+    private Challenge challenge;
 
 }
