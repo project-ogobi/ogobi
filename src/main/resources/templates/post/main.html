@@ -6,15 +6,23 @@
     <h1 class="font-semibold p-3 text-center text-lg">인기글</h1>
 
     <!--   카드 시작 -->
-    <div class="carousel w-full h-48">
+    <div class="carousel w-full mb-3">
         <div th:id="${'item' + i}" class="carousel-item w-full flex justify-center" th:each="post, i: ${bestPosts}">
-            <div class="bg-indigo-200 rounded-lg w-5/6 h-5/6 p-4 flex-col flex">
-                <div class="font-semibold text-2xl mb-4" th:text="${post.subject}">제목</div>
-                <span class="h-16"
-                      th:utext="${#strings.length(post.content) &gt; 90 ? #strings.substring(post.content, 0, 90) + '...' : post.content}">내용</span>
-                <div class="items-end justify-end text-right"><a
-                        th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}">보러가기>></a>
+            <div class="bg-indigo-200 rounded-lg w-5/6 p-4 flex-col flex">
+                <div class="mb-1 px-3">
+                    <div class="badge badge-sm badge-ghost mb-1" th:text="|TOP ${i.count}|"></div>
+                    <div class="flex justify-between font-semibold text-lg tracking-wider">
+                        <a th:text="${post.subject}" th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}"></a>
+                    </div>
                 </div>
+                <div class="flex justify-between font-semibold text-indigo-400 px-3">
+                    <djv th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</djv>
+                    <span class="text-indigo-500" style="float: right">
+                            <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
+                            <span th:text=${#lists.size(post.like)}>추천수</span>
+                    </span>
+                </div>
+
             </div>
         </div>
     </div>
@@ -29,7 +37,7 @@
 
     <!-- 선 추가 -->
     <hr class="my-5 border-gray-300">
-    <h1 class="font-semibold text-center text-lg mb-3">최근 게시글</h1>
+    <h1 class="font-semibold text-center text-lg mb-3">최신 게시글</h1>
     <style>
         .collapse:hover {
             background-color: rgba(0, 0, 0, 0.05);
@@ -37,11 +45,34 @@
     </style>
     <div class="collapse collapse-open border border-base-300 bg-base-100 rounded-box mb-1"
          th:each="post : ${resentPostList}">
-        <a class="collapse-title text-xl font-medium"
-           th:text="|[${post.getCategory().toString().toLowerCase() eq 'free' ? '자유 게시판' : '공유 게시판'}] ${post.subject}|"
-           th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}"></a>
-        <div class="collapse-content" th:utext="${post.content}"></div>
+        <div class="collapse-title pb-1 pr-4">
+            <h5 class="flex justify-between items-center">
+                <div class="text-gray-400" th:text="${post.getCategory().toString().toLowerCase() eq 'free' ? '자유 게시판' : '공유 게시판'}"></div>
+                <div class="text-gray-400 text-xs" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+            </h5>
+            <div class="flex items-center">
+
+                <a class="font-semibold text-lg tracking-wider" th:text="${post.subject}"
+                   th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}"></a><span>&nbsp;&nbsp;</span>
+                <span class="badge badge-primary badge-outline badge-sm">NEW</span>
+            </div>
+
+        </div>
+        <div class="collapse-content">
+            <h5 class="font-semibold text-sm text-gray-500" th:if="${post.author != null}">
+                <span th:text="${post.author.nickname}">작성자</span>
+                <span style="float: right">
+                    <i class="fa-solid fa-eye"></i><span>&nbsp;</span>
+                    <span th:text="${post.view}">조회수</span><span>&nbsp;&nbsp;&nbsp;</span>
+                    <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
+                    <span th:text=${#lists.size(post.like)}>추천수</span><span>&nbsp;&nbsp;&nbsp;</span>
+                    <i class="fa-solid fa-comment"></i><span>&nbsp;</span>
+                    <span th:text="${#lists.size(post.comments)}">댓글수</span>
+                </span>
+            </h5>
+        </div>
     </div>
+
     <!-- 게시글이 없을 때 메시지 출력 -->
     <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-xl mb-2 p-5" th:if="${#lists.isEmpty(resentPostList)}">
         게시글이 없습니다.

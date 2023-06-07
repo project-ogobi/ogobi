@@ -34,7 +34,7 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private List<Comment> comments;
-  
+
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL})
     private Set<Like> like;
 
