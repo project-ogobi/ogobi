@@ -34,7 +34,6 @@
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
                 <!-- 현재 이미지 -->
-                <!-- TODO: 이미지 추가 버튼 클릭 후 삭제 시 오류발생해결-->
                 <div>
                     <table>
                         <tbody id="image-container"  class="my-3">
@@ -44,7 +43,7 @@
                                     <div class="card-body">
                                         <img th:src="${image.uploadFileUrl}" th:id="${image.getId()}" alt="existingImage">
                                         <div class="card-actions justify-end">
-                                            <input type="file" th:id="'image-file-' + ${imageIndex}" style="display: none">
+                                            <input type="file" th:id="'image-file-' + ${imageIndex}" th:attr="onchange=|reloadImage(this, '${imageIndex.index}', '${image.id}')|" style="display: none">
                                             <label th:for="'image-file-' + ${imageIndex}" class="btn">파일선택</label>
                                             <button type="button" class="btn" th:attr="onclick=|deleteImage('${imageIndex.index}', '${image.id}')|">삭제</button>
                                         </div>
@@ -88,7 +87,8 @@
                         newImageInput.type = 'file';
                         newImageInput.style.display = 'none';
                         newImageInput.id = 'image-file-' + imageIndex; // id 설정
-                        newImageInput.name = 'images'
+                        newImageInput.name = 'images[]'
+                        newImageInput.setAttribute('data-index', imageIndex.toString()); // 이미지 인덱스를 data-index 속성으로 추가
                         newImageInput.addEventListener('change', function(event) {
                             var file = event.target.files[0];
                             if (file) {
@@ -97,7 +97,7 @@
                                     newImage.src = reader.result;
                                 };
                                 reader.readAsDataURL(file);
-                                formData.append('images', file, file.name); // formData에 이미지 추가
+                                formData.append('images[' + newImageInput.getAttribute('data-index').toString() + ']', file, file.name);
                             }
                         });
 
@@ -112,9 +112,8 @@
                         newImageDeleteButton.className = 'btn';
                         newImageDeleteButton.textContent = '삭제';
                         newImageDeleteButton.addEventListener('click', function() {
-                            // 이미지 삭제
-                            formData.delete('images');
-                            // card-body 삭제
+                            var imageName = newImageInput.name;
+                            formData.delete('images[' + newImageInput.getAttribute('data-index').toString() + ']');
                             newImageCardBody.parentNode.parentNode.remove();
                         });
 
@@ -143,7 +142,26 @@
                         const header = $("meta[name='_csrf_header']").attr('content');
                         const token = $("meta[name='_csrf']").attr('content');
 
-                        var fileInput = document.querySelector("input[type=file]");
+                        var imagesCount = imageIndex + 1;
+                        console.log(imagesCount);
+                        var combinedImages = [];
+
+                        for (var i = 0; i < imagesCount; i++) {
+                            var imageFiles = formData.getAll('images[' + i + ']');
+
+                            if (imageFiles.length > 1) {
+                                // Combine multiple image files into a single array
+                                combinedImages = combinedImages.concat(imageFiles);
+                            } else if (imageFiles.length === 1) {
+                                // If only one image file exists, add it directly to the combined array
+                                combinedImages.push(imageFiles[0]);
+                            }
+                        }
+
+                        // Append the combined images to the 'images' field in formData
+                        for (var j = 0; j < combinedImages.length; j++) {
+                            formData.append('images', combinedImages[j]);
+                        }
 
                         // 기존 이미지 id을 FormData에 추가
                         var existingImages = document.querySelectorAll('img[alt="existingImage"]');
@@ -186,7 +204,7 @@
                 <script th:inline="javascript">
                     /* 타임리프 변수를 JavaScript 변수로 전달하기 위해 th:inline 속성을 사용합니다. */
 
-                    function uploadImage(input, index, id) {
+                    function reloadImage(input, index, id) {
                         var file = input.files[0]; // 선택한 파일을 가져옵니다.
                         const header = $("meta[name='_csrf_header']").attr('content');
                         const token = $("meta[name='_csrf']").attr('content');
@@ -210,7 +228,7 @@
                             cache: false,
                             success: function(response) {
                                 // 요청이 성공적으로 처리되면, 새로운 이미지 URL을 받아와서 화면에 업데이트합니다.
-                                $('#image-' + index).attr('src', response);
+                                $('#' + id).attr('src', response);
                             },
                             error: function(xhr, status, error) {
                                 // 요청이 실패한 경우 에러 처리를 수행합니다.
@@ -232,7 +250,8 @@
                             contentType: "application/json; charset=utf-8",
                             success: function(response) {
                                 // 요청이 성공적으로 처리되면, 해당 이미지를 화면에서 제거합니다.
-                                $('#image-' + index).closest('.card').remove();
+                                var cardElement = document.getElementById(id).closest('.card');
+                                cardElement.remove();
                             },
                             error: function(xhr, status, error) {
                                 // 요청이 실패한 경우 에러 처리를 수행합니다.

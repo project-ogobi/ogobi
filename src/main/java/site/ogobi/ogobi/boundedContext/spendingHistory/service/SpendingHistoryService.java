@@ -109,4 +109,14 @@ public class SpendingHistoryService {
 
         spendingHistoryRepository.delete(item);
     }
+
+    @Transactional
+    public void updateWithoutNewImage(SpendingHistoryForm form, Long shId, List<String> listId) {
+        SpendingHistory item = findSpendingHistoryById(shId).orElseThrow();
+        List<Image> updateImages = item.getImageFiles().stream()
+                .filter(image -> listId.contains(String.valueOf(image.getId())))
+                .collect(Collectors.toList());
+
+        mappingImagesAndHistoryWithForm(item, form, updateImages);
+    }
 }
