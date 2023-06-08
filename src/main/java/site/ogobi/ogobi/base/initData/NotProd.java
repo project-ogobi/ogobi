@@ -1,10 +1,8 @@
 package site.ogobi.ogobi.base.initData;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import site.ogobi.ogobi.base.crypt.PasswordEncoder;
 import site.ogobi.ogobi.boundedContext.auth.entity.SignUp;
 import site.ogobi.ogobi.boundedContext.auth.service.AuthService;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
@@ -23,9 +21,6 @@ import java.util.List;
 @Configuration
 //@Profile({"dev", "test"})
 public class NotProd {
-
-    @Autowired
-    public PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner initData(

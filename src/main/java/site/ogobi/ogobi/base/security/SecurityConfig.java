@@ -1,27 +1,22 @@
 package site.ogobi.ogobi.base.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableWebSecurity(debug = true)
 @EnableMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final PrincipalOauthUserService principalOauthUserService;
+    private final PrincipalService principalService;
 
     // 로그인 인증에 상관없이 가져와야 할 페이지들
     @Bean
@@ -33,15 +28,14 @@ public class SecurityConfig {
 
     // 권한에 따라 허용하는 url 설정
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // /login, /signup 페이지는 모두 허용, 다른 페이지는 인증된 사용자만 허용
         http
                 .authorizeHttpRequests()
                 .requestMatchers(
                         new AntPathRequestMatcher("/**")
                 ).permitAll()
-                .anyRequest().permitAll();
-
+                .anyRequest().authenticated();
 
         // login 설정
         http
@@ -50,15 +44,20 @@ public class SecurityConfig {
                 .usernameParameter("username")    // 로그인에 필요한 아이디
                 .passwordParameter("password")    // 로그인에 필요한 password 값
                 .defaultSuccessUrl("/");    // 로그인에 성공하면 /로 redirect
+        // 소셜로그인 설정
+        http
+                .oauth2Login()
+                .loginPage("/auth/login")
+                .defaultSuccessUrl("/")
+                .userInfoEndpoint()
+                .userService(principalOauthUserService); // 소셜 로그인이 완료된 뒤의 소셜 회원의 엑세스 토큰, 사용자 정보를 받아옴
         // logout 설정
         http
                 .logout()
                 .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/");    // 로그아웃에 성공하면 /로 redirect
-
-        // 이외 설정
         http
-                .userDetailsService(userDetailService());
+                .userDetailsService(principalService);
 
         return http.build();
 
@@ -68,36 +67,6 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration ac) throws Exception {
         return ac.getAuthenticationManager();
-    }
-
-    // 임시 테스트 데이터
-    @Bean
-    public UserDetailsService userDetailService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        String rawPassword = "test1";
-        String encryptedPassword = new BCryptPasswordEncoder().encode(rawPassword);
-
-        UserDetails user = User.withUsername("test1")
-                .password(encryptedPassword)
-                .roles("ADMIN")
-                .build();
-        manager.createUser(user);
-
-        String rawPassword2 = "1234";
-        String encryptedPassword2 = new BCryptPasswordEncoder().encode(rawPassword2);
-        UserDetails user2 = User.withUsername("user1")
-                .password(encryptedPassword2)
-                .roles("ADMIN")
-                .build();
-        manager.createUser(user2);
-
-        return manager;
-    }
-
-    // Password 암호화 방식 설정
-    @Bean
-    public PasswordEncoder passwordEncoderConfig() {
-        return new BCryptPasswordEncoder();
     }
 
 }

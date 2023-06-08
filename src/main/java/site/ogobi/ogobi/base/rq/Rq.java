@@ -1,5 +1,6 @@
 package site.ogobi.ogobi.base.rq;
 
+import site.ogobi.ogobi.base.security.PrincipalDetails;
 import site.ogobi.ogobi.base.ut.Ut;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
@@ -25,7 +26,7 @@ public class Rq {
     private Locale locale;
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
-    private final User user;
+    private final PrincipalDetails principalDetails;
     private Member member = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
     public Rq(MemberService memberService, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
@@ -37,10 +38,10 @@ public class Rq {
         // 현재 로그인한 회원의 인증정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication.getPrincipal() instanceof User) {
-            this.user = (User) authentication.getPrincipal();
+        if (authentication.getPrincipal() instanceof PrincipalDetails) {
+            this.principalDetails = (PrincipalDetails) authentication.getPrincipal();
         } else {
-            this.user = null;
+            this.principalDetails = null;
         }
     }
 
@@ -53,7 +54,7 @@ public class Rq {
 
     // 로그인 되어 있는지 체크
     public boolean isLogin() {
-        return user != null;
+        return principalDetails != null;
     }
 
     // 로그아웃 되어 있는지 체크
@@ -67,7 +68,7 @@ public class Rq {
 
         // 데이터가 없는지 체크
         if (member == null) {
-            member = memberService.findByUsername(user.getUsername()).orElseThrow();
+            member = memberService.findByUsername(principalDetails.getUsername()).orElseThrow();
         }
 
         return member;

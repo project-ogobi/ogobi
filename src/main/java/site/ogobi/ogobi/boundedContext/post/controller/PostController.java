@@ -38,6 +38,7 @@ public class PostController {
     private final LikeService likeService;
     private final ChallengeService challengeService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/detail/{id}")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto, HttpServletRequest request, HttpServletResponse response) {
         Post post = postService.getPost(id);
