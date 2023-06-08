@@ -41,14 +41,21 @@ public class SpendingHistoryService {
         mappingImagesAndHistoryWithForm(spendingHistory, form, images);
         spendingHistoryRepository.save(spendingHistory);
     }
-    private void mappingImagesAndHistoryWithForm(SpendingHistory item, SpendingHistoryForm form, List<Image> images){
+    @Transactional
+    public void mappingImagesAndHistoryWithForm(SpendingHistory item, SpendingHistoryForm form, List<Image> images){
+        int presentUsedMoney = item.getChallenge().getUsedMoney();
+        int updatedUsedMoney = presentUsedMoney - item.getPrice() + form.getItemPrice();
+
         item.setContent(form.getItemName());
+        item.setPrice(form.getItemPrice());
         item.setDescription(form.getDescription());
 
         item.setImageFiles(images);
         for (Image image : images) {
             image.setSpendingHistory(item);
         }
+
+        item.getChallenge().updateUsedMoney(updatedUsedMoney);
     }
 
     public Optional<SpendingHistory> findSpendingHistoryById(Long id) {
