@@ -11,14 +11,6 @@
 </head>
 <body>
 
-<script>
-    function choice(){
-        let choice= document.getElementById('choice');
-        let list = document.getElementById('list');
-
-        choice.innerHTML = list.text;
-    }
-</script>
 
 <div layout:fragment="content">
     <h1 class="font-semibold p-3 text-center">
@@ -33,17 +25,10 @@
                 <label for="subject" class="form-label my-3">제목</label>
                 <input type="text" placeholder="제목을 입력해주세요." th:field="*{subject}" class="input input-bordered input-md w-full" />
             </div>
-            <div class="dropdown">
-                <label tabindex="0" class="btn btn-primary mt-2">나의 챌린지 목록</label>
-                <ul tabindex="0" class="dropdown-content menu p-1 shadow bg-base-100 rounded-box w-52">
-                    <div th:each="challenge : ${challengeList}" class="p-2">
-                        <button id="list" th:text="${challenge.challengeName}" onclick="choice()">챌린지</button>
-                    </div>
-                </ul>
-                <span id="choice" class="text-gray-600">
-                    공유할 챌린지를 선택해주세요.
-                </span>
-            </div>
+            <select th:field="*{challengeId}" class="select select-bordered w-full max-w-xs mt-2">
+                <option value="" selected>나의 챌린지 목록</option>
+                    <option th:each="challenge : ${challengeList}" th:text="${challenge.challengeName}" th:value="${challenge.id}">챌린지</option>
+            </select>
             <div class="flex flex-col">
                 <label for="content" class="form-label my-3">내용</label>
                 <textarea class="summernote" th:field="*{content}"></textarea>
