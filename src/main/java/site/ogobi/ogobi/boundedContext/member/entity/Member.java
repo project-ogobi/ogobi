@@ -31,6 +31,8 @@ public class Member extends BaseEntity {
     private String username; // 진짜 로그인할때 쓰는 아이디
     private String password;
     private String email;
+    private String providerType; // 어떤 OAuth인지 (local, kakao, naver...)
+    private String provideId; // 해당 OAuth의 key(ID)
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")

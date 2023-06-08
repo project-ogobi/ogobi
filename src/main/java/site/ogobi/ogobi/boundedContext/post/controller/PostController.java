@@ -42,6 +42,7 @@ public class PostController {
     private final ChallengePostRepository challengePostRepository;
 
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/detail/{id}")
     @PreAuthorize("isAuthenticated()")
     public String showPost(Model model, @PathVariable String category, @PathVariable Long id, HttpServletRequest request, HttpServletResponse response, PostDto postDto, CommentDto commentDto) {

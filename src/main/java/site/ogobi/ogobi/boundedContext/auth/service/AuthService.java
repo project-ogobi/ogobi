@@ -1,9 +1,9 @@
 package site.ogobi.ogobi.boundedContext.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.ogobi.ogobi.base.crypt.PasswordEncoder;
 import site.ogobi.ogobi.boundedContext.auth.entity.SignUp;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
@@ -25,15 +25,20 @@ public class AuthService {
 //            throw new IllegalArgumentException();
             return;
         }
-        String encodedPassword = passwordEncoder.encrypt(signUp.getPassword());
+        String encodedPassword = passwordEncoder.encode(signUp.getPassword());
 
         Member member = Member.builder()
                 .nickname(signUp.getNickname())
                 .username(signUp.getLoginId())
                 .password(encodedPassword)
                 .email(signUp.getEmail())
+                .providerType("Local") // 일반 회원가입 회원
                 .build();
         memberRepository.save(member);
     }
-}
 
+    public Optional<Member> findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
+
+}
