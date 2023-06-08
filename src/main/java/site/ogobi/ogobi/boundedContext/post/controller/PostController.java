@@ -82,6 +82,7 @@ public class PostController {
         model.addAttribute("isLiked", isLiked);
 
         if (category.equals("sharing")){
+//            model.addAttribute("challenge", );
             return "post/share";
         }
         return "post/detail";
