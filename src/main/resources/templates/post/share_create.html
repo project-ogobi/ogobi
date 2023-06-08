@@ -1,0 +1,99 @@
+<html layout:decorate="~{template}">
+
+
+<head>
+    <!-- summernote -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.js"></script>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+</head>
+<body>
+
+
+<div layout:fragment="content">
+    <h1 class="font-semibold p-3 text-center">
+        <script>document.write(window.location.href.includes('create') ? '게시글 등록' : '게시글 수정');</script>
+    </h1>
+    <form th:object="${postDto}" method="post">
+        <!-- CSRF 토큰 추가 -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <div class="w-11/12 mx-auto center">
+            <div class="flex flex-col">
+                <label for="subject" class="form-label my-3">제목</label>
+                <input type="text" placeholder="제목을 입력해주세요." th:field="*{subject}" class="input input-bordered input-md w-full" />
+            </div>
+            <select th:field="*{challengeId}" class="select select-bordered w-full max-w-xs mt-2">
+                <option value="" selected>나의 챌린지 목록</option>
+                    <option th:each="challenge : ${challengeList}" th:text="${challenge.challengeName}" th:value="${challenge.id}">챌린지</option>
+            </select>
+            <div class="flex flex-col">
+                <label for="content" class="form-label my-3">내용</label>
+                <textarea class="summernote" th:field="*{content}"></textarea>
+                <script>
+                    $('.summernote').summernote({
+                        height: 500,
+                        minHeight : null,
+                        maxHeight : null,
+                        lang: "ko-KR",
+                        toolbar: [
+                            // [groupName, [list of button]]
+                            ['fontname', ['fontname']],
+                            ['fontsize', ['fontsize']],
+                            ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+                            ['color', ['forecolor','color']],
+                            ['table', ['table']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['height', ['height']],
+                            ['insert',['picture']],
+                            ['view', ['codeview', 'help']]
+                        ],
+                        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+                        fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+                        // 이미지 첨부
+                        callbacks:{
+                            onImageUpload: function(files){
+                                sendFile(files[0], this);
+                            }
+                        }
+                    });
+                    function sendFile(file, editor){
+                        const data = new FormData();
+                        data.append("file", file);
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+
+                        $.ajax({
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            data : data,
+                            type : "POST",
+                            url : "/insert-image",
+                            enctype : 'multipart/form-data',
+                            processData : false,
+                            contentType: false,    // 필수
+                            cache: false,
+                            success : function(image) {
+                                $(editor).summernote('insertImage', image.uploadFileUrl);
+                            },
+                            error : function(data){
+                            }
+                        });
+
+                    }
+                </script>
+            </div>
+            <div class="flex flex-row justify-end my-4">
+                <input type="submit" class="btn btn-outline btn-primary">
+                    <script>document.querySelector('input[type="submit"]').value = window.location.href.includes('create') ? '등록' : '수정';</script>
+                </input>
+                <input type="button" value="취소" class="btn btn-error mx-2" th:onclick="'location.href=\'' + @{/posts/{category}/list(category=${category})} + '\';'"/>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

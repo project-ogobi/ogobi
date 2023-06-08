@@ -2,7 +2,140 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="container my-3">
+    <div class="float-right m-2 mt-10">
+        <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-active btn-primary mx-1"
+           sec:authorize="isAuthenticated()"
+           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">수정</a>
+        <a href="javascript:void(0);" th:data-uri="@{|/posts/${category}/delete/${post.id}|}"
+           class="delete btn btn-active btn-primary" sec:authorize="isAuthenticated()"
+           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
+           onclick="if(confirm('정말로 삭제하시겠습니까?')) { location.href = this.dataset.uri; }">삭제</a>
+    </div>
+    <div class="pt-7 pl-7 text-left">
+        <h5 class="text-gray-400" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h5>
+        <h1 class="font-semibold text-4xl my-1" th:text="${post.subject}">제목</h1>
+        <h5 class="font-semibold text-base text-gray-500 my-3 pr-5" th:if="${post.author != null}">
+            <span th:text="${post.author.nickname}">작성자</span>
+            <span class="text-sm" style="float: right">
+            <i class="fa-solid fa-eye"></i><span>&nbsp;</span>
+            <span th:text="${post.view}">조회수</span><span>&nbsp;&nbsp;&nbsp;</span>
+            <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
+            <span th:text="${#lists.size(post.like)}">추천수</span><span>&nbsp;&nbsp;&nbsp;</span>
+            <i class="fa-solid fa-comment"></i><span>&nbsp;</span>
+            <span th:text="${#lists.size(post.comments)}">댓글수</span>
+            </span>
+        </h5>
+    </div>
+    <hr class="text-gray-200">
 
+    <!-- 게시글 작성날짜 -->
+    <div class="text-right m-2">
+        <div class="text-gray-400 text-sm" th:if="${post.createDate != null && post.modifyDate == post.createDate}"
+             th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+        <div class="text-gray-400 text-sm" th:if="${post.modifyDate != null && post.modifyDate != post.createDate}"
+             th:text="|${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')} (수정됨)|"></div>
+    </div>
+    <div class="ml-6">
+        <p class="m-4 p-3" th:utext="${post.content}"></p>
+        <div>
+            <div class="bg-indigo-200 rounded-2xl p-4 h-auto">
+                <div class="flex w-full">
+                    <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
+                        <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
+                        <div th:text="${challenge.description}"></div>
+                    </div>
+                    <div class="divider divider-horizontal"></div>
+                    <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-left p-1">
+                        <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
+                        <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
+                        <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 추천 -->
+    <div class="my-3 flex justify-center">
+        <form th:data-submit-message="${isLiked} ? '취소하시겠습니까?' : '추천하시겠습니까?'"
+              onsubmit="return confirm($(this).attr('data-submit-message'));"
+              th:action="@{|/posts/${category}/detail/${id}/like|}" method="post">
+            <button th:if="${isLiked}" class="btn btn-error" th:text="추천"></button>
+            <button th:if="${!isLiked}" class="btn btn-outline btn-primary" th:text="추천"></button>
+        </form>
+    </div>
+    <hr class="mt-5 text-gray-200">
 
+    <div class="p-3 m-3 text-left">
+        <span class="font-semibold text-xl">댓글</span>
+
+        <!-- 댓글 등록 -->
+        <form th:action="@{|/comments/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post"
+              class="flex-col my-6">
+            <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full"
+                 role="alert" th:if="${#fields.hasAnyErrors()}">
+                <div th:each="err : ${#fields.allErrors()}" onsubmit="comment_Dto()"/>
+            </div>
+            <div class="flex">
+                <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요."
+                          th:field="*{content}" onsubmit="comment_Dto()"></textarea>
+                <input type="submit" value="등록" class="btn btn-active btn-primary"/>
+            </div>
+        </form>
+    </div>
+
+    <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
+        <div class="flex justify-between mb-1">
+            <span class="mr-6 font-semibold" th:if="${comment.author != null}"
+                  th:text="${comment.author.nickname}">작성자</span>
+            <div class="text-gray-400 text-sm p-1" th:if="${comment.modifyDate == comment.createDate}"
+                 th:text="${#temporals.format(comment.createDate,'yyyy-MM-dd HH:mm')}"></div>
+            <div class="text-gray-400 text-sm p-1" th:if="${comment.modifyDate != comment.createDate}"
+                 th:text="|${#temporals.format(comment.modifyDate,'yyyy-MM-dd HH:mm')} (수정됨)|"></div>
+        </div>
+
+        <!-- 수정, 삭제 버튼 -->
+        <div class="flex items-end justify-end mb-1">
+            <th:block th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}">
+                <button class="btn btn-outline btn-primary mx-1 btn-sm"
+                        onclick="$(this).parent().nextAll('form:first').toggleClass('hidden'); textToggle(this);">수정</button>
+                <form href="javascript:;" onsubmit="return (confirm('정말로 삭제하시겠습니까?')); $(this).next().submit();"
+                      th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}|}" method="post">
+                    <input type="hidden" name="_method" value="delete">
+                    <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
+                </form>
+            </th:block>
+        </div>
+        <!-- 댓글 내용 -->
+        <div class="flex-auto" th:text="${comment.content}"></div>
+        <!-- 댓글 수정 폼 -->
+        <form th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}/modify|}" method="post"
+              class="hidden flex-col my-6">
+            <div class="flex items-end justify-between">
+        <textarea class="textarea textarea-primary w-full mx-4 h-1" name="content"
+                  th:utext="${comment.content}"></textarea>
+                <input type="submit" value="수정" class="btn btn-outline btn-primary mx-1 btn-sm"/>
+            </div>
+        </form>
+        <hr class="mt-5 text-gray-200">
+    </div>
+
+    <script>
+        function textToggle(th) {
+            if (th.innerText == "취소") {
+                th.innerText = "수정";
+            } else {
+                th.innerText = "취소";
+            }
+        }
+
+        function comment_Dto(content) {
+            if (content.length == 0) {
+                toastWarning('내용을 입력해주세요.');
+                comment_Dto.content.focus();
+
+                return;
+            }
+        }
+    </script>
 </div>
 </html>

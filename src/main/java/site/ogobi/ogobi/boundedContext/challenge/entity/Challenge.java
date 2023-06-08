@@ -6,11 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
+import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
+import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -54,5 +58,4 @@ public class Challenge extends BaseEntity {
         this.endDate = endDate;
         this.targetMoney = targetMoney;
     }
-
 }

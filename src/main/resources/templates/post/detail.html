@@ -20,7 +20,7 @@
             <i class="fa-solid fa-eye"></i><span>&nbsp;</span>
             <span th:text="${post.view}">조회수</span><span>&nbsp;&nbsp;&nbsp;</span>
             <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
-            <span th:text=${#lists.size(post.like)}>추천수</span><span>&nbsp;&nbsp;&nbsp;</span>
+            <span th:text="${#lists.size(post.like)}">추천수</span><span>&nbsp;&nbsp;&nbsp;</span>
             <i class="fa-solid fa-comment"></i><span>&nbsp;</span>
             <span th:text="${#lists.size(post.comments)}">댓글수</span>
             </span>

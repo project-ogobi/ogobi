@@ -95,11 +95,8 @@ public class ChallengeService {
         return false;
     }
 
-    public List<Challenge> findAll() {
-        return challengeRepository.findAll();
-    }
-
-    public List<Challenge> findByMember(Member member) {
+    public List<Challenge> findByMember(Member member){
         return challengeRepository.findByMember(member);
     }
+
 }

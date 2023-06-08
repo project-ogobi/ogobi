@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,7 @@ public class PostDto { // 필수 필드에 대해 유효성 검사를 하기 위
 
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
+
+    private Long challengeId;
+
 }
