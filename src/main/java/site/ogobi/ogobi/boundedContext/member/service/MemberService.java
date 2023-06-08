@@ -19,6 +19,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
+
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
@@ -33,6 +34,14 @@ public class MemberService {
 
     }
 
+    public Member findByEmail(String email) {
+        Optional<Member> foundMember = memberRepository.findByEmail(email);
+        if (foundMember.isPresent()) {
+            return foundMember.get();
+        } else {
+            return null;
+        }
+    }
 
     public List<Challenge> runningList(Member member){     //  진행 중인 챌린지 리스트
         List<Challenge> challengeList = challengeRepository.findByMember(member);
@@ -51,7 +60,6 @@ public class MemberService {
         return challengeList;
     }
 
-
     public List<Challenge> successList(Member member){     //  완료한 챌린지 리스트
         List<Challenge> challengeList = challengeRepository.findByMember(member);
         List<Challenge> successList = new ArrayList<>();
@@ -68,4 +76,5 @@ public class MemberService {
 
         return successList;
     }
+
 }
