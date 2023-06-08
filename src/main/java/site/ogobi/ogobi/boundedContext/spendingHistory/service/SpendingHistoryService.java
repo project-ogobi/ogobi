@@ -16,6 +16,7 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.repository.SpendingHistor
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,8 +38,17 @@ public class SpendingHistoryService {
                 .description(form.getDescription())
                 .build();
 
-        update(spendingHistory, form, images);
+        mappingImagesAndHistoryWithForm(spendingHistory, form, images);
         spendingHistoryRepository.save(spendingHistory);
+    }
+    private void mappingImagesAndHistoryWithForm(SpendingHistory item, SpendingHistoryForm form, List<Image> images){
+        item.setContent(form.getItemName());
+        item.setDescription(form.getDescription());
+
+        item.setImageFiles(images);
+        for (Image image : images) {
+            image.setSpendingHistory(item);
+        }
     }
 
     public Optional<SpendingHistory> findSpendingHistoryById(Long id) {
@@ -47,9 +57,9 @@ public class SpendingHistoryService {
 
 
     @Transactional
-    public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images) {
+    public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images, List<String> listId) {
         SpendingHistory item = findSpendingHistoryById(id).orElseThrow();
-        update(item, form, images);
+        update(item, form, images, listId);
     }
 
 
@@ -63,27 +73,30 @@ public class SpendingHistoryService {
         SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
                 .itemName(spendingHistory.getContent())
                 .itemPrice(spendingHistory.getPrice())
+                .description(spendingHistory.getDescription())
                 .build();
         return spendingHistoryForm;
     }
 
     @Transactional
-    public void update(SpendingHistory item, SpendingHistoryForm form, List<Image> images) {
-        item.setContent(form.getItemName());
-        item.setDescription(form.getDescription());
+    public void update(SpendingHistory item, SpendingHistoryForm form, List<Image> images, List<String> listId) {
+
+        List<Image> newImages = new ArrayList<>();
 
         if (item.getImageFiles() != null && item.getImageFiles().size() > 0) {
-            for (Image imageFile : item.getImageFiles()) {
-                imageRepository.delete(imageFile);
-                imageService.deleteUploadedFile(imageFile.getUploadFilePath());
-            }
-            item.setImageFiles(new ArrayList<>());
-        }
-        item.setImageFiles(images);
+            for (Image image : item.getImageFiles()) {
+                if (!listId.contains(String.valueOf(image.getId()))) {
+                    imageRepository.delete(image);
+                    imageService.deleteUploadedFile(image.getUploadFilePath());
+                } else {
+                    newImages.add(image);
+                }
 
-        for (Image image : images) {
-            image.setSpendingHistory(item);
+            }
         }
+
+        newImages.addAll(images);
+        mappingImagesAndHistoryWithForm(item, form, newImages);
     }
 
     @Transactional

@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
@@ -54,14 +55,16 @@ public class SpendingHistoryController {
     @PostMapping("/{challenge_id}/{sh_id}/updateForm")
     public String updateSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result,
                                         @PathVariable Long challenge_id, @PathVariable Long sh_id,
-                                        @RequestParam List<MultipartFile> file) throws IOException {
+                                        @RequestParam("images") List<MultipartFile> file,
+                                        @RequestParam("existingImageId") List<String> listId ) throws IOException {
+
         if (result.hasErrors()) {
             return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
         }
 
         String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);
         List<Image> imageFiles = imageService.uploadFiles(file, filePath);
-        spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles);
+        spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles, listId);
 
         return "redirect:/challenges/" + challenge_id;
     }

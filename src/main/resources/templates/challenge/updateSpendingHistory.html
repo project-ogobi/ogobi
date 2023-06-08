@@ -10,7 +10,7 @@
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
 <!--    <form role="form" th:action="@{/challenges/{id}/{sh_id}(id=${cid}, sh_id=${sh_id})}" method="post" th:object="${form}">-->
-    <form th:action method="post" enctype="multipart/form-data" th:object="${form}">
+    <form th:action method="post" enctype="multipart/form-data" th:object="${form}" id="myForm">
 
         <!-- content 시작 -->
         <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
@@ -34,21 +34,154 @@
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
                 <!-- 현재 이미지 -->
-                <div>현재 첨부된 이미지</div>
+                <!-- TODO: 이미지 추가 버튼 클릭 후 삭제 시 오류발생해결-->
                 <div>
-                    <div th:each="image, imageIndex: ${presentImages}" class="my-3">
-                        <div class="card w-96 bg-base-100 shadow-xl">
-                            <div class="card-body">
-                                <img th:src="${image.uploadFileUrl}" th:id="'image-' + ${imageIndex.index}">
-                                <div class="card-actions justify-end">
-                                    <input type="file" th:id="'image-file-' + ${imageIndex}" style="display: none" th:attr="onchange=|uploadImage(this, '${imageIndex.index}', '${image.id}')|">
-                                    <label th:for="'image-file-' + ${imageIndex}" class="btn">재업로드</label>
-                                    <button type="button" class="btn" th:attr="onclick=|deleteImage('${imageIndex.index}', '${image.id}')|">삭제</button>
+                    <table>
+                        <tbody id="image-container"  class="my-3">
+                        <tr>
+                            <td>
+                                <div th:each="image, imageIndex: ${presentImages}" class="card w-96 bg-base-100 shadow-xl my-3">
+                                    <div class="card-body">
+                                        <img th:src="${image.uploadFileUrl}" th:id="${image.getId()}" alt="existingImage">
+                                        <div class="card-actions justify-end">
+                                            <input type="file" th:id="'image-file-' + ${imageIndex}" style="display: none">
+                                            <label th:for="'image-file-' + ${imageIndex}" class="btn">파일선택</label>
+                                            <button type="button" class="btn" th:attr="onclick=|deleteImage('${imageIndex.index}', '${image.id}')|">삭제</button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" onclick="addNewFileInput()" id="addFileButton">새로운 파일 추가</button>
+                    <button type="button" onclick="printconsole()">dddd</button>
                 </div>
+
+                <script>
+                    function printconsole(){
+                        for (var pair of formData.entries()) {
+                            console.log(pair[0] + ': ' + pair[1]);
+                        }
+                    }
+                    var form = document.getElementById('myForm');
+                    var imageIndex = /*[[${presentImages.size()}]]*/ 0;
+                    var formData = new FormData(form);
+
+                    function addNewFileInput() {
+                        var container = document.getElementById('image-container');
+
+                        // 새로운 이미지 요소를 생성
+                        var newRow = document.createElement('tr');
+                        var newCell = document.createElement('td');
+                        var newImageDiv = document.createElement('div');
+                        newImageDiv.className = 'card w-96 bg-base-100 shadow-xl my-3';
+                        var newImageCardBody = document.createElement('div');
+                        newImageCardBody.className = 'card-body';
+
+                        // 이미지 태그 생성
+                        var newImage = document.createElement('img');
+                        newImage.src = ''; // 새 이미지를 표시할 URL
+
+                        // 파일 선택을 위한 input 엘리먼트 생성
+                        var newImageInput = document.createElement('input');
+                        newImageInput.type = 'file';
+                        newImageInput.style.display = 'none';
+                        newImageInput.id = 'image-file-' + imageIndex; // id 설정
+                        newImageInput.name = 'images'
+                        newImageInput.addEventListener('change', function(event) {
+                            var file = event.target.files[0];
+                            if (file) {
+                                var reader = new FileReader();
+                                reader.onload = function() {
+                                    newImage.src = reader.result;
+                                };
+                                reader.readAsDataURL(file);
+                                formData.append('images', file, file.name); // formData에 이미지 추가
+                            }
+                        });
+
+
+                        var newImageLabel = document.createElement('label');
+                        newImageLabel.className = 'btn';
+                        newImageLabel.textContent = '파일선택';
+                        newImageLabel.htmlFor = 'image-file-' + imageIndex;
+
+                        var newImageDeleteButton = document.createElement('button');
+                        newImageDeleteButton.type = 'button';
+                        newImageDeleteButton.className = 'btn';
+                        newImageDeleteButton.textContent = '삭제';
+                        newImageDeleteButton.addEventListener('click', function() {
+                            // 이미지 삭제
+                            formData.delete('images');
+                            // card-body 삭제
+                            newImageCardBody.parentNode.parentNode.remove();
+                        });
+
+                        // 요소들을 생성한 이미지 카드에 추가
+                        var newImageCardActions = document.createElement('div');
+                        newImageCardActions.className = 'card-actions justify-end';
+                        newImageCardActions.appendChild(newImageInput);
+                        newImageCardActions.appendChild(newImageLabel);
+                        newImageCardActions.appendChild(newImageDeleteButton);
+                        newImageCardBody.appendChild(newImage);
+                        newImageCardBody.appendChild(newImageCardActions);
+                        newImageDiv.appendChild(newImageCardBody);
+                        newCell.appendChild(newImageDiv);
+                        newRow.appendChild(newCell);
+
+                        // 새 이미지 요소를 컨테이너에 추가
+                        container.appendChild(newRow);
+
+                        // 인덱스 증가
+                        imageIndex++;
+                    }
+
+                    form.addEventListener("submit", function(event) {
+                        event.preventDefault(); // 폼 제출을 중단합니다.
+
+                        const header = $("meta[name='_csrf_header']").attr('content');
+                        const token = $("meta[name='_csrf']").attr('content');
+
+                        var fileInput = document.querySelector("input[type=file]");
+
+                        // 기존 이미지 id을 FormData에 추가
+                        var existingImages = document.querySelectorAll('img[alt="existingImage"]');
+                        existingImages.forEach(function(existingImage) {
+                            formData.append("existingImageId", existingImage.id);
+                        });
+                        console.log(existingImages);
+
+                        // FormData 객체의 키-값 쌍 확인
+                        for (var pair of formData.entries()) {
+                            console.log(pair[0] + ', ' + pair[1]);
+                        }
+
+                        fetch($(form).attr('action'), {
+                            method: $(form).attr('method'),
+                            headers: {
+                                header: token
+                            },
+                            body: formData
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log('File uploaded successfully.');
+                                    // 서버 응답을 처리합니다.
+                                } else {
+                                    console.error('An error occurred while uploading the file.');
+                                    // 오류 처리를 수행합니다.
+                                }
+                                window.location.href = response.url;
+                            })
+                            .catch(error => {
+                                console.error('An error occurred while uploading the file.');
+                                // 오류 처리를 수행합니다.
+                            });
+                    });
+
+                </script>
+
 
                 <script th:inline="javascript">
                     /* 타임리프 변수를 JavaScript 변수로 전달하기 위해 th:inline 속성을 사용합니다. */
@@ -109,18 +242,19 @@
                     }
                 </script>
 
-                <div>새 이미지 추가하기</div>
-                <div>
-                    <input type="file" name="file" multiple="multiple">
-                </div>
+
 
             </div>
         </div>
 
-        <!-- TODO: 등록하기 버튼을 눌렀을때 업데이트가 반영이 안됨. form으로 변경점을 안넘겨주기때문. 폼에서 변경된 점을 넘겨주어야함.-->
+
         <div class = "flex justify-end">
             <button type="submit" name="submit" class="btn btn-outline btn-primary">수정하기</button>
         </div>
+        <script>
+
+
+        </script>
         <!-- content 종료 -->
     </form>
 </div>
