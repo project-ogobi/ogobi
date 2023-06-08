@@ -23,7 +23,7 @@
 
                 <div class="form-group">
                     <label th:for="itemPrice">지출 가격</label>
-                    <input type="text" th:field="*{itemPrice}" readonly="readonly" class="input input-bordered input-primary w-full" placeholder="Type here">
+                    <input type="text" th:field="*{itemPrice}" class="input input-bordered input-primary w-full" placeholder="Type here">
                 </div>
                 <p th:if="${#fields.hasErrors('itemPrice')}" th:errors="*{itemPrice}" class="fieldError">Incorrect data</p>
 
@@ -33,248 +33,233 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
-                <!-- 현재 이미지 -->
+                <!-- 이미지 컨테이너 -->
                 <div>
-                    <table>
-                        <tbody id="image-container"  class="my-3">
-                        <tr>
-                            <td>
-                                <div th:each="image, imageIndex: ${presentImages}" class="card w-96 bg-base-100 shadow-xl my-3">
-                                    <div class="card-body">
-                                        <img th:src="${image.uploadFileUrl}" th:id="${image.getId()}" alt="existingImage">
-                                        <div class="card-actions justify-end">
-                                            <input type="file" th:id="'image-file-' + ${imageIndex}" th:attr="onchange=|reloadImage(this, '${imageIndex.index}', '${image.id}')|" style="display: none">
-                                            <label th:for="'image-file-' + ${imageIndex}" class="btn">파일선택</label>
-                                            <button type="button" class="btn" th:attr="onclick=|deleteImage('${imageIndex.index}', '${image.id}')|">삭제</button>
-                                        </div>
-                                    </div>
+                    <div id="image-container" class="my-3">
+                        <div th:each="image, imageIndex: ${presentImages}" class="card w-96 bg-base-100 shadow-xl my-3">
+                            <div class="card-body">
+                                <img th:src="${image.uploadFileUrl}" th:id="${image.getId()}" alt="existingImage">
+                                <div class="card-actions justify-end">
+                                    <input type="file" th:id="'image-file-' + ${imageIndex}" th:attr="onchange=|reloadImage(this, '${imageIndex.index}', '${image.id}')|" style="display: none">
+                                    <label th:for="'image-file-' + ${imageIndex}" class="btn">파일선택</label>
+                                    <button type="button" class="btn" th:attr="onclick=|confirmDelete('${imageIndex.index}', '${image.id}')|" >삭제</button>
                                 </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
                     <button type="button" onclick="addNewFileInput()" id="addFileButton">새로운 파일 추가</button>
-                    <button type="button" onclick="printconsole()">dddd</button>
                 </div>
 
-                <script>
-                    function printconsole(){
-                        for (var pair of formData.entries()) {
-                            console.log(pair[0] + ': ' + pair[1]);
-                        }
-                    }
-                    var form = document.getElementById('myForm');
-                    var imageIndex = /*[[${presentImages.size()}]]*/ 0;
-                    var formData = new FormData(form);
-
-                    function addNewFileInput() {
-                        var container = document.getElementById('image-container');
-
-                        // 새로운 이미지 요소를 생성
-                        var newRow = document.createElement('tr');
-                        var newCell = document.createElement('td');
-                        var newImageDiv = document.createElement('div');
-                        newImageDiv.className = 'card w-96 bg-base-100 shadow-xl my-3';
-                        var newImageCardBody = document.createElement('div');
-                        newImageCardBody.className = 'card-body';
-
-                        // 이미지 태그 생성
-                        var newImage = document.createElement('img');
-                        newImage.src = ''; // 새 이미지를 표시할 URL
-
-                        // 파일 선택을 위한 input 엘리먼트 생성
-                        var newImageInput = document.createElement('input');
-                        newImageInput.type = 'file';
-                        newImageInput.style.display = 'none';
-                        newImageInput.id = 'image-file-' + imageIndex; // id 설정
-                        newImageInput.name = 'images[]'
-                        newImageInput.setAttribute('data-index', imageIndex.toString()); // 이미지 인덱스를 data-index 속성으로 추가
-                        newImageInput.addEventListener('change', function(event) {
-                            var file = event.target.files[0];
-                            if (file) {
-                                var reader = new FileReader();
-                                reader.onload = function() {
-                                    newImage.src = reader.result;
-                                };
-                                reader.readAsDataURL(file);
-                                formData.append('images[' + newImageInput.getAttribute('data-index').toString() + ']', file, file.name);
-                            }
-                        });
-
-
-                        var newImageLabel = document.createElement('label');
-                        newImageLabel.className = 'btn';
-                        newImageLabel.textContent = '파일선택';
-                        newImageLabel.htmlFor = 'image-file-' + imageIndex;
-
-                        var newImageDeleteButton = document.createElement('button');
-                        newImageDeleteButton.type = 'button';
-                        newImageDeleteButton.className = 'btn';
-                        newImageDeleteButton.textContent = '삭제';
-                        newImageDeleteButton.addEventListener('click', function() {
-                            var imageName = newImageInput.name;
-                            formData.delete('images[' + newImageInput.getAttribute('data-index').toString() + ']');
-                            newImageCardBody.parentNode.parentNode.remove();
-                        });
-
-                        // 요소들을 생성한 이미지 카드에 추가
-                        var newImageCardActions = document.createElement('div');
-                        newImageCardActions.className = 'card-actions justify-end';
-                        newImageCardActions.appendChild(newImageInput);
-                        newImageCardActions.appendChild(newImageLabel);
-                        newImageCardActions.appendChild(newImageDeleteButton);
-                        newImageCardBody.appendChild(newImage);
-                        newImageCardBody.appendChild(newImageCardActions);
-                        newImageDiv.appendChild(newImageCardBody);
-                        newCell.appendChild(newImageDiv);
-                        newRow.appendChild(newCell);
-
-                        // 새 이미지 요소를 컨테이너에 추가
-                        container.appendChild(newRow);
-
-                        // 인덱스 증가
-                        imageIndex++;
-                    }
-
-                    form.addEventListener("submit", function(event) {
-                        event.preventDefault(); // 폼 제출을 중단합니다.
-
-                        const header = $("meta[name='_csrf_header']").attr('content');
-                        const token = $("meta[name='_csrf']").attr('content');
-
-                        var imagesCount = imageIndex + 1;
-                        console.log(imagesCount);
-                        var combinedImages = [];
-
-                        for (var i = 0; i < imagesCount; i++) {
-                            var imageFiles = formData.getAll('images[' + i + ']');
-
-                            if (imageFiles.length > 1) {
-                                // Combine multiple image files into a single array
-                                combinedImages = combinedImages.concat(imageFiles);
-                            } else if (imageFiles.length === 1) {
-                                // If only one image file exists, add it directly to the combined array
-                                combinedImages.push(imageFiles[0]);
-                            }
-                        }
-
-                        // Append the combined images to the 'images' field in formData
-                        for (var j = 0; j < combinedImages.length; j++) {
-                            formData.append('images', combinedImages[j]);
-                        }
-
-                        // 기존 이미지 id을 FormData에 추가
-                        var existingImages = document.querySelectorAll('img[alt="existingImage"]');
-                        existingImages.forEach(function(existingImage) {
-                            formData.append("existingImageId", existingImage.id);
-                        });
-                        console.log(existingImages);
-
-                        // FormData 객체의 키-값 쌍 확인
-                        for (var pair of formData.entries()) {
-                            console.log(pair[0] + ', ' + pair[1]);
-                        }
-
-                        fetch($(form).attr('action'), {
-                            method: $(form).attr('method'),
-                            headers: {
-                                header: token
-                            },
-                            body: formData
-                        })
-                            .then(response => {
-                                if (response.ok) {
-                                    console.log('File uploaded successfully.');
-                                    // 서버 응답을 처리합니다.
-                                } else {
-                                    console.error('An error occurred while uploading the file.');
-                                    // 오류 처리를 수행합니다.
-                                }
-                                window.location.href = response.url;
-                            })
-                            .catch(error => {
-                                console.error('An error occurred while uploading the file.');
-                                // 오류 처리를 수행합니다.
-                            });
-                    });
-
-                </script>
-
-
-                <script th:inline="javascript">
-                    /* 타임리프 변수를 JavaScript 변수로 전달하기 위해 th:inline 속성을 사용합니다. */
-
-                    function reloadImage(input, index, id) {
-                        var file = input.files[0]; // 선택한 파일을 가져옵니다.
-                        const header = $("meta[name='_csrf_header']").attr('content');
-                        const token = $("meta[name='_csrf']").attr('content');
-
-                        // 파일 업로드 AJAX 요청을 보냅니다.
-                        var formData = new FormData();
-                        formData.append('file', file); // FormData에 파일을 추가합니다.
-                        formData.append('index', index);
-                        formData.append('id', id);
-
-                        $.ajax({
-                            beforeSend: function(xhr) {
-                                xhr.setRequestHeader(header, token);
-                            },
-                            url: '/update-image/' + id, // 파일 업로드 처리를 수행하는 URL로 수정해야 합니다.
-                            method: 'POST', // 요청 방식을 POST로 설정합니다.
-                            data: formData, // FormData를 전달합니다.
-                            enctype : 'multipart/form-data',
-                            processData : false,
-                            contentType: false,    // 필수
-                            cache: false,
-                            success: function(response) {
-                                // 요청이 성공적으로 처리되면, 새로운 이미지 URL을 받아와서 화면에 업데이트합니다.
-                                $('#' + id).attr('src', response);
-                            },
-                            error: function(xhr, status, error) {
-                                // 요청이 실패한 경우 에러 처리를 수행합니다.
-                                console.log(error);
-                            }
-                        });
-                    }
-
-                    function deleteImage(index, id) {
-                        const header = $("meta[name='_csrf_header']").attr('content');
-                        const token = $("meta[name='_csrf']").attr('content');
-                        // 이미지 삭제 AJAX 요청을 보냅니다.
-                        $.ajax({
-                            beforeSend: function(xhr) {
-                                xhr.setRequestHeader(header, token);
-                            },
-                            url: '/delete-image/' + id,
-                            type: 'DELETE',
-                            contentType: "application/json; charset=utf-8",
-                            success: function(response) {
-                                // 요청이 성공적으로 처리되면, 해당 이미지를 화면에서 제거합니다.
-                                var cardElement = document.getElementById(id).closest('.card');
-                                cardElement.remove();
-                            },
-                            error: function(xhr, status, error) {
-                                // 요청이 실패한 경우 에러 처리를 수행합니다.
-                                console.log(error);
-                            }
-                        });
-                    }
-                </script>
-
-
+                <!-- 이미지 컨테이너 종료 -->
 
             </div>
         </div>
 
-
         <div class = "flex justify-end">
             <button type="submit" name="submit" class="btn btn-outline btn-primary">수정하기</button>
         </div>
-        <script>
-
-
-        </script>
         <!-- content 종료 -->
+
+        <script>
+            var form = document.getElementById('myForm');
+            var imageIndex = /*[[${presentImages.size()}]]*/ 0;
+            var formData = new FormData(form);
+
+            //파일 추가하기 버튼 클릭시
+            function addNewFileInput() {
+                var container = document.getElementById('image-container');
+
+                // 새로운 이미지 요소를 생성
+                var newImageDiv = document.createElement('div');
+                newImageDiv.className = 'card w-96 bg-base-100 shadow-xl my-3';
+                var newImageCardBody = document.createElement('div');
+                newImageCardBody.className = 'card-body';
+
+                // 이미지 태그 생성
+                var newImage = document.createElement('img');
+                newImage.src = ''; // 새 이미지를 표시할 URL
+
+                // 파일 선택을 위한 input 엘리먼트 생성
+                var newImageInput = document.createElement('input');
+                newImageInput.type = 'file';
+                newImageInput.style.display = 'none';
+                newImageInput.id = 'image-file-' + imageIndex; // id 설정
+                newImageInput.name = 'images[]'
+                newImageInput.setAttribute('data-index', imageIndex.toString()); // 이미지 인덱스를 data-index 속성으로 추가
+                newImageInput.addEventListener('change', function(event) {
+                    var file = event.target.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            newImage.src = reader.result;
+                        };
+                        reader.readAsDataURL(file);
+                        formData.append('images[' + newImageInput.getAttribute('data-index').toString() + ']', file, file.name);
+                    }
+                });
+
+                var newImageLabel = document.createElement('label');
+                newImageLabel.className = 'btn';
+                newImageLabel.textContent = '파일선택';
+                newImageLabel.htmlFor = 'image-file-' + imageIndex;
+
+                var newImageDeleteButton = document.createElement('button');
+                newImageDeleteButton.type = 'button';
+                newImageDeleteButton.className = 'btn';
+                newImageDeleteButton.textContent = '삭제';
+                newImageDeleteButton.addEventListener('click', function() {
+                    var confirmation = confirm("정말 삭제하시겠습니까?");
+
+                    if (confirmation) {
+                        var imageName = newImageInput.name;
+                        formData.delete('images[' + newImageInput.getAttribute('data-index').toString() + ']');
+                        newImageDiv.remove();
+                    }
+                });
+
+                // 요소들을 생성한 이미지 카드에 추가
+                var newImageCardActions = document.createElement('div');
+                newImageCardActions.className = 'card-actions justify-end';
+                newImageCardActions.appendChild(newImageInput);
+                newImageCardActions.appendChild(newImageLabel);
+                newImageCardActions.appendChild(newImageDeleteButton);
+                newImageCardBody.appendChild(newImage);
+                newImageCardBody.appendChild(newImageCardActions);
+                newImageDiv.appendChild(newImageCardBody);
+
+                container.appendChild(newImageDiv);
+                imageIndex++;
+            }
+
+            //수정하기 버튼 클릭시
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // 폼 제출을 중단합니다.
+
+                var itemName = document.getElementById('itemName').value;
+                var itemPrice = document.getElementById('itemPrice').value;
+                var description = document.getElementById('description').value;
+
+                formData.set('itemName', itemName);
+                formData.set('itemPrice', itemPrice);
+                formData.set('description', description);
+
+                const header = $("meta[name='_csrf_header']").attr('content');
+                const token = $("meta[name='_csrf']").attr('content');
+
+                var imagesCount = imageIndex + 1;
+                var combinedImages = [];
+
+                for (var i = 0; i < imagesCount; i++) {
+                    var imageFiles = formData.getAll('images[' + i + ']');
+
+                    if (imageFiles.length > 1) {
+                        // Combine multiple image files into a single array
+                        combinedImages = combinedImages.concat(imageFiles);
+                    } else if (imageFiles.length === 1) {
+                        // If only one image file exists, add it directly to the combined array
+                        combinedImages.push(imageFiles[0]);
+                    }
+                }
+
+                // Append the combined images to the 'images' field in formData
+                for (var j = 0; j < combinedImages.length; j++) {
+                    formData.append('images', combinedImages[j]);
+                }
+
+                // 기존 이미지 id을 FormData에 추가
+                var existingImages = document.querySelectorAll('img[alt="existingImage"]');
+                existingImages.forEach(function(existingImage) {
+                    formData.append("existingImageId", existingImage.id);
+                });
+
+                fetch($(form).attr('action'), {
+                    method: $(form).attr('method'),
+                    headers: {
+                        header: token
+                    },
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('File uploaded successfully.');
+                            // 서버 응답을 처리합니다.
+                        } else {
+                            console.error('An error occurred while uploading the file.');
+                            // 오류 처리를 수행합니다.
+                        }
+                        window.location.href = response.url;
+                    })
+                    .catch(error => {
+                        console.error('An error occurred while uploading the file.');
+                        // 오류 처리를 수행합니다.
+                    });
+            });
+        </script>
+
+        <script th:inline="javascript">
+            /* 타임리프 변수를 JavaScript 변수로 전달하기 위해 th:inline 속성을 사용합니다. */
+            const header = $("meta[name='_csrf_header']").attr('content');
+            const token = $("meta[name='_csrf']").attr('content');
+
+            function reloadImage(input, index, id) {
+                var file = input.files[0]; // 선택한 파일을 가져옵니다.
+
+                // 파일 업로드 AJAX 요청을 보냅니다.
+                var formData = new FormData();
+                formData.append('file', file); // FormData에 파일을 추가합니다.
+                formData.append('index', index);
+                formData.append('id', id);
+
+                $.ajax({
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    url: '/update-image/' + id, // 파일 업로드 처리를 수행하는 URL
+                    method: 'POST', // 요청 방식을 POST로 설정
+                    data: formData, // FormData를 전달
+                    enctype : 'multipart/form-data',
+                    processData : false,
+                    contentType: false,    // 필수
+                    cache: false,
+                    success: function(response) {
+                        // 요청이 성공적으로 처리되면, 새로운 이미지 URL을 받아와서 화면에 업데이트합니다.
+                        $('#' + id).attr('src', response);
+                    },
+                    error: function(xhr, status, error) {
+                        // 요청이 실패한 경우 에러 처리를 수행합니다.
+                        console.log(error);
+                    }
+                });
+            }
+            function confirmDelete(imageIndex, imageId) {
+                var confirmation = confirm("정말 삭제하시겠습니까? 삭제 후 되돌릴 수 없습니다.");
+
+                if (confirmation) {
+                    deleteImage(imageIndex, imageId);
+                }
+            }
+
+            function deleteImage(index, id) {
+                // 이미지 삭제 AJAX 요청을 보냅니다.
+                $.ajax({
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    url: '/delete-image/' + id,
+                    type: 'DELETE',
+                    contentType: "application/json; charset=utf-8",
+                    success: function(response) {
+                        // 요청이 성공적으로 처리되면, 해당 이미지를 화면에서 제거합니다.
+                        var cardElement = document.getElementById(id).closest('.card');
+                        cardElement.remove();
+                    },
+                    error: function(xhr, status, error) {
+                        // 요청이 실패한 경우 에러 처리를 수행합니다.
+                        console.log(error);
+                    }
+                });
+            }
+        </script>
+
     </form>
 </div>
-
