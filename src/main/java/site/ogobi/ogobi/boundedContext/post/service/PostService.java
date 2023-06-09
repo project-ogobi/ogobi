@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.post.entity.ChallengePost;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
+import site.ogobi.ogobi.boundedContext.post.repository.ChallengePostRepository;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final ChallengeRepository challengeRepository;
+    private final ChallengePostRepository challengePostRepository;
 
     public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
@@ -57,15 +61,27 @@ public class PostService {
     }
 
     @Transactional
-    public void create(String subject, String content, Post.Category category, Member member) {
+    public void create(String subject, String content, Post.Category category, Member member, Long challengeId) {
         Post p = Post.builder()
                 .subject(subject)
                 .content(content)
                 .category(category)
                 .author(member)
                 .build();
-        postRepository.save(p);
+        Post post = postRepository.save(p);
+
+
+        if (category.equals(Post.Category.SHARING)){
+            Challenge challenge = challengeRepository.findById(challengeId).get();
+
+            ChallengePost challengePost = ChallengePost.builder()
+                    .challenge(challenge)
+                    .post(post)
+                    .build();
+            challengePostRepository.save(challengePost);
+        }
     }
+
 
     @Transactional
     public void modify(Long postId, String subject, String content, String username) {
@@ -103,20 +119,12 @@ public class PostService {
 
     public List<Post> resentPostList() {
         List<Post> sortDate = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
-        int count = Math.min(sortDate.size(), 10);
+        int count = Math.min(sortDate.size(), 5);
         return sortDate.subList(0, count);
     }
 
-    public void saveSharePost(Challenge challenge) {
-        Post sharePost = Post.builder()
-                .subject(challenge.getChallengeName())
-                .createDate(LocalDateTime.now())
-                .content(challenge.getDescription())
-                .author(challenge.getMember())
-                .category(Post.Category.valueOf("SHARING"))
-                .build();
-
-        postRepository.save(sharePost);
+    public Optional<Challenge> findByChallengeId(Long id){
+        return challengeRepository.findById(id);
     }
 
     @Transactional

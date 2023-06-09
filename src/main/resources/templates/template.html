@@ -78,16 +78,27 @@
 
 <!--    다크모드-->
     <script>
-        function darkMode(){
-            console.log("찍히나요?")
+        function darkMode() {
             const body = document.querySelector('body');
+            const currentMode = body.id;
 
-            if(body.id === 'light'){
-                document.querySelector('body').setAttribute("id", "dark");
+            if (currentMode === 'light') {
+                body.id = 'dark';
+                localStorage.setItem('mode', 'dark');
             } else {
-                document.querySelector('body').setAttribute("id", "light");
+                body.id = 'light';
+                localStorage.setItem('mode', 'light');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.querySelector('body');
+            const storedMode = localStorage.getItem('mode');
+
+            if (storedMode) {
+                body.id = storedMode;
+            }
+        });
     </script>
 
     <!-- CSS -->

@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.base.rq.Rq;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.service.CommentService;
@@ -28,6 +30,7 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final MemberService memberService;
+    private final ChallengeService challengeService;
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/detail/{id}")
@@ -36,7 +39,7 @@ public class CommentController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", post);
-            return rq.historyBack("내용을 적어주세요.");
+            return rq.historyBack("내용을 입력해주세요.");
         }
 
         Member member = this.memberService.getMember(principal.getName());

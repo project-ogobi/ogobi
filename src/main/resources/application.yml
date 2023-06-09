@@ -1,3 +1,6 @@
+server:
+  port: 8111
+
 spring:
   servlet:
     multipart:
@@ -25,7 +28,23 @@ spring:
         use_sql_comments: true
   s3:
     bucket: ogobi
-
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            scope:
+              - account_email
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST # 카카오는 필수 파라미터를 POST로 요청
+            redirect-uri: http://localhost:8111/login/oauth2/code/kakao # 코드를 받는 URL
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: kakao_account
 logging:
   level:
     root: INFO

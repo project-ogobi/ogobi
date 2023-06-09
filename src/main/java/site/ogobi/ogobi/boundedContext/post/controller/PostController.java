@@ -21,7 +21,9 @@ import site.ogobi.ogobi.boundedContext.like.service.LikeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.post.dto.PostDto;
+import site.ogobi.ogobi.boundedContext.post.entity.ChallengePost;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
+import site.ogobi.ogobi.boundedContext.post.repository.ChallengePostRepository;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 
 import java.security.Principal;
@@ -37,12 +39,17 @@ public class PostController {
     private final MemberService memberService;
     private final LikeService likeService;
     private final ChallengeService challengeService;
+    private final ChallengePostRepository challengePostRepository;
 
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/detail/{id}")
-    public String showPost(Model model, @PathVariable String category, @PathVariable Long id, CommentDto commentDto, HttpServletRequest request, HttpServletResponse response) {
+    public String showPost(Model model, @PathVariable String category, @PathVariable Long id, HttpServletRequest request, HttpServletResponse response, PostDto postDto, CommentDto commentDto) {
         Post post = postService.getPost(id);
         Member member = rq.getMember();
         Like like = likeService.findByMemberIdAndPostId(member.getId(), id).orElse(null);
+
+        model.addAttribute("commentDto", commentDto);
 
         boolean isLiked = false;
         if (like != null && like.getPost()==post){
@@ -77,6 +84,17 @@ public class PostController {
 
         model.addAttribute("post", post);
         model.addAttribute("isLiked", isLiked);
+
+        if (category.equals("sharing")){
+            ChallengePost challengePost = challengePostRepository.findByPostId(post.getId()).orElse(null);
+
+            if (challengePost==null){
+                return rq.historyBack("챌린지 post가 아닙니다.");
+            }
+
+            model.addAttribute("challenge", challengePost.getChallenge());
+            return "post/share";
+        }
         return "post/detail";
     }
 
@@ -91,13 +109,30 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{category}/create")
     public String showCreate(Model model, @PathVariable String category, PostDto postDto) {
+        Member member = rq.getMember();
+
         model.addAttribute("category", category);
+
+        if (category.equals("sharing")){
+            List<Challenge> challengeList = challengeService.findByMember(member);
+            if (challengeList.isEmpty()){
+                return rq.historyBack("공유할 챌린지가 없습니다.");
+            }
+
+            List<Challenge> challenges = challengeService.findByMember(member);
+
+            model.addAttribute("challengeList", challengeList);
+            model.addAttribute("challenges", challenges);
+            model.addAttribute("postDto", postDto);
+            return "post/share_create";
+        }
         return "post/create";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/create")
     public String create(@Valid PostDto postDto, BindingResult bindingResult, @PathVariable String category, Principal principal) {
+
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -107,7 +142,11 @@ public class PostController {
         }
         Post.Category postCategory = getCategory(category);
         Member member = this.memberService.getMember(principal.getName());
-        this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory, member);
+
+
+
+        this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory, member, postDto.getChallengeId());
+
         return String.format("redirect:/posts/%s/list", category);
     }
 
@@ -160,13 +199,4 @@ public class PostController {
         return "post/main";
     }
 
-    @PostMapping("/share/{id}")
-    public String sharing(Model model, @PathVariable Long id){
-        Challenge challenge = challengeService.findChallengeById(id).orElse(null);
-
-        postService.saveSharePost(challenge);
-
-        model.addAttribute("challenge", challenge);
-        return "post/share";
-    }
 }
