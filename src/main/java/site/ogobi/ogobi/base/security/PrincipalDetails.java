@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-// 시큐리티가 "/login" 주소 요청이 오면 낚아채서 로그인을 진행해준다.
+// 시큐리티가 "/auth/login" 주소 요청이 오면 낚아채서 로그인을 진행
 // 로그인 진행이 완료되면 시큐리티 session을 만들어준다.(Security Session(Session안에 특정영역))
 // 해당 세션안에는 Authentication 타입객체가 들어간다.
 // Authentication 은 UserDetails 타입 객체가 들어갈수 있다.

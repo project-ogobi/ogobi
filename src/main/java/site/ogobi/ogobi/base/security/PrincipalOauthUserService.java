@@ -18,7 +18,7 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
     @Autowired
     private MemberRepository memberRepository;
 
-    // Resource Server로부터 받은 userRequest 데이터에 대한 후처리
+    // Resource Server로부터 받은 userRequest 데이터 후처리
     // 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
     @Override
     @Transactional
@@ -28,7 +28,7 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
         System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
         System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());
         System.out.println("getAttributes: " + super.loadUser(userRequest).getAttributes());
-        // 소셜 로그인 버튼 클릭 -> 소셜 로그인 창 -> 로그인 완료 -> code를 리턴(OAuth - Clien 라이브러리가 받아줌) -> code를 통해서 AcssToken요청 (access토큰 받음)
+        // 소셜 로그인 버튼 클릭 -> 소셜 로그인 창 -> 로그인 완료 -> code를 리턴(OAuth - Client 라이브러리가 받아줌) -> code를 통해서 AccessToken 요청
         // => "userRequest"가 가지고 있는 정보
         // 회원 프로필을 받을 때 사용되는 "loadUser" 함수 -> Resource Server로부터 정보를 받을 수 있다.
 
@@ -49,7 +49,7 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
         String password = "test"; // TODO: 복호화
         String email = oAuth2UserInfo.getEmail();
 
-        Member memberEntity = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("username(%s) not found".formatted(username))); // TODO: Optional을 예외처리하여 Member로 받게되면 stackoverflow
+        Member memberEntity = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("username(%s) not found".formatted(username)));
         // 처음 서비스를 이용한 회원일 경우
         if (memberEntity == null) {
             memberEntity = Member.builder()
