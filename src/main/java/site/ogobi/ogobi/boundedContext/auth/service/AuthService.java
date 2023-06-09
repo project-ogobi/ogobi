@@ -36,9 +36,4 @@ public class AuthService {
                 .build();
         memberRepository.save(member);
     }
-
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
-    }
-
 }

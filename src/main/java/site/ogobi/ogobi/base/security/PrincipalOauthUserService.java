@@ -1,7 +1,7 @@
 package site.ogobi.ogobi.base.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -14,9 +14,10 @@ import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class PrincipalOauthUserService extends DefaultOAuth2UserService {
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // Resource Server로부터 받은 userRequest 데이터 후처리
     // 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
@@ -45,19 +46,19 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
 
         String providerType = oAuth2UserInfo.getProviderType();
         String providerId = oAuth2UserInfo.getProviderId();
-        String username = providerType + "_" + providerId;
-        String password = "test"; // TODO: 복호화
         String email = oAuth2UserInfo.getEmail();
+        String username = providerType + "_" + providerId;
+        String password = passwordEncoder.encode("");
 
-        Member memberEntity = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("username(%s) not found".formatted(username)));
+        Member memberEntity = memberRepository.findByUsername(username).orElse(null);
         // 처음 서비스를 이용한 회원일 경우
         if (memberEntity == null) {
             memberEntity = Member.builder()
-                    .username(username)
-                    .password(password)
-                    .email(email)
                     .providerType(providerType)
                     .provideId(providerId)
+                    .email(email)
+                    .username(username)
+                    .password(password)
                     .nickname(username)
                     .build();
             memberRepository.save(memberEntity);
