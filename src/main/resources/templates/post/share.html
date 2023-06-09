@@ -36,24 +36,39 @@
              th:text="|${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')} (수정됨)|"></div>
     </div>
     <div class="ml-6">
-        <p class="m-4 p-3" th:utext="${post.content}"></p>
-        <div>
-            <div class="bg-indigo-200 rounded-2xl p-4 h-auto">
-                <div class="flex w-full">
-                    <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
-                        <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
-                        <div th:text="${challenge.description}"></div>
-                    </div>
-                    <div class="divider divider-horizontal"></div>
-                    <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-left p-1">
-                        <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
-                        <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
-                        <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
-                    </div>
+        <div class="bg-indigo-200 rounded-2xl p-4 h-auto">
+            <div class="flex w-full">
+                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
+                    <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
+                    <div th:text="${challenge.description}"></div>
+                </div>
+                <div class="divider divider-horizontal"></div>
+                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-left p-1">
+                    <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
+                    <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
+                    <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
                 </div>
             </div>
         </div>
+        <th:block th:if="${challenge.hasSpendingHistory}">
+            <div class="flex items-center justify-center" th:each="spendingHistory: ${challenge.getSpendingHistories()}">
+                <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 object-center">
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>
+                        <div th:text="${spendingHistory.getPrice + '원'}"></div>
+                        <p>날짜-시간</p>
+                        <div th:text="${spendingHistory.getDescription}"></div>
+
+                        <div th:each="image: ${spendingHistory.getImageFiles()}">
+                            <img th:src="${image.getUploadFileUrl}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+        <p class="p-3" th:utext="${post.content}"></p>
     </div>
+
     <!-- 추천 -->
     <div class="my-3 flex justify-center">
         <form th:data-submit-message="${isLiked} ? '취소하시겠습니까?' : '추천하시겠습니까?'"

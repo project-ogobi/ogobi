@@ -119,7 +119,7 @@ public class ChallengeController {
         return "redirect:/challenges";
     }
 
-
+    
 
 
 }
