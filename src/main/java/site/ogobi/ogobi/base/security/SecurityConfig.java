@@ -65,22 +65,18 @@ public class SecurityConfig {
 
     }
 
+    //  비밀번호 찾기 설정 등록
+    @Bean
+    public PasswordResetConfig passwordResetConfig() {
+        return new PasswordResetConfig();
+    }
+
     // 로그인 방식 등록
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration ac) throws Exception {
         return ac.getAuthenticationManager();
     }
 
-    // Password 암호화 방식 설정
-    @Bean
-    public PasswordEncoder passwordEncoderConfig() {
-        return new SCryptPasswordEncoder(
-                16384,
-                8,
-                1,
-                32,
-                64);
-    }
 
 
 }
