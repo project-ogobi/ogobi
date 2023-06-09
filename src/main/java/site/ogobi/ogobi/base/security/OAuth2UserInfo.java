@@ -34,3 +34,28 @@ class KakaoUserInfo implements OAuth2UserInfo {
         return String.valueOf(kakaoAccount.get("email"));
     }
 }
+
+class GoogleUserInfo implements OAuth2UserInfo {
+    private Map<String, Object> attributes;
+
+    public GoogleUserInfo(Map<String, Object> attributes) {
+
+        this.attributes = attributes;
+    }
+
+    @Override
+    public String getProviderId() {
+        return String.valueOf(attributes.get("sub"));
+    }
+
+    @Override
+    public String getProviderType() {
+        return "google";
+    }
+
+    @Override
+    public String getEmail() {
+        return String.valueOf(attributes.get("email"));
+    }
+}
+

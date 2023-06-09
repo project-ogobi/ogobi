@@ -38,8 +38,10 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = null;
 
         if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
-            oAuth2UserInfo = new KakaoUserInfo((Map)oAuth2User.getAttributes().get("kakao_account"),
+            oAuth2UserInfo = new KakaoUserInfo((Map) oAuth2User.getAttributes().get("kakao_account"),
                     String.valueOf(oAuth2User.getAttributes().get("id")));
+        } else if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         } else {
             System.out.println("지원하지 않는 로그인 서비스 입니다.");
         }
@@ -49,6 +51,7 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
         String username = providerType + "_" + providerId;
         String password = passwordEncoder.encode("");
+        String nickname = providerType + "_" + username.substring(username.indexOf("_") + 1, username.indexOf("_") + 7);
 
         Member memberEntity = memberRepository.findByUsername(username).orElse(null);
         // 처음 서비스를 이용한 회원일 경우
@@ -59,7 +62,7 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
                     .email(email)
                     .username(username)
                     .password(password)
-                    .nickname(username)
+                    .nickname(nickname)
                     .build();
             memberRepository.save(memberEntity);
         }

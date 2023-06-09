@@ -38,7 +38,11 @@ spring:
             client-name: Kakao
             authorization-grant-type: authorization_code
             client-authentication-method: POST # 카카오는 필수 파라미터를 POST로 요청
-            redirect-uri: http://localhost:8111/login/oauth2/code/kakao # 코드를 받는 URL
+            redirect-uri: 'http://localhost:8111/login/oauth2/code/{registrationId}' # 코드를 받는 URL
+          google:
+            scope:
+              - email
+            redirect-uri: 'http://localhost:8111/login/oauth2/code/{registrationId}'
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
