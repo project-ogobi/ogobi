@@ -27,8 +27,9 @@ public class SpendingHistoryForm {
     private List<MultipartFile> imageFiles;
 
     @Builder
-    public SpendingHistoryForm(String itemName, Integer itemPrice) {
+    public SpendingHistoryForm(String itemName, Integer itemPrice, String description) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
+        this.description = description;
     }
 }
