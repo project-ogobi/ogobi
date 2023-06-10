@@ -34,8 +34,8 @@ public class Member extends BaseEntity {
     private String email;
     private String providerType; // 어떤 OAuth인지 (local, kakao, naver...)
     private String provideId; // 해당 OAuth의 key(ID)
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
-    private List<String> titles;    //todo 왜 ...?
+//    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+//    private List<String> titles;    //todo 왜 ...?
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
