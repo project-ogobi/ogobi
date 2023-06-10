@@ -3,8 +3,6 @@ package site.ogobi.ogobi.boundedContext.challenge.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +13,10 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.post.service.PostService;
+import site.ogobi.ogobi.boundedContext.title.ChallengeALot;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/challenges")
@@ -29,6 +26,7 @@ public class ChallengeController {
 
     private final Rq rq;
     private final ChallengeService challengeService;
+    private ChallengeALot challengeALot;
 
     //challengeHome
     @PreAuthorize("isAuthenticated()")
@@ -50,10 +48,16 @@ public class ChallengeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("")
     public String create(@Valid CreateForm createForm, BindingResult result){
+        Member member = rq.getMember();
+
         if (result.hasErrors()) {
             return "/challenge/createForm";
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
+
+        if (challengeALot.condition(member)){
+            //todo 칭호를 받는 조건이 충족되었는지 확인, 충족한다면 칭호를 member의 titles에 넣는다.
+        }
         return "redirect:/challenges";
     }
 
