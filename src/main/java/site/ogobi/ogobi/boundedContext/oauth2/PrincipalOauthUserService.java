@@ -1,4 +1,4 @@
-package site.ogobi.ogobi.base.security;
+package site.ogobi.ogobi.boundedContext.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.ogobi.ogobi.base.security.PrincipalDetails;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 
@@ -39,11 +40,11 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
 
         if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
             oAuth2UserInfo = new KakaoUserInfo((Map) oAuth2User.getAttributes().get("kakao_account"),
-            String.valueOf(oAuth2User.getAttributes().get("id")));
+                    String.valueOf(oAuth2User.getAttributes().get("id")));
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
-            oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
+            oAuth2UserInfo = new NaverUserInfo((Map) oAuth2User.getAttributes().get("response"));
         } else {
             System.out.println("지원하지 않는 로그인 서비스 입니다.");
         }

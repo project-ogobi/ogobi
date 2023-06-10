@@ -1,18 +1,20 @@
-package site.ogobi.ogobi.base.security;
+package site.ogobi.ogobi.boundedContext.oauth2;
 
 import java.util.Map;
 
 public interface OAuth2UserInfo {
 
     String getProviderId();
+
     String getProviderType();
+
     String getEmail();
 }
 
 class KakaoUserInfo implements OAuth2UserInfo {
 
-    private String id;
-    private Map<String, Object> kakaoAccount;
+    private final String id;
+    private final Map<String, Object> kakaoAccount;
 
     public KakaoUserInfo(Map<String, Object> attributes, String id) {
         this.kakaoAccount = attributes;
@@ -36,7 +38,7 @@ class KakaoUserInfo implements OAuth2UserInfo {
 }
 
 class GoogleUserInfo implements OAuth2UserInfo {
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     public GoogleUserInfo(Map<String, Object> attributes) {
 
@@ -60,9 +62,9 @@ class GoogleUserInfo implements OAuth2UserInfo {
 }
 
 class NaverUserInfo implements OAuth2UserInfo {
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
-    public NaverUserInfo(Map<String, Object> attributes ) {
+    public NaverUserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 
