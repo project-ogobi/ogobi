@@ -60,7 +60,6 @@ public class PrincipalOauthUserService extends DefaultOAuth2UserService {
         if (memberEntity == null) {
             memberEntity = Member.builder()
                     .providerType(providerType)
-                    .provideId(providerId)
                     .email(email)
                     .username(username)
                     .password(password)
