@@ -89,10 +89,11 @@ public class ChallengeService {
         LocalDateTime today = LocalDateTime.now();
         Challenge challenge = challengeRepository.findById(id).orElse(null);
 
-        if (challenge.getEndDate().isAfter(ChronoLocalDate.from(today))){
-            challenge.setSuccess(true);
+        if (challenge.getUsedMoney() > challenge.getTargetMoney()){
+            challenge.setSuccess(false);    //  실패한 경우, todo 실패 리스트에 넣어야 함 / 성공,실패 리스트 구현 필요..
+            return false;
         }
-        return false;
+        return true;
     }
 
     public List<Challenge> findByMember(Member member){

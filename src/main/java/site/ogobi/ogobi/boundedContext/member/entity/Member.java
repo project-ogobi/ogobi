@@ -37,6 +37,7 @@ public class Member extends BaseEntity {
 //    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
 //    private List<String> titles;    //todo 왜 ...?
 
+
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;

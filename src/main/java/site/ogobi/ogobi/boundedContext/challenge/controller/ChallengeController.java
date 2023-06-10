@@ -111,6 +111,8 @@ public class ChallengeController {
             return "";//"올바르지 않은 접근 처리";
         }
         challengeService.update(rq.getMember(), updateForm, id);
+
+        challengeService.isSuccess(id); //  챌린지 실패 여부를 확인, false일 경우 실패
         return "redirect:/challenges";
     }
 
