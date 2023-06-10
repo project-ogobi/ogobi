@@ -26,7 +26,7 @@ class KakaoUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProviderType() {
-        return "kakao";
+        return "Kakao";
     }
 
     @Override
@@ -50,7 +50,30 @@ class GoogleUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProviderType() {
-        return "google";
+        return "Google";
+    }
+
+    @Override
+    public String getEmail() {
+        return String.valueOf(attributes.get("email"));
+    }
+}
+
+class NaverUserInfo implements OAuth2UserInfo {
+    private Map<String, Object> attributes;
+
+    public NaverUserInfo(Map<String, Object> attributes ) {
+        this.attributes = attributes;
+    }
+
+    @Override
+    public String getProviderId() {
+        return String.valueOf(attributes.get("id"));
+    }
+
+    @Override
+    public String getProviderType() {
+        return "Naver";
     }
 
     @Override
