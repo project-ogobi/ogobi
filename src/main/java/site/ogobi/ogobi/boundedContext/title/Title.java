@@ -1,14 +1,13 @@
 package site.ogobi.ogobi.boundedContext.title;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
-import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import jakarta.persistence.*;
 
+@Entity
+public class Title {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
 
-public interface Title {
-
-    @OneToMany(mappedBy = "Title", cascade = {CascadeType.ALL})
-    String titleName = null;
-
-    Boolean condition(Member member);
 }
+

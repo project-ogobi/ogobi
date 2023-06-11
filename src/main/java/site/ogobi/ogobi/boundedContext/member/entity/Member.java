@@ -13,13 +13,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
-import site.ogobi.ogobi.boundedContext.like.entity.Like;
-import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.title.Title;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -34,8 +31,8 @@ public class Member extends BaseEntity {
     private String email;
     private String providerType; // 어떤 OAuth인지 (local, kakao, naver...)
     private String provideId; // 해당 OAuth의 key(ID)
-//    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
-//    private List<String> titles;    //todo 왜 ...?
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+    private List<Title> titles;
 
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})

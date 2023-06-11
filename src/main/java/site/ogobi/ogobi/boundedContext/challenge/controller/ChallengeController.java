@@ -13,7 +13,8 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.title.ChallengeALot;
+import site.ogobi.ogobi.boundedContext.title.ALotChallenge;
+import site.ogobi.ogobi.boundedContext.title.Title;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ public class ChallengeController {
 
     private final Rq rq;
     private final ChallengeService challengeService;
-    private ChallengeALot challengeALot;
+    private final ALotChallenge aLotChallenge;
 
     //challengeHome
     @PreAuthorize("isAuthenticated()")
@@ -55,9 +56,12 @@ public class ChallengeController {
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
 
-        if (challengeALot.condition(member)){
-            //todo 칭호를 받는 조건이 충족되었는지 확인, 충족한다면 칭호를 member의 titles에 넣는다.
+        if (member.getChallenge().size()>=10){
+            Title title = aLotChallenge;
+
+            challengeService.getTitle(title);
         }
+
         return "redirect:/challenges";
     }
 
