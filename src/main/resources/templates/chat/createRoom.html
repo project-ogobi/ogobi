@@ -1,0 +1,23 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content">
+
+    <!-- content 시작 -->
+    <div class="w-full">
+        <div class="font-semibold text-2xl my-1 text-center my-4">채팅방 생성</div>
+        <form class="space-y-4" action="#" th:action="@{/chatrooms/create}" th:object="${chatRoom}" method="post">
+            <div>
+                <label for="name">채팅방 이름:</label>
+                <input type="text" id="name" name="name" th:field="*{name}" required="required" class="input input-bordered input-primary w-full" placeholder="Type here" />
+
+                <label for="content">채팅방 설명:</label>
+                <textarea id="content" name="content" th:field="*{content}" required="required" class="textarea textarea-primary w-full" placeholder="Type here"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">생성</button>
+        </form>
+    </div>
+    <!-- content 종료 -->
+
+</div>
+</html>
