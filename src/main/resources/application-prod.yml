@@ -45,3 +45,7 @@ logging:
 
 image:
   upload-dir: classpath:/tmp/
+
+custom:
+  site:
+    baseUrl: https://www.ogobi.site
