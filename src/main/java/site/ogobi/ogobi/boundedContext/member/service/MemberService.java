@@ -2,6 +2,7 @@ package site.ogobi.ogobi.boundedContext.member.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
@@ -24,6 +25,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
     private final MemberTitleRepository memberTitleRepository;
+    private final PasswordEncoder passwordEncoder;
+
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
@@ -100,5 +103,29 @@ public class MemberService {
     public void setTitle(Member member, String title) {
         member.setTitle(title);
         memberRepository.save(member);
+    }
+    public Member findByResetToken(String resetToken) {
+        Optional<Member> foundMember = memberRepository.findByResetToken(resetToken);
+        if (foundMember.isPresent()) {
+            return foundMember.get();
+        } else {
+            return null;
+        }
+
+    }
+
+    public Member findById(String memberId) {
+        Optional<Member> foundMember = memberRepository.findById(Long.parseLong(memberId));
+        if (foundMember.isPresent()) {
+            return foundMember.get();
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void updateNewPassword(Member member, String newPassword) {
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        member.setPassword(encodedPassword);
     }
 }

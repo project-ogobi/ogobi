@@ -33,6 +33,7 @@ public class Member extends BaseEntity {
     private String provideId; // 해당 OAuth의 key(ID)
     @Setter
     private String title;   //  칭호
+    private String resetToken = null;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
@@ -62,5 +63,13 @@ public class Member extends BaseEntity {
         }
 
         return grantedAuthorities;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,0 +1,20 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content" class="container my-3">
+    <form th:action="@{/auth/reset-token}" method="post">
+        <div class="mb-3">
+            <label for="token" class="form-label">인증번호 입력</label>
+            <input type="text" name="token" id="token" class="form-control" required>
+        </div>
+        <div th:if="${param.error}">
+            <hr style="margin-bottom: 10px">
+            <p style="color: red;">인증번호가 올바르지 않습니다.</p>
+        </div>
+        <button type="submit" class="btn btn-md btn-primary" value="reset token">제출</button>
+        <hr style="margin-top: 10px; border: none; background-color: transparent;">
+        <a th:href="@{/auth/forgot-password}" style="color: lightblue; text-decoration: underline;">인증번호를 받지 못했나요?</a>
+    </form>
+</div>
+
+</html>
