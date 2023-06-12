@@ -80,7 +80,7 @@ public class MemberService {
     }
 
     public List<Title> titleList(Member member) {
-        Optional<MemberTitle> memberTitles = memberTitleRepository.findByMember(member);
+        List<MemberTitle> memberTitles = memberTitleRepository.findByMember(member);
 
         if (memberTitles.isEmpty()) {
             return Collections.emptyList();
@@ -88,6 +88,7 @@ public class MemberService {
 
         List<Title> titles = new ArrayList<>();
 
+        
         for (MemberTitle memberTitle : memberTitles) {
             titles.add(memberTitle.getTitle()); //  todo 에러..
         }

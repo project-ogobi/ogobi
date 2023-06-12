@@ -3,11 +3,30 @@
 
 
 <div layout:fragment="content" class="container">
+    <script>
+        $(document).ready(function() {
+            $(".a__move").click(function(event) {
+                var itemId = $(this).attr("href");
+                adjustSlideScroll(itemId);
+            });
+        });
+        function adjustSlideScroll(itemId) {
+            var offset = 500; // 스크롤 위치를 조정할 오프셋 값
+            var selectedCarouselItem = $(itemId);
+            var topOffset = selectedCarouselItem.offset().top - offset;
+
+            $("html, body").animate({
+                scrollTop: topOffset
+            }, 800); // 800ms 동안 스크롤 애니메이션을 적용
+        }
+
+    </script>
+
     <h1 class="font-semibold p-3 text-center text-lg">인기글</h1>
 
     <!--   카드 시작 -->
     <div class="carousel w-full mb-3">
-        <div th:id="${'item' + i}" class="carousel-item w-full flex justify-center" th:each="post, i: ${bestPosts}">
+        <div th:id="${'item' + post.id}" class="carousel-item w-full flex justify-center" th:each="post, i: ${bestPosts}">
             <div class="bg-indigo-200 rounded-lg w-5/6 p-4 flex-col flex">
                 <div class="mb-1 px-3">
                     <div class="badge badge-sm badge-primary mb-1" th:text="|TOP ${i.count}|"></div>
@@ -31,7 +50,7 @@
     <!--   번호 -->
     <div class="flex w-full gap-2 justify-center items-center">
         <div class="flex-col" th:each="post, i : ${bestPosts}">
-            <a th:href="${'#item' + i}" class="btn btn-xs btn-primary" th:text="${i.count}">index</a>
+            <a th:href="${'#item' + post.id}" class="btn btn-xs btn-primary a__move" th:text="${i.count}">index</a>
         </div>
     </div>
 

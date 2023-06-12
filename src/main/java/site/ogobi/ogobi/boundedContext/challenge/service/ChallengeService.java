@@ -107,7 +107,6 @@ public class ChallengeService {
                 .member(rq.getMember())
                 .title(title)
                 .build();
-
         memberTitleRepository.save(memberTitle);
     }
 }

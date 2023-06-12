@@ -85,6 +85,8 @@ public class NotProd {
 
             spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyLunch, sampleImage);
             spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyCoffee, sampleImage2);
+
+
         };
     }
 

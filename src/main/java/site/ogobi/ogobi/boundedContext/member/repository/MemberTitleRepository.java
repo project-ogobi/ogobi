@@ -5,10 +5,11 @@ import org.springframework.stereotype.Repository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MemberTitleRepository extends JpaRepository<MemberTitle, Long> {
-    Optional<MemberTitle> findByMember(Member member);
+    List<MemberTitle> findByMember(Member member);
 
 }
