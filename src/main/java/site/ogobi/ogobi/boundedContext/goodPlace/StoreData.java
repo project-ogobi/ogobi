@@ -25,4 +25,6 @@ public class StoreData {
     private String phoneNumber;
     @JsonProperty("SH_PHOTO")
     private String photo;
+    @JsonProperty("SH_RCMN")
+    private int recommend; // 추천수
 }

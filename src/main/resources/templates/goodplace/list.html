@@ -23,6 +23,7 @@
         .card:hover {
             background-color: rgba(0, 0, 0, 0.05);
         }
+
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -34,18 +35,24 @@
         <div class="card w-5/12 bg-base-100 shadow-xl mb-5" th:each="store : ${stores}">
             <figure><img class="w-full h-60" th:src="${store.photo}"/></figure>
             <div class="card-body">
-                <h2 class="card-title">
-                    <span th:text="${store.name}"></span>
+                <h2 class="card-title flex justify-between">
+                    <span th:text="${store.name}" th:class="${#strings.length(store.name) &gt;= 9} ? 'text-lg'"></span>
+                    <span class="flex items-center gap-1 text-indigo-300">
+                        <i class="fa-regular fa-thumbs-up"></i>
+                        <span class="text-base" th:text="${store.recommend}">추천수</span>
+                    </span>
+                    <h2 class="card-title">
+                        <span th:text="${store.name}"></span>
+                    </h2>
+                    <p th:text="'전화번호: ' + ${store.phoneNumber}"></p>
+                    <p th:text="'주소: ' + ${store.address}"></p>
+                    <!-- 추가 필요한 내용 -->
+                    <div class="card-actions justify-end">
+                        <div class="badge badge-outline" th:text="${store.categoryName}"></div>
+                    </div>
                 </h2>
-                <p th:text="'전화번호: ' + ${store.phoneNumber}"></p>
-                <p th:text="'주소: ' + ${store.address}"></p>
-                <!-- 추가 필요한 내용 -->
-                <div class="card-actions justify-end">
-                    <div class="badge badge-outline" th:text="${store.categoryName}"></div>
-                </div>
             </div>
         </div>
     </div>
-
 </div>
 </html>

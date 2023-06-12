@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URLEncoder;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class ApiController {
+
+//    private final ListPriceModelStoreService listPriceModelStoreService;
 
     @GetMapping("/goodplace")
     public String goodPlace(
@@ -29,6 +32,10 @@ public class ApiController {
             urlBuilder.append("/" + URLEncoder.encode(start, "UTF-8")); /* 요청 시작위치 */
             urlBuilder.append("/" + URLEncoder.encode(end, "UTF-8")); /* 요청 종료위치 */
 
+//            if (end.isBlank()) {
+//                end = listPriceModelStoreService.getTotal();
+//            } TODO: 해당 분류코드의 모든 데이터가 나올 수 있도록
+
             if (!vo.isBlank()) {
                 urlBuilder.append("/" + URLEncoder.encode(vo, "UTF-8")); /* 분류 코드 */
             }
@@ -41,7 +48,7 @@ public class ApiController {
                     .block();
 
             List<StoreData> stores = response.getService().getStoreData();
-
+            stores.sort(Comparator.comparingInt(StoreData::getRecommend).reversed()); // 추천수를 기준으로 내림차순으로 정렬
             model.addAttribute("stores", stores);
             return "goodplace/list";
 

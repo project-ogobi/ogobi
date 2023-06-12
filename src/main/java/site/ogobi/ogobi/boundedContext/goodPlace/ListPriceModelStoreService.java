@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+//@Component
 public class ListPriceModelStoreService {
     @JsonProperty("list_total_count")
     private String total;
