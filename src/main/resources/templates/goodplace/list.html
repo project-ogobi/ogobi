@@ -1,0 +1,51 @@
+<html layout:decorate="~{template}">
+
+<div layout:fragment="content" class="overflow-x-auto">
+    <h1 class="font-semibold p-3 text-center text-lg">착한가게</h1>
+    <!-- 업종 분류 -->
+    <form class="mb-3 mr-10 text-right" action="/goodplace" method="GET">
+        <select name="vo" class="select select-bordered select-xs w-1/4 max-w-xs">
+            <option value="" disabled selected>업종</option>
+            <option value="001">한식</option>
+            <option value="002">중식</option>
+            <option value="003">경양식,일식</option>
+            <option value="004">기타외식업(다방,패스트푸드등)</option>
+            <option value="005">이 미용업</option>
+            <option value="006">목욕업</option>
+            <option value="007">세탁업</option>
+            <option value="008">숙박업(호텔,여관)</option>
+            <option value="013">기타서비스업종</option>
+        </select>
+        <button type="submit" class="btn btn-xs btn-primary">검색</button>
+    </form>
+    <!-- 착한가게 목록 -->
+    <style>
+        .card:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+    </style>
+    <div class="card-container">
+        <div class="card w-5/12 bg-base-100 shadow-xl mb-5" th:each="store : ${stores}">
+            <figure><img class="w-full h-60" th:src="${store.photo}"/></figure>
+            <div class="card-body">
+                <h2 class="card-title">
+                    <span th:text="${store.name}"></span>
+                </h2>
+                <p th:text="'전화번호: ' + ${store.phoneNumber}"></p>
+                <p th:text="'주소: ' + ${store.address}"></p>
+                <!-- 추가 필요한 내용 -->
+                <div class="card-actions justify-end">
+                    <div class="badge badge-outline" th:text="${store.categoryName}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</html>
