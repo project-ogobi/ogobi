@@ -88,9 +88,8 @@ public class MemberService {
 
         List<Title> titles = new ArrayList<>();
 
-        
         for (MemberTitle memberTitle : memberTitles) {
-            titles.add(memberTitle.getTitle()); //  todo 에러..
+            titles.add(memberTitle.getTitle());
         }
 
         return titles;

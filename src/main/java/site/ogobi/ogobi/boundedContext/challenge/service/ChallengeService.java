@@ -13,6 +13,7 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
 import site.ogobi.ogobi.boundedContext.title.Title;
+import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class ChallengeService {
     private final Rq rq;
     private final ChallengeRepository challengeRepository;
     private final MemberTitleRepository memberTitleRepository;
+    private final TitleRepository titleRepository;
 
     @Transactional
     public void create(Member member, String challengeName, String description, int targetMoney, LocalDate startDate, LocalDate endDate) {
@@ -102,10 +104,11 @@ public class ChallengeService {
         return challengeRepository.findByMember(member);
     }
 
-    public void getTitle(Title title){
+    public void getTitle(){
+        Title aLotChallenge = titleRepository.findById(1L).orElse(null);
         MemberTitle memberTitle = MemberTitle.builder()
                 .member(rq.getMember())
-                .title(title)
+                .title(aLotChallenge)
                 .build();
         memberTitleRepository.save(memberTitle);
     }

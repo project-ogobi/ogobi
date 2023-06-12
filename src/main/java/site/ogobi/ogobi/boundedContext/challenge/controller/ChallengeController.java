@@ -14,6 +14,7 @@ import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.title.Title;
+import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class ChallengeController {
 
     private final Rq rq;
     private final ChallengeService challengeService;
+
 
     //challengeHome
     @PreAuthorize("isAuthenticated()")
@@ -54,11 +56,9 @@ public class ChallengeController {
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
 
-//        if (member.getChallenge().size()==10){
-//            Title title = ;
-//
-//            challengeService.getTitle(title);
-//        }
+        if (member.getChallenge().size()==10){
+            challengeService.getTitle();
+        }
 
         return "redirect:/challenges";
     }

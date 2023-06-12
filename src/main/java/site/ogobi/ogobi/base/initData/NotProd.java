@@ -13,6 +13,8 @@ import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
+import site.ogobi.ogobi.boundedContext.title.Title;
+import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,11 +27,10 @@ public class NotProd {
     @Bean
     CommandLineRunner initData(
             MemberService memberService,
-            MemberRepository memberRepository,
+            TitleRepository titleRepository,
             ChallengeService challengeService,
             SpendingHistoryService spendingHistoryService,
-            AuthService authService,
-            PostService postService
+            AuthService authService
     ) {
 
         return args -> {
@@ -86,6 +87,9 @@ public class NotProd {
             spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyLunch, sampleImage);
             spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyCoffee, sampleImage2);
 
+            Title aLotChallenge = Title.builder()
+                    .name("명예 도전자").build();
+            titleRepository.save(aLotChallenge);
 
         };
     }
