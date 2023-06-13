@@ -2,29 +2,61 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content">
+    <div class="font-semibold p-3 text-center text-lg">채팅방 목록</div>
 
-    <!-- content 시작 -->
-    <div class="w-full">
-        <div class="font-semibold text-2xl my-1 text-center my-4">채팅방 목록</div>
-        <a href = "/chatrooms/create" class="btn btn-primary">채팅방 생성</a>
-
-        <div th:each="chatRoom : ${chatRooms}">
-            <div class="card w-96 bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title" th:text="${chatRoom.name}"></h2>
-                    <p th:text="${chatRoom.content}"></p>
-                    <p th:text="${'방장: ' + chatRoom.owner.getNickname()}"></p>
-                    <p th:text="${'현재인원: ' + chatRoom.chatUsers.size()}">명</p>
-                    <div class="card-actions justify-end">
-                        <a th:href = "@{/chatrooms/{id}(id=${chatRoom.id})}" class="btn btn-primary">입장하기</a>
+    <div class="overflow-x-auto w-full">
+        <table class="table w-full">
+            <!-- head -->
+            <thead class>
+            <tr style="text-align: center">
+                <th></th>
+                <th class="text-base">제목</th>
+                <th class="text-base">방장</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- row -->
+            <tr class="hover" style="text-align: center" th:each="chatRoom : ${chatRooms}">
+                <td class="pr-1">
+                    <div class="flex justify-center items-center">
+                        <div class="mask mask-squircle w-12 h-12 flex justify-center items-center">
+                            <i class="fa-regular fa-comment-dots fa-flip-horizontal fa-2xl"></i>
+                        </div>
                     </div>
-                </div>
+                </td>
+                <td style="text-align: start" class="font-semibold">
+                    <div>
+                        <span th:text="${chatRoom.name}">제목</span>
+                        <span class="badge badge-ghost badge-sm gap-2 text-gray-400 font-semibold ml-2">
+                            <i class="fa-solid fa-user"></i>
+                            <span th:text="${chatRoom.chatUsers.size()}">인원</span>
+                        </span>
+                    </div>
+                    <p class="text-sm opacity-50 mt-1" th:text="${chatRoom.content}">설명</p>
+                </td>
+                <td>
+                    <div>
+                        <div th:text="${chatRoom.owner.getNickname()}">방장</div>
+<!--                        <div class="text-sm opacity-50">칭호</div>-->
+                    </div>
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-outline btn-sm" th:href="@{/chatrooms/{id}(id=${chatRoom.id})}">입장하기</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${!#lists.isEmpty(chatRooms)}">
+            <hr class="border-gray-300 mb-5">
+            <div class="flex justify-center">
+                <a href="/chatrooms/create" class="btn btn-primary mb-5">채팅방 생성</a>
             </div>
-
         </div>
-
     </div>
-    <!-- content 종료 -->
-
+    <!-- 게시글이 없을 때 메시지 출력 -->
+    <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-xl mb-2 p-5" th:if="${#lists.isEmpty(chatRooms)}">
+        채팅방이 없습니다.
+    </div>
 </div>
 </html>
