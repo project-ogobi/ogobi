@@ -63,5 +63,11 @@
             </div>
         </div>
     </div>
+    <!-- 페이징 -->
+    <div class="btn-group flex items-center justify-center mb-5" th:unless="${param.vo}">
+        <a class="btn btn-sm btn-outline" th:href="@{/goodplace}" th:if="${param.start != null and param.start != '1001'}">이전</a>
+        <a class="btn btn-sm btn-outline" th:href="@{/goodplace(start=1001, end=2000)}" th:unless="${param.start != null and param.start != '1001'}">다음</a>
+    </div>
+
 </div>
 </html>
