@@ -56,7 +56,7 @@ public class ChallengeController {
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
 
-        if (member.getChallenge().size()==10){
+        if (member.getChallenge().size()==9){
             challengeService.getTitle();
         }
 

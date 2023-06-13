@@ -106,10 +106,14 @@ public class ChallengeService {
 
     public void getTitle(){
         Title aLotChallenge = titleRepository.findById(1L).orElse(null);
-        MemberTitle memberTitle = MemberTitle.builder()
-                .member(rq.getMember())
-                .title(aLotChallenge)
-                .build();
-        memberTitleRepository.save(memberTitle);
+
+        if(aLotChallenge!=null){
+            MemberTitle memberTitle = MemberTitle.builder()
+                    .member(rq.getMember())
+                    .title(aLotChallenge)
+                    .build();
+            memberTitleRepository.save(memberTitle);
+        }
+
     }
 }
