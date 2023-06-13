@@ -16,11 +16,12 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
 
-    public ChatMessage save(String content, String nickName, Long roomId) {
+    public ChatMessage save(String content, String nickName, Long senderId, Long roomId) {
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .chatRoomId(roomId)
                 .sender(nickName)
+                .senderId(senderId)
                 .content(content)
                 .timestamp(LocalDateTime.now())
                 .build();

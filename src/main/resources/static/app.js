@@ -13,10 +13,14 @@ function connect() {
     stompClient.connect(headers, function (frame) {
         console.log('Connected: ' + frame);
 
-        stompClient.subscribe(`/topic/chats/${chatRoomId}`, function (data) {
-            getChatMessages();
+        onConnected();
+    });
+}
 
-        });
+function onConnected() {
+    stompClient.subscribe(`/topic/chats/${chatRoomId}`, function (data) {
+
+        getChatMessages();
     });
 }
 
@@ -31,26 +35,26 @@ function getChatMessages() {
         }})
         .then(response => response.json())
         .then(body => {
-            console.log(body);
-            drawMessages(body);
+            const { messages, memberId } = body;
+            drawMessages(messages, memberId);
         })
         .catch(error => {
             console.error(error);
         });
 }
 
-function drawMessages(messages) {
+function drawMessages(messages, memberId) {
+
+    let isOwnChat = true;
 
     if (messages.length > 0) {
         fromId = messages[messages.length - 1].id;
     }
 
     messages.forEach((message) => {
+        let isOwnChat = message.senderId === memberId;
 
-        const newItem = document.createElement("li");
-        newItem.textContent = `${message.sender} : ${message.content}`;
-
-        ChatMessageUl.appendChild(newItem);
+        addChatBubble(isOwnChat, `${message.sender}`, `${message.content}`);
     });
 }
 
@@ -68,3 +72,20 @@ document.addEventListener("DOMContentLoaded", function() {
     getChatMessages();
     connect();
 });
+
+function addChatBubble(isOwnChat, sender, message) {
+    const chatContainer = document.createElement("div");
+    chatContainer.classList.add("chat", isOwnChat ? "chat-end" : "chat-start");
+
+    const chatHeader = document.createElement("div");
+    chatHeader.classList.add("chat-header");
+    chatHeader.textContent = sender;
+
+    const chatBubble = document.createElement("div");
+    chatBubble.classList.add("chat-bubble");
+    chatBubble.textContent = message;
+
+    chatContainer.appendChild(chatHeader);
+    chatContainer.appendChild(chatBubble);
+    ChatMessageUl.appendChild(chatContainer);
+}

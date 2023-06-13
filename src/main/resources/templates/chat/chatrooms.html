@@ -13,6 +13,7 @@
                 <div class="card-body">
                     <h2 class="card-title" th:text="${chatRoom.name}"></h2>
                     <p th:text="${chatRoom.content}"></p>
+                    <p th:text="${'방장: ' + chatRoom.owner.getNickname()}"></p>
                     <p th:text="${'현재인원: ' + chatRoom.chatUsers.size()}">명</p>
                     <div class="card-actions justify-end">
                         <a th:href = "@{/chatrooms/{id}(id=${chatRoom.id})}" class="btn btn-primary">입장하기</a>
