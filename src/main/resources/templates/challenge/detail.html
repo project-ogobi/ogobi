@@ -35,6 +35,7 @@
                         <div th:text="${spendingHistory.getPrice + '원'}"></div>
                         <div th:text="${#temporals.format(spendingHistory.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
                         <div th:text="${spendingHistory.getDescription}"></div>
+                        <div th:text="${spendingHistory.getDate}"></div>
 
                         <div th:each="image: ${spendingHistory.getImageFiles()}">
                             <img th:src="${image.getUploadFileUrl}"/>

@@ -147,7 +147,7 @@ public class ChallengeService {
             currentDate = currentDate.plusDays(1);
         }
         for (SpendingHistory sh : challenge.getSpendingHistories()) {
-            LocalDate date = sh.getCreateDate().toLocalDate();
+            LocalDate date = sh.getDate();
             graphData.put(date, graphData.get(date) + sh.getPrice());
         }
 

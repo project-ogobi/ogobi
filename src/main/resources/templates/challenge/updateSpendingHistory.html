@@ -33,6 +33,33 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
+                <div class="form-group">
+                    <label th:for="date">지출한 날짜</label>
+                    <input type="text" th:field="*{date}" id="datepicker" class="border border-primary rounded-md text-center">
+                </div>
+                <p id="date-error" class="fieldError" style="display: none; color: red;">날짜를 입력해주세요.</p>
+
+                <script>
+                    $( function() {
+                        $( "#datepicker" ).datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: "yy-mm-dd",
+                            onSelect: function(dateText) {
+                                $("#date-error").hide();
+                            }
+                        });
+
+                        $("form").submit(function(e) {
+                            // Check if the date input is empty
+                            if ($("#datepicker").val() === "") {
+                                $("#date-error").show();
+                                e.preventDefault();
+                            }
+                        });
+                    } );
+                </script>
+
                 <!-- 이미지 컨테이너 -->
                 <div>
                     <div id="image-container" class="my-3">

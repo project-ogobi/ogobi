@@ -36,6 +36,7 @@ public class SpendingHistoryService {
                 .content(form.getItemName())
                 .price(form.getItemPrice())
                 .description(form.getDescription())
+                .date(form.getDate())
                 .build();
 
         mappingImagesAndHistoryWithForm(spendingHistory, form, images);
@@ -49,6 +50,7 @@ public class SpendingHistoryService {
         item.setContent(form.getItemName());
         item.setPrice(form.getItemPrice());
         item.setDescription(form.getDescription());
+        item.setDate(form.getDate());
 
         item.setImageFiles(images);
         for (Image image : images) {
@@ -81,6 +83,7 @@ public class SpendingHistoryService {
                 .itemName(spendingHistory.getContent())
                 .itemPrice(spendingHistory.getPrice())
                 .description(spendingHistory.getDescription())
+                .date(spendingHistory.getDate())
                 .build();
         return spendingHistoryForm;
     }

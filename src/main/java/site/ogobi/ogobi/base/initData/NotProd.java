@@ -66,14 +66,18 @@ public class NotProd {
             challengeService.create(member, "테스트네임9", "테스트내용9", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
 
 
+            LocalDate localDate = LocalDate.parse("2023-06-11");
+            LocalDate localDate_v2 = LocalDate.parse("2023-06-12");
             SpendingHistoryForm historyCoffee = SpendingHistoryForm.builder()
                     .itemName("커피")
                     .itemPrice(4500)
+                    .date(localDate)
                     .build();
 
             SpendingHistoryForm historyLunch = SpendingHistoryForm.builder()
                     .itemName("점심")
                     .itemPrice(8000)
+                    .date(localDate_v2)
                     .build();
 
             Image image = Image.builder()

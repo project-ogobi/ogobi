@@ -27,6 +27,7 @@ public class SpendingHistory extends BaseEntity {
     private String content; // 지출내역 품목
     private int price; //각 사용금액 ex)4500원
     private String description; // 작성한 내용 ex)스타벅스커피...
+    private LocalDate date; // 실제 지출이 일어난 날짜
 
     @OneToMany(mappedBy = "spendingHistory", cascade = {ALL})
     private List<Image> imageFiles = new ArrayList<>();
