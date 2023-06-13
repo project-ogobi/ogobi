@@ -9,7 +9,7 @@
         <th:block th:unless="${@rq.member.hasChallenge}">
             <div>등록된 챌린지가 없습니다.</div>
         </th:block>
-
+        <a href="/challenges/createForm" id="btn-challenge-create"  class="btn btn-primary my-3">새 챌린지 등록하기</a>
         <th:block th:if="${@rq.member.hasChallenge}">
             <ul>
                 <li th:each="c: ${challenge}">
@@ -41,8 +41,6 @@
                 </li>
             </ul>
         </th:block>
-
-        <a href="/challenges/createForm" id="btn-challenge-create"  class="btn btn-primary my-3">새 챌린지 등록하기</a>
     </div>
     <!-- content 종료 -->
 

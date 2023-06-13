@@ -26,9 +26,11 @@
                         획득한 칭호
                     </div>
                     <div class="collapse-content bg-indigo-50">
-<!--                        <div class="font-semibold" th:if="${#lists.size(memberTitles)==0}">-->
-<!--                            획득한 칭호가 없습니다.</div>-->
-                        <div class="font-semibold" th:each="title : ${memberTitles}">칭호리스트</div>
+                        <div th:each="title : ${memberTitles}">
+                            <div class="font-semibold" th:if="${#lists.size(memberTitles)==0}">
+                                획득한 칭호가 없습니다.</div>
+                            <div class="font-semibold" th:text="${title.name}">칭호리스트</div>
+                        </div>
                     </div>
                 </div>
                 <div class="collapse bg-indigo-100">
@@ -38,8 +40,8 @@
                     </div>
                     <div class="collapse-content bg-indigo-50">
                         <div th:each="challenge : ${runningChallengeList}" class="mt-2 p-1">
-<!--                            <div class="font-semibold" th:if="${#lists.size(successList)==0}">-->
-<!--                                진행 중인 챌린지가 없습니다.</div>-->
+                            <div class="font-semibold" th:if="${#lists.size(runningChallengeList)==0}">
+                                진행 중인 챌린지가 없습니다.</div>
                             <a th:text="${challenge.challengeName}" th:href="@{/challenges/{id}(id=${challenge.id})}" class="font-semibold text-indigo-900">챌린지 제목</a>
                         </div>
                     </div>
