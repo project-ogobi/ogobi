@@ -3,6 +3,9 @@ package site.ogobi.ogobi.boundedContext.challenge.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.math.raw.Mod;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +15,14 @@ import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
+import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,16 +73,32 @@ public class ChallengeController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}")
-    public String showDetailById(@PathVariable Long challenge_id, Model model){
+    public String showDetailById(@PathVariable Long challenge_id, Model model) throws IOException {
 
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         if(!Objects.equals(rq.getMember().getId(), challenge.getMember().getId())){
             return "error";
         }
-
         model.addAttribute("challenge", challenge);
         return "challenge/detail";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}/showGraph")
+    public String showGraph(@PathVariable Long challenge_id, Model model) throws IOException {
+        // 지출내역 데이터 구성
+
+
+        // 그래프 생성 후 이미지 저장,업로드
+        GraphImage chartImage = challengeService.generatePriceChart(challenge_id);
+
+        // 아래 템플릿에서 이미지 불러오면 끝.
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        model.addAttribute("challenge", challenge);
+
+        return "challenge/graph";
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/update")

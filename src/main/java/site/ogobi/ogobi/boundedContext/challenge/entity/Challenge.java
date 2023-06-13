@@ -8,19 +8,25 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
+import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @SuperBuilder
 @NoArgsConstructor
 @Entity
 @Getter
+@Setter
 public class Challenge extends BaseEntity {
     private String challengeName;
     private String description;
@@ -40,9 +46,15 @@ public class Challenge extends BaseEntity {
     @OneToMany(mappedBy = "challenge", cascade = {CascadeType.ALL})
     private List<SpendingHistory> spendingHistories;
 
+    @OneToMany(mappedBy = "challenge", cascade = {ALL})
+    private List<GraphImage> graphImage;
 
     public boolean hasSpendingHistory(){
         return spendingHistories.size() != 0;
+    }
+
+    public boolean hasGraphImage() {
+        return graphImage.size() != 0;
     }
 
     public void updateUsedMoney(int money){

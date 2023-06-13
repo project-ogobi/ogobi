@@ -23,7 +23,10 @@
         </div>
         <div class="flex items-center justify-center">
             <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
+            <hr style="margin-left: 10px;">
+            <a th:href="@{/challenges/{id}/showGraph(id=${challenge.getId})}" id="btn-challenge-graph" class="btn btn-primary my-3">지출내역 누적그래프 확인</a>
         </div>
+
         <th:block th:if="${challenge.hasSpendingHistory}">
             <div class="flex items-center justify-center" th:each="spendingHistory: ${challenge.getSpendingHistories()}">
                 <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 object-center">
