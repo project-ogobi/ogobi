@@ -99,6 +99,7 @@ public class ImageService {
     // 지출내역 가격 누적그래프 업로드
     public GraphImage uploadToS3(byte[] chartBytes, Long challenge_id) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
+
         String filePath = "challenge/graphs";
         String fileName = challenge_id.toString() + "-" + seq.toString();
         String keyName = filePath + "/" + fileName;

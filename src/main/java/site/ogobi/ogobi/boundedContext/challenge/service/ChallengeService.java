@@ -188,6 +188,21 @@ public class ChallengeService {
         ImageIO.write(image, "png", baos);
         byte[] chartBytes = baos.toByteArray();
 
+        // 안쓰는 이미지 삭제
+        if (graphImageRepository.findByChallengeId(challenge_id).isPresent()) {
+            GraphImage found = graphImageRepository.findByChallengeId(challenge_id).get();
+            imageService.deleteUploadedFile(found.getUploadFilePath());
+
+            List<GraphImage> temp = new ArrayList<>();
+            for (GraphImage graphImage : challenge.getGraphImage()) {
+                if (!graphImage.equals(found)) {
+                    temp.add(graphImage);
+                }
+            }
+            challenge.setGraphImage(temp);
+            graphImageRepository.delete(found);
+        }
+
         GraphImage graphImage = imageService.uploadToS3(chartBytes, challenge_id);
         updateGraphImage(challenge, graphImage);
 
