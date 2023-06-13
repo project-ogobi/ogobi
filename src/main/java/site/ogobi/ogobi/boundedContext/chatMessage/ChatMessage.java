@@ -1,13 +1,14 @@
 package site.ogobi.ogobi.boundedContext.chatMessage;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Document(collection = "messages")
+@Entity
 @Getter
 @Setter
 @Builder
@@ -15,9 +16,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class ChatMessage {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String sender;
     private String content;
-    private String chatRoomId;
-    private Date timestamp;
+    private Long chatRoomId;
+    private LocalDateTime timestamp;
 }

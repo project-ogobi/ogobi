@@ -16,13 +16,7 @@
         <div class="font-semibold text-2xl my-1 text-center my-4">채팅방1</div>
 
         <!-- 채팅 내용 -->
-        <div id="chatMessages">
-            <ul>
-                <li th:each="message : ${messages}">
-                    <span th:text="${message.sender}"/>: <span th:text="${message.content}"/>
-                </li>
-            </ul>
-        </div>
+        <li class="chat__message-ul"></li>
 
         <!-- 채팅 입력 -->
         <form id="messageForm" onsubmit="chatWriteMessage(this); return false;">
@@ -31,13 +25,6 @@
             <button type="submit" class="btn btn-primary">전달!</button>
             </div>
         </form>
-        <script>
-
-
-        </script>
-
-        <li class="chat__message-ul"></li>
-
     </div>
 </div>
 <!-- content 종료 -->

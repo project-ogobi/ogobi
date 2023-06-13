@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.chatRoom.ChatRoom;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
@@ -37,6 +38,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;
+
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL})
+    private List<ChatRoom> ownedChatRoom;
 
     public boolean isAdmin() {
         return "admin".equals(username);

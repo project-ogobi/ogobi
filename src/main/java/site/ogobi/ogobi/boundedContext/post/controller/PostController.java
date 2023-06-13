@@ -51,10 +51,7 @@ public class PostController {
 
         model.addAttribute("commentDto", commentDto);
 
-        boolean isLiked = false;
-        if (like != null && like.getPost()==post){
-            isLiked = true;
-        }
+        boolean isLiked = like != null && like.getPost() == post;
 
         // 조회수 중복 방지
         Cookie oldCookie = null;

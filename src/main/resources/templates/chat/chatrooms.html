@@ -8,7 +8,19 @@
         <div class="font-semibold text-2xl my-1 text-center my-4">채팅방 목록</div>
         <a href = "/chatrooms/create" class="btn btn-primary">채팅방 생성</a>
 
-        <a href = "/chatrooms/1" class="btn btn-primary">채팅방1</a>
+        <div th:each="chatRoom : ${chatRooms}">
+            <div class="card w-96 bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title" th:text="${chatRoom.name}"></h2>
+                    <p th:text="${chatRoom.content}"></p>
+                    <p th:text="${'현재인원: ' + chatRoom.chatUsers.size()}">명</p>
+                    <div class="card-actions justify-end">
+                        <a th:href = "@{/chatrooms/{id}(id=${chatRoom.id})}" class="btn btn-primary">입장하기</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
     </div>
     <!-- content 종료 -->

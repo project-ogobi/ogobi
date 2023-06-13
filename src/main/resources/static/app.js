@@ -41,13 +41,17 @@ function getChatMessages() {
 
 function drawMessages(messages) {
 
-    if (Array.isArray(messages)) {
-        messages.forEach((message) => {
-            const newItem = document.createElement("li");
-            newItem.textContent = `${message.sender} : ${message.content}`;
-            ChatMessageUl.appendChild(newItem);
-        });
+    if (messages.length > 0) {
+        fromId = messages[messages.length - 1].id;
     }
+
+    messages.forEach((message) => {
+
+        const newItem = document.createElement("li");
+        newItem.textContent = `${message.sender} : ${message.content}`;
+
+        ChatMessageUl.appendChild(newItem);
+    });
 }
 
 function chatWriteMessage(form) {
