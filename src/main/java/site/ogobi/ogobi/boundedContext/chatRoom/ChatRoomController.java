@@ -20,7 +20,7 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{chatRoomId}")
     public String showChatRoom(@PathVariable Long chatRoomId, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
@@ -38,7 +38,7 @@ public class ChatRoomController {
         return "chat/roomDetail";
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String showChatRoomForm(Model model) {
         model.addAttribute("chatRoom", new ChatRoomDTO());
@@ -52,7 +52,7 @@ public class ChatRoomController {
         return "redirect:/chatrooms";
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     public String showChatRooms(Model model) {
         List<ChatRoom> chatRooms = chatRoomService.findAllChatRooms();

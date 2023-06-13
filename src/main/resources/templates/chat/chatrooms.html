@@ -47,16 +47,15 @@
             </tr>
             </tbody>
         </table>
-        <div th:if="${!#lists.isEmpty(chatRooms)}">
-            <hr class="border-gray-300 mb-5">
-            <div class="flex justify-center">
-                <a href="/chatrooms/create" class="btn btn-primary mb-5">채팅방 생성</a>
-            </div>
+        <!-- 게시글이 없을 때 메시지 출력 -->
+        <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-xl p-5" th:if="${#lists.isEmpty(chatRooms)}">
+            채팅방이 없습니다.
         </div>
-    </div>
-    <!-- 게시글이 없을 때 메시지 출력 -->
-    <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-xl mb-2 p-5" th:if="${#lists.isEmpty(chatRooms)}">
-        채팅방이 없습니다.
+
+        <hr class="border-gray-300 mb-5">
+        <div class="flex justify-center">
+            <a href="/chatrooms/create" class="btn btn-primary mb-5">채팅방 생성</a>
+        </div>
     </div>
 </div>
 </html>
