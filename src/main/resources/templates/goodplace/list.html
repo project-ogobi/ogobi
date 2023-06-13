@@ -41,16 +41,13 @@
                         <i class="fa-regular fa-thumbs-up"></i>
                         <span class="text-base" th:text="${store.recommend}">추천수</span>
                     </span>
-                    <h2 class="card-title">
-                        <span th:text="${store.name}"></span>
-                    </h2>
-                    <p th:text="'전화번호: ' + ${store.phoneNumber}"></p>
-                    <p th:text="'주소: ' + ${store.address}"></p>
-                    <!-- 추가 필요한 내용 -->
-                    <div class="card-actions justify-end">
-                        <div class="badge badge-outline" th:text="${store.categoryName}"></div>
-                    </div>
                 </h2>
+                <p th:text="'전화번호: ' + ${store.phoneNumber}"></p>
+                <p th:text="'주소: ' + ${store.address}"></p>
+                <!-- 추가 필요한 내용 -->
+                <div class="card-actions justify-end">
+                    <div class="badge badge-outline" th:text="${store.categoryName}"></div>
+                </div>
             </div>
         </div>
     </div>
