@@ -52,8 +52,8 @@
             채팅방이 없습니다.
         </div>
 
-        <hr class="border-gray-300 mb-5">
-        <div class="flex justify-center">
+        <hr class="border-gray-300" th:if="${!#lists.isEmpty(chatRooms)}">
+        <div class="mt-5 flex justify-center">
             <a href="/chatrooms/create" class="btn btn-primary mb-5">채팅방 생성</a>
         </div>
     </div>

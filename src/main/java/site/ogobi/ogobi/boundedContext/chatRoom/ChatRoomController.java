@@ -38,7 +38,7 @@ public class ChatRoomController {
         return "chat/roomDetail";
     }
 
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String showChatRoomForm(Model model) {
         model.addAttribute("chatRoom", new ChatRoomDTO());
