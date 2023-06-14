@@ -49,7 +49,7 @@ public class ChallengeService {
     public void create(Member member, String challengeName, String description, int targetMoney, LocalDate startDate, LocalDate endDate) {
 
         //TODO: 칭호 가져오는 다른 방법?혹은 개선점? 현재 방식은 문제가 발생하기 쉬워보임.
-        if ( member.getChallenge() != null || member.getChallenge().size()==2){
+        if ( member.getChallenge() != null || member.getChallenge().size()==9){
             getTitle();
         }
 
