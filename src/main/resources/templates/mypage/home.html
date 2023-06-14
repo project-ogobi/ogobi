@@ -30,7 +30,7 @@
                         <div th:each="title : ${memberTitles}" class="mt-3">
                             <div class="font-semibold" th:if="${#lists.size(memberTitles)==0}">
                                 획득한 칭호가 없습니다.</div>
-                            <a th:href="@{/mypages/home/{title}(title=${title.name})}" th:id="${title.name}" class="font-semibold" th:text="${title.name}">칭호리스트</a>
+                            <a th:href="@{/mypages/home/{title}(title=${title.name})}" th:id="${title.name}" class="font-semibold" th:text="${title.name}" >칭호리스트</a>
                         </div>
                     </div>
                 </div>

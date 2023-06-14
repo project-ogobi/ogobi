@@ -98,7 +98,7 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findById(id).orElse(null);
 
         if (challenge.getUsedMoney() > challenge.getTargetMoney()){
-            challenge.setSuccess(false);    //  실패한 경우, todo 실패 리스트에 넣어야 함 / 성공,실패 리스트 구현 필요..
+            challenge.setSuccess(false);
             return false;
         }
         return true;
