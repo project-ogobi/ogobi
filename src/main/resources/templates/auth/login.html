@@ -1,39 +1,56 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
-<div layout:fragment="content" class="container my-3">
-    <form th:action="@{/auth/login}" method="post">
-        <div th:if="${param.error}">
-            <div class="alert alert-danger">
-                사용자 아이디 또는 비밀번호가 일치하지 않습니다.
+<div layout:fragment="content" class="container">
+    <p class="font-semibold p-3 pb-0 text-center text-lg">로그인</p>
+    <div class="mt-4 mb-2 flex flex-col gap-3 mx-auto center w-5/6">
+        <form th:action="@{/auth/login}" method="post">
+            <div class="alert alert-danger mb-2 flex justify-center" th:if="${param.error}">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>사용자 아이디 또는 비밀번호가 일치하지 않습니다.</span>
+
             </div>
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">아이디</label>
-            <input type="text" name="username" id="username" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" name="password" id="password" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-md btn-secondary">로그인</button>
-        <a href="/oauth2/authorization/kakao" class="btn btn-outline gap-2 bg-yellow-300">
-            <i class="fa-solid fa-comment"></i>
-            <span>카카오 로그인</span>
-        </a>
-        <a href="/oauth2/authorization/google" class="btn btn-outline gap-2">
-            <i class="fa-brands fa-google"></i>
-            <span>구글 로그인</span>
-        </a>
-        <a href="/oauth2/authorization/naver" class="btn btn-outline gap-2 bg-green-400">
-            <i class="fa-solid fa-n text-white"></i>
-            <span class="normal-case text-white">네이버 로그인</span>
-        </a>
-
-        <hr style="border: none; border-top: 1px solid darkslategrey; margin: 10px 0;">
-        <a th:href="@{/auth/signup}" style="color: lightblue; text-decoration: underline; margin-right: 10px">회원가입</a>
-        <a th:href="@{/auth/forgot-password}" style="color: lightblue; text-decoration: underline;">비밀번호 찾기</a>
-    </form>
+            <div class="flex justify-center gap-10">
+                <div>
+                    <div class="flex justify-center">
+                        <div class="flex flex-col mb-1">
+                            <label for="username" class="form-label m-1">아이디</label>
+                            <input type="text" name="username" id="username" class="input input-bordered input-sm w-full">
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <div class="flex flex-col mb-8">
+                            <label for="password" class="form-label m-1">비밀번호</label>
+                            <input type="password" name="password" id="password" class="input input-bordered input-sm w-full">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button type="submit" class="btn btn-md btn-outline btn-primary btn-lg">로그인</button>
+                </div>
+            </div>
+            <div class="flex justify-center gap-1">
+                <a th:href="@{/auth/signup}" class="btn btn-primary btn-wide">회원가입</a>
+                <a th:href="@{/auth/forgot-password}" class="btn btn-ghost btn-wide bg-gray-200">비밀번호 찾기</a>
+            </div>
+            <hr class="my-5 border-gray-300">
+            <div class="flex justify-center">
+                <div class="flex flex-col w-11/12 gap-2">
+                    <a href="/oauth2/authorization/kakao" class="btn btn-warning gap-2 bg-yellow-300">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>카카오 로그인</span>
+                    </a>
+                    <a href="/oauth2/authorization/naver" class="btn btn-success gap-2 bg-green-400">
+                        <i class="fa-solid fa-n text-white"></i>
+                        <span class="normal-case text-white">네이버 로그인</span>
+                    </a>
+                    <a href="/oauth2/authorization/google" class="btn btn-outline gap-2">
+                        <i class="fa-brands fa-google"></i>
+                        <span>구글 로그인</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
-
 </html>
