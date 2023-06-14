@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ApiController {
             urlBuilder.append("/" + end); /* 요청 종료위치 */
 
             if (!vo.isBlank()) {
-                urlBuilder.append("/" + URLEncoder.encode(vo, "UTF-8")); /* 분류 코드 */
+                urlBuilder.append("/" + URLEncoder.encode(vo, StandardCharsets.UTF_8)); /* 분류 코드 */
             }
 
             ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()

@@ -17,7 +17,7 @@
                 <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-left p-1">
                     <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
                     <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
-                    <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
+                    <div id="progress"></div>
                 </div>
             </div>
         </div>
@@ -58,4 +58,15 @@
 
 <!-- content 종료 -->
 
+    <script th:inline="javascript">
+        function dayDiff(startDateString) {
+            var startDate = new Date(startDateString);
+            var currentDate = new Date();
+            var timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
+            return Math.ceil(timeDiff / (1000 * 3600 * 24));
+        }
+        var startDate =  /*[[${challenge.startDate}]]*/ '';
+        var diff = dayDiff(startDate);
+        document.getElementById("progress").innerText = diff + "일차 진행중! 화이팅";
+    </script>
 </div>

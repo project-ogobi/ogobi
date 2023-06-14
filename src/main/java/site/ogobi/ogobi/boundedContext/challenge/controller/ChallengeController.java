@@ -59,6 +59,10 @@ public class ChallengeController {
     public String create(@Valid CreateForm createForm, BindingResult result){
         Member member = rq.getMember();
 
+        if (createForm.getStartDate().isAfter(createForm.getEndDate())){
+            return rq.historyBack("시작날짜가 종료날짜보다 빠를수 없습니다.");
+        }
+
         if (result.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : result.getFieldErrors()) {
@@ -82,7 +86,7 @@ public class ChallengeController {
 
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         if(!Objects.equals(rq.getMember().getId(), challenge.getMember().getId())){
-            return "error";
+            return rq.historyBack("잘못된 접근입니다");
         }
         model.addAttribute("challenge", challenge);
         return "challenge/detail";
@@ -108,7 +112,7 @@ public class ChallengeController {
         Challenge c = challengeService.findChallengeById(id).orElseThrow();
 
         if(!Objects.equals(rq.getMember().getId(), c.getMember().getId())){
-            return "error";
+            return rq.historyBack("잘못된 접근입니다");
         }
 
         CreateForm updateForm = new CreateForm();
@@ -130,7 +134,7 @@ public class ChallengeController {
             return "/challenge/updateForm";
         }
         if(!challengeService.canUpdate(rq.getMember(), id)){
-            return "";//"올바르지 않은 접근 처리";
+            return rq.historyBack("잘못된 접근입니다");
         }
         challengeService.update(rq.getMember(), updateForm, id);
 

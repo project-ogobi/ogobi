@@ -17,7 +17,9 @@ import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
 import site.ogobi.ogobi.boundedContext.image.repository.GraphImageRepository;
 import site.ogobi.ogobi.boundedContext.image.service.ImageService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
+import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
@@ -45,8 +47,10 @@ public class ChallengeService {
 
     @Transactional
     public void create(Member member, String challengeName, String description, int targetMoney, LocalDate startDate, LocalDate endDate) {
-        if (!(member.getChallenge() ==null) || member.getChallenge().size()==9){
-//            getTitle(); // TODO: 이거 무엇인지??
+
+        //TODO: 칭호 가져오는 다른 방법?혹은 개선점? 현재 방식은 문제가 발생하기 쉬워보임.
+        if ( member.getChallenge() != null || member.getChallenge().size()==2){
+            getTitle();
         }
 
         Challenge challenge = Challenge
@@ -58,7 +62,6 @@ public class ChallengeService {
                 .endDate(endDate)
                 .targetMoney(targetMoney)
                 .usedMoney(0)
-                .achievementRate(0)
                 .createDate(LocalDateTime.now())
                 .modifyDate(LocalDateTime.now())
                 .build();
@@ -116,7 +119,7 @@ public class ChallengeService {
         int compareEnd = today.compareTo(challenge.getEndDate());
 
         // 이미 완료체크된 경우
-        if (challenge.isDone() == true) {
+        if (challenge.isDone()) {
             return;
         }
 
@@ -228,6 +231,20 @@ public class ChallengeService {
 
         graphImage.setChallenge(challenge);
         challenge.setGraphImage(temp);
+    }
+
+    @Transactional
+    public void getTitle(){
+        Title aLotChallenge = titleRepository.findById(1L).orElse(null);
+
+        if(aLotChallenge!=null){
+            MemberTitle memberTitle = MemberTitle.builder()
+                    .member(rq.getMember())
+                    .title(aLotChallenge)
+                    .build();
+            memberTitleRepository.save(memberTitle);
+        }
+
     }
 
 }

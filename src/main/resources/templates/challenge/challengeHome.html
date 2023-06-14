@@ -29,13 +29,12 @@
 
                                 <div th:text="${'총 사용금액: ' + c.usedMoney + '원'}"></div>
 
-                                <div th:text="${'달성률: ' + c.achievementRate + '%'}"></div>
+                                <div id="progress" th:data-startdate="${c.startDate}"></div>
                                 <div class="card-actions justify-end">
                                     <a th:href="@{/challenges/{id}/update(id=${c.getId})}">
                                         <button class="btn btn-primary">수정하기</button>
                                     </a>
-<!--                                    TODO: 취소버튼 취소 수정 아직 반영 안된게 맞는지?-->
-                                    <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{/challenges/{id}(id=${c.getId})}" method="post">
+                                    <form href="javascript:;" onsubmit="return confirm('정말로 삭제하시겠습니까?')" th:action="@{/challenges/{id}(id=${c.getId})}" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button class="btn btn-outline btn-primary" type="submit">삭제하기</button>
                                     </form>
@@ -47,6 +46,21 @@
             </ul>
         </th:block>
     </div>
+    <script>
+        function dayDiff(startDateString) {
+            var startDate = new Date(startDateString);
+            var currentDate = new Date();
+            var timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
+            return Math.ceil(timeDiff / (1000 * 3600 * 24));
+        }
+
+        var challengeItems = document.querySelectorAll(".card-compact");
+        challengeItems.forEach(function(item) {
+            var startDateString = item.querySelector("#progress").getAttribute("data-startdate");
+            var diff = dayDiff(startDateString);
+            item.querySelector("#progress").innerText = diff + "일차 진행중! 화이팅";
+        });
+    </script>
     <!-- content 종료 -->
 
 </div>

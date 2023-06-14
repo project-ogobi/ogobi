@@ -84,10 +84,7 @@ public class SpendingHistoryService {
         int compareStart = input.compareTo(challenge.getStartDate());
         int compareEnd = input.compareTo(challenge.getEndDate());
 
-        if (compareStart >= 0 && compareEnd <= 0) {
-            return true;
-        }
-        return false;
+        return compareStart >= 0 && compareEnd <= 0;
     }
 
     public SpendingHistoryForm buildSpendingHistoryForm(SpendingHistory spendingHistory) {
