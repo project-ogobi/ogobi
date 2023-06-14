@@ -12,10 +12,13 @@ import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
+import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +37,10 @@ public class ChallengeController {
     @GetMapping("")
     public String home(Model model) {
         List<Challenge> li = rq.getMember().getChallenge();
+        // 완료여부 체크
+        for (Challenge challenge : li) {
+            challengeService.checkDone(challenge.getId());
+        }
         model.addAttribute("challenge", li);
         return "/challenge/challengeHome";
     }
@@ -66,16 +73,28 @@ public class ChallengeController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}")
-    public String showDetailById(@PathVariable Long challenge_id, Model model){
+    public String showDetailById(@PathVariable Long challenge_id, Model model) throws IOException {
 
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         if(!Objects.equals(rq.getMember().getId(), challenge.getMember().getId())){
             return "error";
         }
-
         model.addAttribute("challenge", challenge);
         return "challenge/detail";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}/showGraph")
+    public String showGraph(@PathVariable Long challenge_id, Model model) throws IOException {
+        // 그래프 생성 후 이미지 저장,업로드
+        GraphImage chartImage = challengeService.generatePriceChart(challenge_id);
+
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        model.addAttribute("challenge", challenge);
+
+        return "challenge/graph";
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/update")
@@ -110,7 +129,6 @@ public class ChallengeController {
         }
         challengeService.update(rq.getMember(), updateForm, id);
 
-        challengeService.isSuccess(id); //  챌린지 실패 여부를 확인, false일 경우 실패
         return "redirect:/challenges";
     }
 

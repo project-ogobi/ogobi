@@ -11,6 +11,7 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.post.service.PostService;
+import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.service.SpendingHistoryService;
 import site.ogobi.ogobi.boundedContext.title.Title;
@@ -19,6 +20,7 @@ import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 //@Profile({"dev", "test"})
@@ -44,7 +46,8 @@ public class NotProd {
             SignUp signup2 = SignUp.builder()
                     .nickname("멤투")
                     .loginId("test1")
-                    .email("test1@ogobi.com")
+//                    .email("test1@ogobi.com")
+                    .email("lucas0209@naver.com")
                     .password("test1")
                     .build();
 
@@ -62,17 +65,21 @@ public class NotProd {
             challengeService.create(member, "테스트네임7", "테스트내용7", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
             challengeService.create(member, "테스트네임8", "테스트내용8", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
             challengeService.create(member, "테스트네임9", "테스트내용9", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임10", "테스트내용10", 30000, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 7, 1));
 
 
-
+            LocalDate localDate = LocalDate.parse("2023-06-11");
+            LocalDate localDate_v2 = LocalDate.parse("2023-06-12");
             SpendingHistoryForm historyCoffee = SpendingHistoryForm.builder()
                     .itemName("커피")
                     .itemPrice(4500)
+                    .date(localDate)
                     .build();
 
             SpendingHistoryForm historyLunch = SpendingHistoryForm.builder()
                     .itemName("점심")
                     .itemPrice(8000)
+                    .date(localDate_v2)
                     .build();
 
             Image image = Image.builder()

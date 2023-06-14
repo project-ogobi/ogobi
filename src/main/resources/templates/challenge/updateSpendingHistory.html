@@ -11,7 +11,11 @@
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
 <!--    <form role="form" th:action="@{/challenges/{id}/{sh_id}(id=${cid}, sh_id=${sh_id})}" method="post" th:object="${form}">-->
     <form th:action method="post" enctype="multipart/form-data" th:object="${form}" id="myForm">
-
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                챌린지 기간 내의 날짜를 입력해주세요.
+            </div>
+        </div>
         <!-- content 시작 -->
         <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
             <div class="mt-4 mb-2 flex flex-col gap-2">
@@ -32,6 +36,20 @@
                     <input type="text" th:field="*{description}" class="input input-bordered input-primary w-full" placeholder="Type here">
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
+
+                <div class="form-group">
+                    <label th:for="date">지출한 날짜</label>
+                    <input type="text" th:field="*{date}" id="datepicker" class="border border-primary rounded-md text-center">
+                </div>
+
+                <script>
+                    $( function() {
+                        $( "#datepicker" ).datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                        });
+                    } );
+                </script>
 
                 <!-- 이미지 컨테이너 -->
                 <div>
@@ -138,10 +156,12 @@
                 var itemName = document.getElementById('itemName').value;
                 var itemPrice = document.getElementById('itemPrice').value;
                 var description = document.getElementById('description').value;
+                var date = document.getElementById('datepicker').value;
 
                 formData.set('itemName', itemName);
                 formData.set('itemPrice', itemPrice);
                 formData.set('description', description);
+                formData.set('date', date);
 
                 const header = $("meta[name='_csrf_header']").attr('content');
                 const token = $("meta[name='_csrf']").attr('content');

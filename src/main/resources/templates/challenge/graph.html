@@ -1,0 +1,13 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content">
+    <th:block th:if="${challenge.hasGraphImage}">
+        <div class="font-semibold text-2xl my-1 text-center my-4">지출내역 가격 누적그래프</div>
+
+<!--        <div th:each="image: ${challenge.getGraphImage()}">-->
+<!--            <img th:src="${image.getUploadFileUrl}"/>-->
+<!--        </div>-->
+        <img th:src="${challenge.getGraphImage().get(challenge.getGraphImage().size()-1).getUploadFileUrl}"/>
+    </th:block>
+</div>

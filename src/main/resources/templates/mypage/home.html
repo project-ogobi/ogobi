@@ -15,15 +15,6 @@
                 <div class="collapse bg-indigo-100">
                     <input type="checkbox" />
                     <div class="collapse-title text-xl font-medium font-semibold">
-                        지출 그래프
-                    </div>
-                    <div class="collapse-content bg-indigo-50">
-                        <div class="font-semibold">내용물</div>
-                    </div>
-                </div>
-                <div class="collapse bg-indigo-100">
-                    <input type="checkbox" />
-                    <div class="collapse-title text-xl font-medium font-semibold">
                         획득한 칭호
                     </div>
                     <div class="collapse-content bg-indigo-50">
@@ -41,6 +32,7 @@
                     </div>
                     <div class="collapse-content bg-indigo-50">
                         <div th:each="challenge : ${runningChallengeList}" class="mt-2 p-1">
+<!--                            <div class="font-semibold" th:if="${#lists.size(doneList)==0}">진행 중인 챌린지가 없습니다.</div>-->
                             <div class="font-semibold" th:if="${#lists.size(runningChallengeList)==0}">
                                 진행 중인 챌린지가 없습니다.</div>
                             <a th:text="${challenge.challengeName}" th:href="@{/challenges/{id}(id=${challenge.id})}" class="font-semibold text-indigo-900">챌린지 제목</a>
@@ -53,9 +45,11 @@
                         완료된 챌린지
                     </div>
                     <div class="collapse-content bg-indigo-50">
-                        <div th:each="challenge : ${successList}">
-                            <div class="font-semibold" th:if="${#lists.size(successList)==0}">완료된 챌린지가 없습니다.</div>
-                            <div class="font-semibold" th:text="${challenge.challengeName}">제목</div>
+                        <div th:each="challenge : ${doneList}">
+                            <div class="font-semibold" th:if="${#lists.size(doneList)==0}">완료된 챌린지가 없습니다.</div>
+                            <a th:text="${challenge.challengeName}" th:href="@{/challenges/{id}(id=${challenge.id})}" class="font-semibold text-indigo-900">챌린지 제목</a>
+                            <button class="btn btn-sm btn-primary" th:if="${challenge.isSuccess}">성공</button>
+                            <button class="btn btn-sm btn-primary" th:unless="${challenge.isSuccess}">실패</button>
                         </div>
                     </div>
                 </div>
@@ -74,8 +68,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary mt-6">로그아웃</button>
+            <a class="btn btn-primary mt-6" th:href="@{/auth/logout}">로그아웃</a>
         </div>
     </div>
 </div>
-
