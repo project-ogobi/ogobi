@@ -38,6 +38,7 @@
                         $("#startdatepicker").datepicker({
                             changeMonth: true,
                             changeYear: true,
+                            dateFormat: "yy-mm-dd",
                             onSelect: function (selectedDate) {
                                 $("#enddatepicker").datepicker("option", "minDate", selectedDate);
                             }
@@ -46,6 +47,7 @@
                         $("#enddatepicker").datepicker({
                             changeMonth: true,
                             changeYear: true,
+                            dateFormat: "yy-mm-dd",
                             onClose: function (selectedDate) {
                                 $("#startdatepicker").datepicker("option", "maxDate", selectedDate);
                             }

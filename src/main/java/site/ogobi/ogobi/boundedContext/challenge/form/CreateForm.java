@@ -13,20 +13,20 @@ import java.time.LocalDate;
 @Setter
 public class CreateForm{
 
-    @NotBlank
-    @Size(min=3, max=20)
+    @NotBlank(message = "제목을 입력해주세요.")
+    @Size(min=3, max=20, message = "제목은 3자 이상, 20자 이하로 입력해주세요.")
     private String challengeName;
 
-    @NotBlank
+    @NotBlank(message = "내용을 입력해주세요.")
     private String description;
 
     @Min(0)
     private Integer targetMoney;
 
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     public void formBuilder(String challengeName, String description, Integer targetMoney, LocalDate startDate, LocalDate endDate) {
