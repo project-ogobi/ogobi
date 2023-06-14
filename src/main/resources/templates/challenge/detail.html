@@ -7,7 +7,7 @@
     <div class="w-full">
         <div class="font-semibold text-2xl my-1 text-center my-4">챌린지 상세</div>
 
-        <div class="bg-indigo-200 rounded-2xl p-4 h-auto">
+        <div class="bg-green-200 rounded-2xl p-4 h-auto">
             <div class="flex w-full">
                 <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
                     <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
@@ -47,7 +47,7 @@
                                id="btn-challenge-spendingHistory-update" class="btn btn-sm btn-primary">수정</a>
 
                             <form href="javascript:;" onsubmit="return confirm('정말로 삭제하시겠습니까?')" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
-                                <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary">삭제</button>
+                                <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary btn-outline">삭제</button>
                             </form>
                         </div>
                     </div>

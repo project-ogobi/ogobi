@@ -1,15 +1,10 @@
 package site.ogobi.ogobi.boundedContext.member.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import jakarta.persistence.*;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
@@ -30,8 +25,7 @@ public class Member extends BaseEntity {
     private String username; // 진짜 로그인할때 쓰는 아이디
     private String password;
     private String email;
-    private String providerType; // 어떤 OAuth인지 (local, kakao, naver...)
-    private String provideId; // 해당 OAuth의 key(ID)
+    private String providerType; // 어떤 OAuth인지 (Local, Kakao, Google, Naver)
     @Setter
     private String title;   //  칭호
     private String resetToken = null;
@@ -47,7 +41,7 @@ public class Member extends BaseEntity {
         return "admin".equals(username);
     }
 
-    public boolean hasChallenge(){
+    public boolean hasChallenge() {
         return challenge.size() != 0;
     }
 

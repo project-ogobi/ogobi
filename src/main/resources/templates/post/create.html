@@ -81,7 +81,7 @@
                 </script>
             </div>
             <div class="flex flex-row justify-end my-4">
-                <input type="submit" class="btn btn-outline btn-primary">
+                <input type="submit" class="btn btn-primary">
                     <script>document.querySelector('input[type="submit"]').value = window.location.href.includes('create') ? '등록' : '수정';</script>
                 </input>
                 <input type="button" value="취소" class="btn btn-error mx-2" th:onclick="'location.href=\'' + @{/posts/{category}/list(category=${category})} + '\';'"/>

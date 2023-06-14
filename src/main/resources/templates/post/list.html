@@ -19,7 +19,7 @@
             <td class="font-semibold" th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
             <td style="text-align: start">
                 <a th:href="@{|/posts/${category}/detail/${post.id}|}" th:text="${post.subject}"/>
-                <span class="font-semibold text-indigo-500 text-xs ml-2" th:if="${#lists.size(post.comments) > 0}" th:text="${#lists.size(post.comments)}"></span>
+                <span class="font-semibold text-green-500 text-xs ml-2" th:if="${#lists.size(post.comments) > 0}" th:text="${#lists.size(post.comments)}"></span>
             </td>
             <td>
                 <div th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="text-center font-semibold text-green-900 text-xs"></div>

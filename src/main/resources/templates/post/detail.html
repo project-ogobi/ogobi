@@ -3,11 +3,11 @@
 
 <div layout:fragment="content" class="container my-3">
     <div class="float-right m-2 mt-10">
-        <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-active btn-primary mx-1"
+        <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-primary mx-1"
            sec:authorize="isAuthenticated()"
            th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">수정</a>
         <a href="javascript:void(0);" th:data-uri="@{|/posts/${category}/delete/${post.id}|}"
-           class="delete btn btn-active btn-primary" sec:authorize="isAuthenticated()"
+           class="delete btn btn-error" sec:authorize="isAuthenticated()"
            th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
            onclick="if(confirm('정말로 삭제하시겠습니까?')) { location.href = this.dataset.uri; }">삭제</a>
     </div>
@@ -50,25 +50,12 @@
     </div>
     <hr class="mt-5 text-gray-200">
 
-    <div class="p-3 m-3 text-left">
+    <div class="p-3 ml-2 text-left">
         <span class="font-semibold text-xl">댓글</span>
-
-        <!-- 댓글 등록 -->
-        <form th:action="@{|/comments/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post"
-              class="flex-col my-6">
-            <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full"
-                 role="alert" th:if="${#fields.hasAnyErrors()}">
-                <div th:each="err : ${#fields.allErrors()}" onsubmit="comment_Dto()"/>
-            </div>
-            <div class="flex">
-                <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요."
-                          th:field="*{content}" onsubmit="comment_Dto()"></textarea>
-                <input type="submit" value="등록" class="btn btn-active btn-primary"/>
-            </div>
-        </form>
+        <span th:text="|${#lists.size(post.comments)}개|"></span>
     </div>
 
-    <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
+    <div class="p-3 mx-4 mt-1 mb-2 flex-direction" th:each="comment, index : ${post.comments}">
         <div class="flex mb-1 justify-between">
             <div>
             <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-900"></span>
@@ -84,15 +71,16 @@
         <!-- 수정, 삭제 버튼 -->
         <div class="flex items-end justify-end mb-1">
             <th:block th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}">
-                <button class="btn btn-outline btn-primary mx-1 btn-sm"
+                <button class="btn btn-primary mx-1 btn-sm"
                         onclick="$(this).parent().nextAll('form:first').toggleClass('hidden'); textToggle(this);">수정</button>
                 <form href="javascript:;" onsubmit="return (confirm('정말로 삭제하시겠습니까?')); $(this).next().submit();"
                       th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}|}" method="post">
                     <input type="hidden" name="_method" value="delete">
-                    <button class="btn btn-active btn-primary mx-1 btn-sm">삭제</button>
+                    <button class="btn btn-error mx-1 btn-sm">삭제</button>
                 </form>
             </th:block>
         </div>
+
         <!-- 댓글 내용 -->
         <div class="flex-auto" th:text="${comment.content}"></div>
         <!-- 댓글 수정 폼 -->
@@ -106,6 +94,20 @@
         </form>
         <hr class="mt-5 text-gray-200">
     </div>
+
+    <!-- 댓글 등록 -->
+    <form th:action="@{|/comments/${category}/detail/${post.id}|}" th:object="${commentDto}" method="post"
+          class="flex-col my-6">
+        <div class="alert bg-red-300 shadow-lg w-11/12 mx-auto text-sm flex-col font-semibold m-2 w-full"
+             role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" onsubmit="comment_Dto()"/>
+        </div>
+        <div class="flex">
+                <textarea class="textarea textarea-primary w-full mx-4 h-1" placeholder="댓글을 입력해주세요."
+                          th:field="*{content}" onsubmit="comment_Dto()"></textarea>
+            <input type="submit" value="등록" class="btn btn-primary"/>
+        </div>
+    </form>
 
     <script>
         function textToggle(th) {

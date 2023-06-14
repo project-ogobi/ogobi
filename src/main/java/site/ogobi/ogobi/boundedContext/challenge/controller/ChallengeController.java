@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
@@ -59,7 +60,11 @@ public class ChallengeController {
         Member member = rq.getMember();
 
         if (result.hasErrors()) {
-            return "/challenge/createForm";
+            StringBuilder errorMessage = new StringBuilder();
+            for (FieldError error : result.getFieldErrors()) {
+                errorMessage.append(error.getDefaultMessage()).append("<br>");
+            }
+            return rq.historyBack(errorMessage.toString());
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
 
