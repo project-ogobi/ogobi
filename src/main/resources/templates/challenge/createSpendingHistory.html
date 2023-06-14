@@ -3,6 +3,11 @@
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
     <form th:action method="post" enctype="multipart/form-data" th:object="${form}">
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                챌린지 기간 내의 날짜를 입력해주세요.
+            </div>
+        </div>
         <!-- content 시작 -->
         <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
             <div class="mt-4 mb-2 flex flex-col gap-2">

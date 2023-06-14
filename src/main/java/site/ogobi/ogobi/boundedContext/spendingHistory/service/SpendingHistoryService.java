@@ -13,6 +13,7 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.repository.SpendingHistoryRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +77,17 @@ public class SpendingHistoryService {
     public void createSpendingHistory(SpendingHistoryForm form, Long challenge_id, List<Image> images) {
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         create(challenge, form, images);
+    }
+
+    @Transactional
+    public boolean validateDate(Challenge challenge, LocalDate input) {
+        int compareStart = input.compareTo(challenge.getStartDate());
+        int compareEnd = input.compareTo(challenge.getEndDate());
+
+        if (compareStart >= 0 && compareEnd <= 0) {
+            return true;
+        }
+        return false;
     }
 
     public SpendingHistoryForm buildSpendingHistoryForm(SpendingHistory spendingHistory) {
