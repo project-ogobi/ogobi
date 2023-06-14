@@ -11,8 +11,8 @@ public interface OAuth2UserInfo {
 
 class KakaoUserInfo implements OAuth2UserInfo {
 
-    private String id;
-    private Map<String, Object> kakaoAccount;
+    private final String id;
+    private final Map<String, Object> kakaoAccount;
 
     public KakaoUserInfo(Map<String, Object> attributes, String id) {
         this.kakaoAccount = attributes;

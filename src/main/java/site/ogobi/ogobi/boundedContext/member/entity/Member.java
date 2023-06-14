@@ -14,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
-import site.ogobi.ogobi.boundedContext.title.Title;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;
+
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL})
+    private List<ChatRoom> ownedChatRoom;
 
     public boolean isAdmin() {
         return "admin".equals(username);
