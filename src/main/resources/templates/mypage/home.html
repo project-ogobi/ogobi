@@ -2,11 +2,10 @@
 
 
 <div layout:fragment="content" class="overflow-x-auto">
-    <h1 class="font-semibold p-3 text-center text-lg">My Page</h1>
+    <h1 class="font-semibold p-3 text-center text-lg">내 정보</h1>
     <!-------------- 프로필 -------------->
     <div class="flex-col flex justify-center items-center">
         <div class="card card-compact w-3/5 bg-green-200 shadow-lg mb-8 p-6">
-            <h1 class="font-semibold p-2 text-center text-lg">내 정보</h1>
             <div class="text-center mb-4 text-gray-600" th:text="|${member.nickname}님 안녕하세요.|"></div>
 
 <!-------------------- 메뉴 -------------------->
