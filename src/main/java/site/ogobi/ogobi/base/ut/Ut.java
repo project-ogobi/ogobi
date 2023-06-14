@@ -26,7 +26,7 @@ public class Ut {
                 throw new RuntimeException(e);
             }
         }
-    };
+    }
 
     public static class time {
         public static String diffFormat1Human(LocalDateTime time1, LocalDateTime time2) {

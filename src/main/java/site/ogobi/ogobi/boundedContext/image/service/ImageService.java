@@ -34,7 +34,7 @@ public class ImageService {
 
     public String getUuidFileName(String fileName) {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
-        return UUID.randomUUID().toString() + "." + ext;
+        return UUID.randomUUID() + "." + ext;
     }
     public List<Image> uploadFilesSample(List<MultipartFile> multipartFiles){
 
