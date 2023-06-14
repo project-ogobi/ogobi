@@ -55,6 +55,15 @@ public class NotProd {
 
             challengeService.create(member, "테스트네임1", "테스트내용1", 10000, LocalDate.of(2023, 5, 27), LocalDate.of(2023, 5, 29));
             challengeService.create(member, "테스트네임2", "테스트내용2", 20000, LocalDate.of(2023, 5, 27), LocalDate.of(2023, 5, 30));
+            challengeService.create(member, "테스트네임3", "테스트내용3", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임4", "테스트내용4", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임5", "테스트내용5", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임6", "테스트내용6", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임7", "테스트내용7", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임8", "테스트내용8", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임9", "테스트내용9", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+
+
 
             SpendingHistoryForm historyCoffee = SpendingHistoryForm.builder()
                     .itemName("커피")
@@ -90,6 +99,7 @@ public class NotProd {
             Title aLotChallenge = Title.builder()
                     .name("명예 도전자").build();
             titleRepository.save(aLotChallenge);
+
 
         };
     }

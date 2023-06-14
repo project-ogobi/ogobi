@@ -15,6 +15,7 @@
         <h5 class="text-gray-400" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h5>
         <h1 class="font-semibold text-4xl my-1" th:text="${post.subject}">제목</h1>
         <h5 class="font-semibold text-base text-gray-500 my-3 pr-5" th:if="${post.author != null}">
+            <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="text-center font-semibold text-green-900"></span>
             <span th:text="${post.author.nickname}">작성자</span>
             <span class="text-sm" style="float: right">
             <i class="fa-solid fa-eye"></i><span>&nbsp;</span>
@@ -68,12 +69,15 @@
     </div>
 
     <div class="p-3 m-4 flex-direction" th:each="comment, index : ${post.comments}">
-        <div class="flex justify-between mb-1">
+        <div class="flex mb-1 justify-between">
+            <div>
+            <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-900"></span>
             <span class="mr-6 font-semibold" th:if="${comment.author != null}"
                   th:text="${comment.author.nickname}">작성자</span>
-            <div class="text-gray-400 text-sm p-1" th:if="${comment.modifyDate == comment.createDate}"
+            </div>
+            <div class="text-gray-400 text-sm p-1 justify-end items-end" th:if="${comment.modifyDate == comment.createDate}"
                  th:text="${#temporals.format(comment.createDate,'yyyy-MM-dd HH:mm')}"></div>
-            <div class="text-gray-400 text-sm p-1" th:if="${comment.modifyDate != comment.createDate}"
+            <div class="text-gray-400 text-sm p-1 justify-end items-end" th:if="${comment.modifyDate != comment.createDate}"
                  th:text="|${#temporals.format(comment.modifyDate,'yyyy-MM-dd HH:mm')} (수정됨)|"></div>
         </div>
 

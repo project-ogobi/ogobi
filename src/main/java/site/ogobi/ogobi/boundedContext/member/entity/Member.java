@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.*;
 
@@ -31,6 +32,7 @@ public class Member extends BaseEntity {
     private String email;
     private String providerType; // 어떤 OAuth인지 (local, kakao, naver...)
     private String provideId; // 해당 OAuth의 key(ID)
+    @Setter
     private String title;   //  칭호
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})

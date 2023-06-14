@@ -31,6 +31,10 @@ public class ChallengeService {
 
     @Transactional
     public void create(Member member, String challengeName, String description, int targetMoney, LocalDate startDate, LocalDate endDate) {
+        if (!(member.getChallenge() ==null) || member.getChallenge().size()==9){
+            getTitle();
+        }
+
         Challenge challenge = Challenge
                 .builder()
                 .member(member)
@@ -44,8 +48,8 @@ public class ChallengeService {
                 .createDate(LocalDateTime.now())
                 .modifyDate(LocalDateTime.now())
                 .build();
-
         challengeRepository.save(challenge);
+
     }
 
     public Optional<Challenge> findChallengeById(Long id) {

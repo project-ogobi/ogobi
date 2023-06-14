@@ -3,6 +3,7 @@ package site.ogobi.ogobi.boundedContext.member.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -93,5 +95,10 @@ public class MemberService {
         }
 
         return titles;
+    }
+
+    public void setTitle(Member member, String title) {
+        member.setTitle(title);
+        memberRepository.save(member);
     }
 }

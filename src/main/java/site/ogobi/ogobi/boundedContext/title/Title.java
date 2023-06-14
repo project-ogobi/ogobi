@@ -18,7 +18,6 @@ public class Title {
     }
 
     public Title() {
-        //todo 확인
     }
 }
 
