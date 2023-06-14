@@ -7,7 +7,9 @@
         <p class="font-semibold text-lg">챌린지</p>
 
         <th:block th:unless="${@rq.member.hasChallenge}">
-            <div>등록된 챌린지가 없습니다.</div>
+            <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-lg mt-5 mb-1 p-5 w-11/12">
+                등록된 챌린지가 없습니다.
+            </div>
         </th:block>
 
         <th:block th:if="${@rq.member.hasChallenge}">

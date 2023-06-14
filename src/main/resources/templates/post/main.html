@@ -36,7 +36,7 @@
     </div>
 
     <!-- 선 추가 -->
-    <hr class="my-5 border-gray-300">
+    <hr class="my-5 border-gray-300 w-11/12 mx-auto">
     <h1 class="font-semibold text-center text-lg mb-3">최신 게시글</h1>
     <style>
         .collapse:hover {
@@ -74,7 +74,7 @@
     </div>
 
     <!-- 게시글이 없을 때 메시지 출력 -->
-    <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-xl mb-2 p-5" th:if="${#lists.isEmpty(resentPostList)}">
+    <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-lg mb-2 p-5 w-11/12 mx-auto" th:if="${#lists.isEmpty(resentPostList)}">
         게시글이 없습니다.
     </div>
 
