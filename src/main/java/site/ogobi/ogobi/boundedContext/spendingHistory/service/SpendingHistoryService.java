@@ -13,6 +13,7 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.repository.SpendingHistoryRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class SpendingHistoryService {
                 .content(form.getItemName())
                 .price(form.getItemPrice())
                 .description(form.getDescription())
+                .date(form.getDate())
                 .build();
 
         mappingImagesAndHistoryWithForm(spendingHistory, form, images);
@@ -49,6 +51,7 @@ public class SpendingHistoryService {
         item.setContent(form.getItemName());
         item.setPrice(form.getItemPrice());
         item.setDescription(form.getDescription());
+        item.setDate(form.getDate());
 
         item.setImageFiles(images);
         for (Image image : images) {
@@ -76,11 +79,23 @@ public class SpendingHistoryService {
         create(challenge, form, images);
     }
 
+    @Transactional
+    public boolean validateDate(Challenge challenge, LocalDate input) {
+        int compareStart = input.compareTo(challenge.getStartDate());
+        int compareEnd = input.compareTo(challenge.getEndDate());
+
+        if (compareStart >= 0 && compareEnd <= 0) {
+            return true;
+        }
+        return false;
+    }
+
     public SpendingHistoryForm buildSpendingHistoryForm(SpendingHistory spendingHistory) {
         SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
                 .itemName(spendingHistory.getContent())
                 .itemPrice(spendingHistory.getPrice())
                 .description(spendingHistory.getDescription())
+                .date(spendingHistory.getDate())
                 .build();
         return spendingHistoryForm;
     }

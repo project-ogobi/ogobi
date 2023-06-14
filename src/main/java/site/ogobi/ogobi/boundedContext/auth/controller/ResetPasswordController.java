@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import site.ogobi.ogobi.base.security.PasswordResetConfig;
+import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 
 @Controller
@@ -21,24 +20,22 @@ public class ResetPasswordController {
     private final PasswordResetConfig passwordResetConfig;
 
     @GetMapping("/reset-password")
-    public String showResetPasswordForm() {
+    public String showResetPasswordForm(@ModelAttribute("memberId") String memberId, Model model) {
+        model.addAttribute("memberId", memberId);
         return passwordResetConfig.getPasswordResetProcessingPage();
     }
 
     @PostMapping("/reset-password")
-    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+    public String showResetPasswordForm(@RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, @RequestParam("memberId") String memberId,
+                                        RedirectAttributes redirectAttributes) {
+        if (!password.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("memberId", memberId);
+            return "redirect:/" + passwordResetConfig.getPasswordResetProcessingPage() + "?error";
+        }
+        Member foundMember = memberService.findById(memberId);
+        memberService.updateNewPassword(foundMember, password);
 
-        log.info("Reset view!");
-
-//        Member user = memberService.findByResetToken(token);
-//
-//        if (user == null) {
-//            // Handle invalid or expired token
-//            return "redirect:" + passwordResetConfig.getPasswordResetPage() + "?error";
-//        }
-//
-//        model.addAttribute("token", token);
-        return "reset-password";
+        return "redirect:/auth/login";
     }
 
 }

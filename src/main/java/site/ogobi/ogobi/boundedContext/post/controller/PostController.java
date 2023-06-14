@@ -51,10 +51,7 @@ public class PostController {
 
         model.addAttribute("commentDto", commentDto);
 
-        boolean isLiked = false;
-        if (like != null && like.getPost()==post){
-            isLiked = true;
-        }
+        boolean isLiked = like != null && like.getPost() == post;
 
         // 조회수 중복 방지
         Cookie oldCookie = null;
@@ -82,6 +79,7 @@ public class PostController {
             response.addCookie(newCookie);
         }
 
+        model.addAttribute("member", member);
         model.addAttribute("post", post);
         model.addAttribute("isLiked", isLiked);
 
@@ -102,6 +100,10 @@ public class PostController {
     public String showList(Model model, @PathVariable String category, @RequestParam(value = "page", defaultValue = "0") int page) {
         Post.Category postCategory = getCategory(category);
         Page<Post> paging = this.postService.getListByCategory(postCategory, page);
+
+        Member member = rq.getMember();
+
+        model.addAttribute("member", member);
         model.addAttribute("paging", paging);
         return "post/list";
     }
@@ -193,7 +195,9 @@ public class PostController {
     public String showMain(Model model){
         List<Post> bestPosts = postService.bestPostList();
         List<Post> resentPostList = postService.resentPostList();
+        Member member = rq.getMember();
 
+        model.addAttribute("member", member);
         model.addAttribute("bestPosts", bestPosts);
         model.addAttribute("resentPostList", resentPostList);
         return "post/main";

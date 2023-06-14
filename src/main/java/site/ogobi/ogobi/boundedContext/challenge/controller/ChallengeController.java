@@ -3,8 +3,6 @@ package site.ogobi.ogobi.boundedContext.challenge.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +13,15 @@ import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
+import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
+import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.post.service.PostService;
+import site.ogobi.ogobi.boundedContext.title.Title;
+import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/challenges")
@@ -31,11 +32,16 @@ public class ChallengeController {
     private final Rq rq;
     private final ChallengeService challengeService;
 
+
     //challengeHome
     @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     public String home(Model model) {
         List<Challenge> li = rq.getMember().getChallenge();
+        // 완료여부 체크
+        for (Challenge challenge : li) {
+            challengeService.checkDone(challenge.getId());
+        }
         model.addAttribute("challenge", li);
         return "/challenge/challengeHome";
     }
@@ -51,6 +57,8 @@ public class ChallengeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("")
     public String create(@Valid CreateForm createForm, BindingResult result){
+        Member member = rq.getMember();
+
         if (result.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : result.getFieldErrors()) {
@@ -59,6 +67,7 @@ public class ChallengeController {
             return rq.historyBack(errorMessage.toString());
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
+
         return "redirect:/challenges";
     }
 
@@ -69,16 +78,28 @@ public class ChallengeController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}")
-    public String showDetailById(@PathVariable Long challenge_id, Model model){
+    public String showDetailById(@PathVariable Long challenge_id, Model model) throws IOException {
 
         Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
         if(!Objects.equals(rq.getMember().getId(), challenge.getMember().getId())){
             return "error";
         }
-
         model.addAttribute("challenge", challenge);
         return "challenge/detail";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{challenge_id}/showGraph")
+    public String showGraph(@PathVariable Long challenge_id, Model model) throws IOException {
+        // 그래프 생성 후 이미지 저장,업로드
+        GraphImage chartImage = challengeService.generatePriceChart(challenge_id);
+
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        model.addAttribute("challenge", challenge);
+
+        return "challenge/graph";
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/update")
@@ -112,6 +133,7 @@ public class ChallengeController {
             return "";//"올바르지 않은 접근 처리";
         }
         challengeService.update(rq.getMember(), updateForm, id);
+
         return "redirect:/challenges";
     }
 

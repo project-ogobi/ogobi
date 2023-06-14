@@ -1,18 +1,21 @@
 package site.ogobi.ogobi.boundedContext.image.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
 import site.ogobi.ogobi.boundedContext.image.entity.Image;
+import site.ogobi.ogobi.boundedContext.image.repository.GraphImageRepository;
 import site.ogobi.ogobi.boundedContext.image.repository.ImageRepository;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -21,10 +24,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ImageService {
 
     private final AmazonS3Client amazonS3Client;
     private final ImageRepository imageRepository;
+    private final GraphImageRepository graphImageRepository;
+    Long seq = 0L;
 
     @Value("${spring.s3.bucket}")
     private String bucketName;
@@ -34,7 +40,7 @@ public class ImageService {
 
     public String getUuidFileName(String fileName) {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
-        return UUID.randomUUID().toString() + "." + ext;
+        return UUID.randomUUID() + "." + ext;
     }
     public List<Image> uploadFilesSample(List<MultipartFile> multipartFiles){
 
@@ -87,6 +93,34 @@ public class ImageService {
         }
 
         return s3files;
+    }
+
+    @Transactional
+    // 지출내역 가격 누적그래프 업로드
+    public GraphImage uploadToS3(byte[] chartBytes, Long challenge_id) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+
+        String filePath = "challenge/graphs";
+        String fileName = challenge_id.toString() + "-" + seq.toString();
+        String keyName = filePath + "/" + fileName;
+        String originalFileName = "challenge-graph/" + fileName;
+        String uploadFileName = getUuidFileName(originalFileName);
+        InputStream inputStream = new ByteArrayInputStream(chartBytes);
+
+        amazonS3Client.putObject(
+                new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        // S3에 업로드한 폴더 및 파일 URL
+        String uploadFileUrl = "https://kr.object.ncloudstorage.com/ogobi/" + keyName;
+        seq++;
+
+        return GraphImage.builder()
+                .originalFileName(originalFileName)
+                .uploadFileName(uploadFileName)
+                .uploadFilePath(keyName)
+                .uploadFileUrl(uploadFileUrl)
+                .build();
     }
 
     public String deleteUploadedFile(String filePath) {

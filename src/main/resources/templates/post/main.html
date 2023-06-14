@@ -3,11 +3,29 @@
 
 
 <div layout:fragment="content" class="container">
+    <script>
+        $(document).ready(function() {
+            $(".a__move").click(function(event) {
+                var itemId = $(this).attr("href");
+                adjustSlideScroll(itemId);
+            });
+        });
+        function adjustSlideScroll(itemId) {
+            var offset = 500; // 스크롤 위치를 조정할 오프셋 값
+            var selectedCarouselItem = $(itemId);
+            var topOffset = selectedCarouselItem.offset().top - offset;
+
+            $("html, body").animate({
+                scrollTop: topOffset
+            }, 800); // 800ms 동안 스크롤 애니메이션을 적용
+        }
+
+    </script>
     <h1 class="font-semibold p-3 text-center text-lg">인기글</h1>
 
     <!--   카드 시작 -->
     <div class="carousel w-full mb-3">
-        <div th:id="${'item' + i}" class="carousel-item w-full flex justify-center" th:each="post, i: ${bestPosts}">
+        <div th:id="${'item' + post.id}" class="carousel-item w-full flex justify-center" th:each="post, i: ${bestPosts}">
             <div class="bg-gray-200 rounded-lg w-5/6 p-4 flex-col flex shadow-xl">
                 <div class="mb-1 px-3">
                     <div class="badge badge-sm badge-primary mb-1" th:text="|TOP ${i.count}|"></div>
@@ -16,7 +34,10 @@
                     </div>
                 </div>
                 <div class="flex justify-between font-semibold text-green-400 px-3">
-                    <djv th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</djv>
+                    <div>
+                        <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-900"></span>
+                        <div th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</div>
+                    </div>
                     <span class="text-gray-500" style="float: right">
                             <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
                             <span th:text=${#lists.size(post.like)}>추천수</span>
@@ -31,7 +52,7 @@
     <!--   번호 -->
     <div class="flex w-full gap-2 justify-center items-center">
         <div class="flex-col" th:each="post, i : ${bestPosts}">
-            <a th:href="${'#item' + i}" class="btn btn-xs btn-primary" th:text="${i.count}">index</a>
+            <a th:href="${'#item' + post.id}" class="btn btn-xs btn-primary a__move" th:text="${i.count}">index</a>
         </div>
     </div>
 

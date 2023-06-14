@@ -59,6 +59,11 @@ public class SpendingHistoryController {
                                         @RequestParam(value = "images", required = false) List<MultipartFile> file,
                                         @RequestParam(value = "existingImageId", required = false) List<String> listId ) throws IOException {
 
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        if (!spendingHistoryService.validateDate(challenge, form.getDate())) {
+            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm" + "?error";
+        }
+
         if (file == null){
             spendingHistoryService.updateWithoutNewImage(form, sh_id, listId);
         }
@@ -97,6 +102,11 @@ public class SpendingHistoryController {
                                         @RequestParam List<MultipartFile> file) throws IOException {
         if (result.hasErrors()) {
             return "redirect:/challenges/" + challenge_id + "/createForm";
+        }
+
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        if (!spendingHistoryService.validateDate(challenge, form.getDate())) {
+            return "redirect:/challenges/" + challenge_id + "/createForm" + "?error";
         }
 
         String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);

@@ -3,11 +3,13 @@ package site.ogobi.ogobi.boundedContext.member.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.chatRoom.ChatRoom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +26,16 @@ public class Member extends BaseEntity {
     private String password;
     private String email;
     private String providerType; // 어떤 OAuth인지 (Local, Kakao, Google, Naver)
+    @Setter
+    private String title;   //  칭호
+    private String resetToken = null;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;
+
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL})
+    private List<ChatRoom> ownedChatRoom;
 
     public boolean isAdmin() {
         return "admin".equals(username);
@@ -50,5 +58,13 @@ public class Member extends BaseEntity {
         }
 
         return grantedAuthorities;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
