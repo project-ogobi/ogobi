@@ -46,7 +46,8 @@ public class NotProd {
             SignUp signup2 = SignUp.builder()
                     .nickname("멤투")
                     .loginId("test1")
-                    .email("test1@ogobi.com")
+//                    .email("test1@ogobi.com")
+                    .email("lucas0209@naver.com")
                     .password("test1")
                     .build();
 
@@ -64,6 +65,7 @@ public class NotProd {
             challengeService.create(member, "테스트네임7", "테스트내용7", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
             challengeService.create(member, "테스트네임8", "테스트내용8", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
             challengeService.create(member, "테스트네임9", "테스트내용9", 20000, LocalDate.of(2023, 4, 20), LocalDate.of(2023, 4, 28));
+            challengeService.create(member, "테스트네임10", "테스트내용10", 30000, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 7, 1));
 
 
             LocalDate localDate = LocalDate.parse("2023-06-11");

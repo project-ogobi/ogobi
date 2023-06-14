@@ -4,12 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.base.rq.Rq;
@@ -17,13 +14,10 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.image.entity.GraphImage;
-import site.ogobi.ogobi.boundedContext.image.entity.Image;
 import site.ogobi.ogobi.boundedContext.image.repository.GraphImageRepository;
 import site.ogobi.ogobi.boundedContext.image.service.ImageService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
-import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
@@ -31,10 +25,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,7 +46,7 @@ public class ChallengeService {
     @Transactional
     public void create(Member member, String challengeName, String description, int targetMoney, LocalDate startDate, LocalDate endDate) {
         if (!(member.getChallenge() ==null) || member.getChallenge().size()==9){
-            getTitle();
+//            getTitle(); // TODO: 이거 무엇인지??
         }
 
         Challenge challenge = Challenge
@@ -236,16 +230,4 @@ public class ChallengeService {
         challenge.setGraphImage(temp);
     }
 
-    public void getTitle(){
-        Title aLotChallenge = titleRepository.findById(1L).orElse(null);
-
-        if(aLotChallenge!=null){
-            MemberTitle memberTitle = MemberTitle.builder()
-                    .member(rq.getMember())
-                    .title(aLotChallenge)
-                    .build();
-            memberTitleRepository.save(memberTitle);
-        }
-
-    }
 }

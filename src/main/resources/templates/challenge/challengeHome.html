@@ -32,6 +32,7 @@
                                     <a th:href="@{/challenges/{id}/update(id=${c.getId})}">
                                         <button class="btn btn-primary">수정하기</button>
                                     </a>
+<!--                                    TODO: 취소버튼 취소 수정 아직 반영 안된게 맞는지?-->
                                     <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{/challenges/{id}(id=${c.getId})}" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button class="btn btn-outline btn-primary" type="submit">삭제하기</button>
