@@ -119,7 +119,7 @@ public class ChallengeService {
         int compareEnd = today.compareTo(challenge.getEndDate());
 
         // 이미 완료체크된 경우
-        if (challenge.isDone() == true) {
+        if (challenge.isDone()) {
             return;
         }
 
