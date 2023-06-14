@@ -62,7 +62,6 @@ public class ChallengeService {
                 .endDate(endDate)
                 .targetMoney(targetMoney)
                 .usedMoney(0)
-                .achievementRate(0)
                 .createDate(LocalDateTime.now())
                 .modifyDate(LocalDateTime.now())
                 .build();

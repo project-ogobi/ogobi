@@ -58,7 +58,7 @@
                 <div class="form-group flex flex-col">
                     <label class="mb-2" th:for="targetMoney">목표 금액</label>
                     <input type="text" th:field="*{targetMoney}" class="input input-bordered w-full"
-                           placeholder="목표금액을 입력하세요.">
+                           placeholder="숫자만 입력 예) 10000">
                 </div>
                 <p th:if="${#fields.hasErrors('targetMoney')}" th:errors="*{targetMoney}" class="fieldError">Incorrect
                     data</p>
