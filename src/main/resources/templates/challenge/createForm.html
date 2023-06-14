@@ -1,55 +1,67 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
-<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+<div layout:fragment="content">
     <form role="form" th:action="@{/challenges}" method="post" th:object="${createForm}">
 
         <!-- content 시작 -->
-        <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
-            <div>
-                <p class="font-semibold text-center text-lg">챌린지 작성하기</p>
+        <div class="container">
+            <p class="font-semibold p-3 pb-0 text-center text-lg">챌린지 작성</p>
+            <div class="mt-4 mb-2 flex flex-col gap-3 mx-auto center w-5/6">
+                <div class="form-group flex flex-col">
+                    <label class="mb-2" th:for="challengeName">제목</label>
+                    <input type="text" th:field="*{challengeName}" class="input input-bordered w-full"
+                           placeholder="제목을 입력하세요.">
+                </div>
+                <p th:if="${#fields.hasErrors('challengeName')}" th:errors="*{challengeName}" class="fieldError">
+                    Incorrect data</p>
 
+                <div class="form-group flex flex-col">
+                    <label class="mb-2" th:for="challengeName">내용</label>
+                    <input type="text" th:field="*{description}" class="input input-bordered w-full"
+                           placeholder="내용을 입력하세요.">
+                </div>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect
+                    data</p>
 
-                <div class="mt-4 mb-2 flex flex-col gap-2">
-                    <div class="form-group mb-1">
-                        <label th:for="challengeName">챌린지 제목</label>
-                        <input type="text" th:field="*{challengeName}" class="input input-bordered input-primary w-full" placeholder="Typeh here">
+                <div class="flex flex-col">
+                    <div class="mb-2">챌린지 기간</div>
+                    <div class="flex flex-row items-center">
+                        <input type="text" th:field="*{startDate}" id="startdatepicker" class="border rounded-md text-center w-1/2" placeholder="시작날짜" />
+                        <span class="mx-2">~</span>
+                        <input type="text" th:field="*{endDate}" id="enddatepicker" class="border rounded-md text-center w-1/2" placeholder="종료날짜" />
                     </div>
-                    <p th:if="${#fields.hasErrors('challengeName')}" th:errors="*{challengeName}" class="fieldError">Incorrect data</p>
-
-                    <div class="form-group">
-                        <label th:for="challengeName">챌린지 내용</label>
-                        <input type="text" th:field="*{description}" class="input input-bordered input-primary w-full" placeholder="Type here">
-                    </div>
-                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
-
-                    <div>챌린지 기간</div>
-                    <p>시작날짜: <input type="text" th:field="*{startDate}" id="startdatepicker" class="border border-primary rounded-md text-center"></p>
-                    <p>종료날짜: <input type="text" th:field="*{endDate}" id="enddatepicker" class="border border-primary rounded-md text-center"></p>
-                    <script>
-                        $( function() {
-                            $( "#startdatepicker" ).datepicker({
-                                changeMonth: true,
-                                changeYear: true
-                            });
-                        } );
-                        $( function() {
-                            $( "#enddatepicker" ).datepicker({
-                                changeMonth: true,
-                                changeYear: true
-                            });
-                        } );
-                    </script>
-
-                    <div class="form-group">
-                        <label th:for="targetMoney">목표 금액</label>
-                        <input type="text" th:field="*{targetMoney}" class="input input-bordered input-primary w-full" placeholder="Type here">
-                    </div>
-                    <p th:if="${#fields.hasErrors('targetMoney')}" th:errors="*{targetMoney}" class="fieldError">Incorrect data</p>
-
                 </div>
 
-                <div class = "flex justify-end">
+                <script>
+                    $(function () {
+                        $("#startdatepicker").datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                            onSelect: function (selectedDate) {
+                                $("#enddatepicker").datepicker("option", "minDate", selectedDate);
+                            }
+                        });
+
+                        $("#enddatepicker").datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                            onClose: function (selectedDate) {
+                                $("#startdatepicker").datepicker("option", "maxDate", selectedDate);
+                            }
+                        });
+                    });
+                </script>
+
+                <div class="form-group flex flex-col">
+                    <label class="mb-2" th:for="targetMoney">목표 금액</label>
+                    <input type="text" th:field="*{targetMoney}" class="input input-bordered w-full"
+                           placeholder="목표금액을 입력하세요.">
+                </div>
+                <p th:if="${#fields.hasErrors('targetMoney')}" th:errors="*{targetMoney}" class="fieldError">Incorrect
+                    data</p>
+
+                <div class="flex justify-end">
                     <button type="submit" name="submit" class="btn btn-primary">등록하기</button>
                 </div>
             </div>
