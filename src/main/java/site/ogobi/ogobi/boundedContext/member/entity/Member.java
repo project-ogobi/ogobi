@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.*;
 
@@ -13,13 +14,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
-import site.ogobi.ogobi.boundedContext.chatRoom.ChatRoom;
-import site.ogobi.ogobi.boundedContext.like.entity.Like;
-import site.ogobi.ogobi.boundedContext.post.entity.Post;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -34,6 +31,8 @@ public class Member extends BaseEntity {
     private String email;
     private String providerType; // 어떤 OAuth인지 (local, kakao, naver...)
     private String provideId; // 해당 OAuth의 key(ID)
+    @Setter
+    private String title;   //  칭호
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")

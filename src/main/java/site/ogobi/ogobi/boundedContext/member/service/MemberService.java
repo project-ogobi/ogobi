@@ -7,19 +7,23 @@ import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
+import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
+import site.ogobi.ogobi.boundedContext.title.Title;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
-
+    private final MemberTitleRepository memberTitleRepository;
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
@@ -77,4 +81,24 @@ public class MemberService {
         return successList;
     }
 
+    public List<Title> titleList(Member member) {
+        List<MemberTitle> memberTitles = memberTitleRepository.findByMember(member);
+
+        if (memberTitles.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Title> titles = new ArrayList<>();
+
+        for (MemberTitle memberTitle : memberTitles) {
+            titles.add(memberTitle.getTitle());
+        }
+
+        return titles;
+    }
+
+    public void setTitle(Member member, String title) {
+        member.setTitle(title);
+        memberRepository.save(member);
+    }
 }

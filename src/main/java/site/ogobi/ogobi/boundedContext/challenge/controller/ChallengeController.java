@@ -3,8 +3,6 @@ package site.ogobi.ogobi.boundedContext.challenge.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +13,11 @@ import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.form.CreateForm;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
-import site.ogobi.ogobi.boundedContext.post.service.PostService;
+import site.ogobi.ogobi.boundedContext.title.Title;
+import site.ogobi.ogobi.boundedContext.title.TitleRepository;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/challenges")
@@ -29,6 +27,7 @@ public class ChallengeController {
 
     private final Rq rq;
     private final ChallengeService challengeService;
+
 
     //challengeHome
     @PreAuthorize("isAuthenticated()")
@@ -50,10 +49,13 @@ public class ChallengeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("")
     public String create(@Valid CreateForm createForm, BindingResult result){
+        Member member = rq.getMember();
+
         if (result.hasErrors()) {
             return "/challenge/createForm";
         }
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
+
         return "redirect:/challenges";
     }
 
@@ -107,6 +109,8 @@ public class ChallengeController {
             return "";//"올바르지 않은 접근 처리";
         }
         challengeService.update(rq.getMember(), updateForm, id);
+
+        challengeService.isSuccess(id); //  챌린지 실패 여부를 확인, false일 경우 실패
         return "redirect:/challenges";
     }
 

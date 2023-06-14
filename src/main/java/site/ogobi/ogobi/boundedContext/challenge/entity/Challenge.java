@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
@@ -38,6 +39,7 @@ public class Challenge extends BaseEntity {
 
     @OneToMany(mappedBy = "challenge", cascade = {CascadeType.ALL})
     private List<SpendingHistory> spendingHistories;
+
 
     public boolean hasSpendingHistory(){
         return spendingHistories.size() != 0;

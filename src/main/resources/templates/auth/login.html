@@ -1,31 +1,37 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
-<div layout:fragment="content" class="container my-3">
-    <form th:action="@{/auth/login}" method="post">
-        <div th:if="${param.error}">
-            <div class="alert alert-danger">
-                사용자 아이디 또는 비밀번호가 일치하지 않습니다.
+<div layout:fragment="content" class="container my-3 flex flex-col">
+    <div class="flex justify-center mt-20">
+        <form th:action="@{/auth/login}" method="post">
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">
+                    사용자 아이디 또는 비밀번호가 일치하지 않습니다.
+                </div>
             </div>
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">아이디</label>
-            <input type="text" name="username" id="username" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" name="password" id="password" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-md btn-primary">로그인</button>
-        <a href="/oauth2/authorization/kakao" class="btn btn-outline gap-2 bg-yellow-300">
-            <i class="fa-solid fa-comment"></i>
-            <span>카카오 로그인</span>
-        </a>
+            <div class="mb-3">
+                <label for="username" class="form-label">아이디</label>
+                <input type="text" name="username" id="username" class="form-control input input-bordered input-primary w-full max-w-xs">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" name="password" id="password" class="form-control input input-bordered input-primary w-full max-w-xs">
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="btn btn-md btn-primary mr-1">로그인</button>
+                <a href="/oauth2/authorization/kakao" class="btn btn-outline gap-2 bg-yellow-300">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>카카오 로그인</span>
+                </a>
+            </div>
 
-        <hr style="border: none; border-top: 1px solid darkslategrey; margin: 10px 0;">
-        <a th:href="@{/auth/signup}" style="color: lightblue; text-decoration: underline; margin-right: 10px">회원가입</a>
-        <a th:href="@{/auth/forgot-password}" style="color: lightblue; text-decoration: underline;">비밀번호 찾기</a>
-    </form>
+            <hr class="my-5 text-indigo-900">
+            <div class="flex justify-center">
+                <a th:href="@{/auth/signup}" style="color: lightblue; text-decoration: underline; margin-right: 10px">회원가입</a>
+                <a th:href="@{/auth/forgot-password}" style="color: lightblue; text-decoration: underline;">비밀번호 찾기</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 </html>
