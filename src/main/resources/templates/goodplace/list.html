@@ -50,7 +50,7 @@
             <div class="card-body">
                 <h2 class="card-title flex justify-between">
                     <span th:text="${store.name}" th:class="${#strings.length(store.name) &gt;= 8} ? 'text-lg'"></span>
-                    <span class="flex items-center gap-1 text-indigo-300">
+                    <span class="flex items-center gap-1 text-green-300">
                         <i class="fa-regular fa-thumbs-up"></i>
                         <span class="text-base" th:text="${store.recommend}">추천수</span>
                     </span>
