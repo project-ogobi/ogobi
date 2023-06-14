@@ -21,8 +21,9 @@
                 </div>
             </div>
         </div>
+
         <div class="flex items-center justify-center">
-            <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
+            <a th:unless="${challenge.isDone}" th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
             <hr style="margin-left: 10px;">
             <a th:href="@{/challenges/{id}/showGraph(id=${challenge.getId})}" id="btn-challenge-graph" class="btn btn-primary my-3">지출내역 누적그래프 확인</a>
         </div>

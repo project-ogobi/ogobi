@@ -50,6 +50,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public List<Challenge> runningList(Member member){     //  진행 중인 챌린지 리스트
         List<Challenge> challengeList = challengeRepository.findByMember(member);
         List<Challenge> runningChallengeList = new ArrayList<>();
@@ -59,29 +60,30 @@ public class MemberService {
         }
 
         for (Challenge ch: challengeList) {
-            if (!ch.isSuccess()){
+            if (!ch.isDone()){
                 runningChallengeList.add(ch);
             }
         }
 
-        return challengeList;
+        return runningChallengeList;
     }
 
-    public List<Challenge> successList(Member member){     //  완료한 챌린지 리스트
+    @Transactional
+    public List<Challenge> doneList(Member member){     //  완료한 챌린지 리스트
         List<Challenge> challengeList = challengeRepository.findByMember(member);
-        List<Challenge> successList = new ArrayList<>();
+        List<Challenge> doneList = new ArrayList<>();
 
         for (Challenge ch:challengeList) {
-            if (ch.isSuccess()){
-                successList.add(ch);
+            if (ch.isDone()){
+                doneList.add(ch);
             }
         }
 
-        if (successList.size()==0){
+        if (doneList.size()==0){
             return null;
         }
 
-        return successList;
+        return doneList;
     }
 
     public List<Title> titleList(Member member) {

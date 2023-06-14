@@ -37,8 +37,9 @@ public class Challenge extends BaseEntity {
     private int targetMoney; // 목표 금액
     private int usedMoney; // 현재까지 사용한 금액
     private int achievementRate; // 달성률
-    @Setter
-    private boolean success;    //  성공 여부
+
+    private boolean isDone = false; // 종료 여부
+    private boolean isSuccess = true; // 성공 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -72,4 +73,5 @@ public class Challenge extends BaseEntity {
         this.endDate = endDate;
         this.targetMoney = targetMoney;
     }
+
 }

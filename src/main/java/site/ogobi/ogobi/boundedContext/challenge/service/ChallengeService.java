@@ -112,16 +112,31 @@ public class ChallengeService {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
-    public boolean isSuccess(Long id){
-        LocalDateTime today = LocalDateTime.now();
-        Challenge challenge = challengeRepository.findById(id).orElse(null);
+    // 챌린지 완료여부 파악
+    @Transactional
+    public void checkDone(Long id){
+        LocalDate today = LocalDate.now();
+        Challenge challenge = challengeRepository.findById(id).orElseThrow();
 
-        if (challenge.getUsedMoney() > challenge.getTargetMoney()){
-            challenge.setSuccess(false);
-            return false;
+        int compareStart = today.compareTo(challenge.getStartDate());
+        int compareEnd = today.compareTo(challenge.getEndDate());
+
+        // 이미 완료체크된 경우
+        if (challenge.isDone() == true) {
+            return;
         }
-        return true;
+
+        // 종료시점 비교
+        if (compareStart < 0 || compareEnd > 0){
+            challenge.setDone(true);
+        }
+
+        // 진행중인 챌린지의 목표금액 비교
+        if (compareStart >= 0 && compareEnd <= 0 && challenge.getUsedMoney() > challenge.getTargetMoney()) {
+            challenge.setDone(true);
+            challenge.setSuccess(false);
+        }
+
     }
 
     public List<Challenge> findByMember(Member member){
