@@ -62,6 +62,8 @@ public class ChallengeService {
                 .description(description)
                 .startDate(startDate)
                 .endDate(endDate)
+                .isDone(false)
+                .isSuccess(true)
                 .targetMoney(targetMoney)
                 .usedMoney(0)
                 .createDate(LocalDateTime.now())
@@ -125,14 +127,13 @@ public class ChallengeService {
             return;
         }
 
-        // 종료시점 비교
-        if (compareStart < 0 || compareEnd > 0){
+        // 챌린지 생성 시기별
+        if (compareStart > 0 && compareEnd > 0){ // 과거의 챌린지 생성 상황
             challenge.setDone(true);
-        }
-
-        // 진행중인 챌린지의 목표금액 비교
-        if (compareStart >= 0 && compareEnd <= 0 && challenge.getUsedMoney() > challenge.getTargetMoney()) {
-            challenge.setDone(true);
+        } else if (compareStart < 0 && compareEnd < 0) { // 미래의 챌린지 생성 상황
+            challenge.setDone(false);
+        } else if (compareStart >= 0 && compareEnd <= 0 && challenge.getUsedMoney() > challenge.getTargetMoney()) {
+            challenge.setDone(true); // 진행중인 챌린지의 목표금액 비교
             challenge.setSuccess(false);
         }
 
@@ -183,8 +184,8 @@ public class ChallengeService {
         // 누적 그래프 생성
         JFreeChart chart = ChartFactory.createLineChart(
                 "", // 제목
-                "기간", // X-축 레이블
-                "누적 지출금액", // Y-축 레이블
+                "Period", // X-축 레이블
+                "Price", // Y-축 레이블
                 dataset, // 데이터셋
                 PlotOrientation.VERTICAL,
                 true,

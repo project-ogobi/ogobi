@@ -48,7 +48,6 @@
                         <div th:each="challenge : ${doneList}">
                             <div class="font-semibold" th:if="${#lists.size(doneList)==0}">완료된 챌린지가 없습니다.</div>
                             <a th:text="${challenge.challengeName}" th:href="@{/challenges/{id}(id=${challenge.id})}" class="font-semibold text-green-900">챌린지 제목</a>
-                            <button class="btn btn-sm btn-primary" th:if="${challenge.isSuccess}">성공</button>
                             <button class="btn btn-sm btn-primary" th:unless="${challenge.isSuccess}">실패</button>
                         </div>
                     </div>
