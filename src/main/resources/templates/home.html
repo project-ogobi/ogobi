@@ -2,7 +2,109 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
-    <h1>메인 페이지입니다.</h1>
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #66CC99;
+            --color-secondary: #339966;
+            --color-tertiary: #336633;
+            --color-quaternary: #006633;
+            --color-quinary: #003300;
+        }
+
+        .content {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+        }
+
+        .text-shadows {
+            text-shadow: 3px 3px 0 var(--color-secondary), 6px 6px 0 var(--color-tertiary),
+            9px 9px var(--color-quaternary), 12px 12px 0 var(--color-quinary);
+            font-family: bungee, sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: 3.75rem;
+            text-align: center;
+            margin: 0;
+            color: var(--color-primary);
+            animation: shadows 1.2s ease-in infinite;
+            letter-spacing: 0.4rem;
+        }
+
+        @keyframes shadows {
+            0% {
+                text-shadow: none;
+            }
+            10% {
+                transform: translate(-3px, -3px);
+                text-shadow: 3px 3px 0 var(--color-secondary);
+            }
+            20% {
+                transform: translate(-6px, -6px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary);
+            }
+            30% {
+                transform: translate(-9px, -9px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+            }
+            40% {
+                transform: translate(-12px, -12px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            50% {
+                transform: translate(-12px, -12px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            60% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            70% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+            }
+            80% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary);
+            }
+            90% {
+                text-shadow: 3px 3px 0 var(--color-secondary);
+            }
+            100% {
+                text-shadow: none;
+            }
+        }
+    </style>
+
+    <div class="flex flex-col">
+        <div class="content">
+            <h2 class="text-shadows">OGOBI</h2>
+        </div>
+
+        <div class="text-center mt-6">
+            <p>안녕하세요. 오늘의 고비는 절약을 위해 하루하루를 애쓰며 살아가는 여러분을 위한 사이트입니다.</p>
+            <p>오늘의 고비에서 정해진 일정 내에, 목표한 금액만을 사용할 수 있도록 챌린지를 생성하세요.</p>
+        </div>
+
+        <div class="flex justify-center">
+            <a class="btn btn-primary mt-10" th:href="@{/auth/login}">시작하기</a>
+        </div>
+    </div>
+
 </div>
 
 </html>

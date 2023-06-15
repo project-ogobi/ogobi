@@ -2,9 +2,11 @@ package site.ogobi.ogobi.boundedContext.member.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
@@ -116,7 +118,7 @@ public class MemberService {
 
     }
 
-    public Member findById(String memberId) {
+    public Member findById(String memberId) { // 비밀번호 찾기에서 사용됨
         Optional<Member> foundMember = memberRepository.findById(Long.parseLong(memberId));
         if (foundMember.isPresent()) {
             return foundMember.get();
@@ -129,5 +131,33 @@ public class MemberService {
     public void updateNewPassword(Member member, String newPassword) {
         String encodedPassword = passwordEncoder.encode(newPassword);
         member.setPassword(encodedPassword);
+    }
+
+    public Member findById(Long memberId) {
+        Optional<Member> foundMember = memberRepository.findById(memberId);
+        if (foundMember.isPresent()) {
+            return foundMember.get();
+        } else {
+            return null;
+        }
+    }
+
+    public Member findbyNickname(String nickname) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isPresent()) {
+            return optionalMember.get();
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void editNickname(Long memberId, String newNickname, String username) {
+        Member member = findById(memberId);
+        if (!member.getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        member.setNickname(newNickname);
+        memberRepository.save(member);
     }
 }
