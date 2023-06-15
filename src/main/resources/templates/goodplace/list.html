@@ -45,7 +45,7 @@
         }
     </style>
     <div class="card-container">
-        <div class="card w-5/12 bg-base-100 shadow-xl mb-5" th:each="store : ${stores}">
+        <div class="card mx-4 sm:w-5/12 bg-base-100 shadow-xl mb-5" th:each="store : ${stores}">
             <figure><img class="w-full h-60" th:src="${store.photo}"/></figure>
             <div class="card-body">
                 <h2 class="card-title flex justify-between">

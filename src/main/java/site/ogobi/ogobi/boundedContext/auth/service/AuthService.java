@@ -19,12 +19,6 @@ public class AuthService {
 
     @Transactional
     public void signUp(SignUp signUp) {
-        // 중복 이메일 체크
-        Optional<Member> userEmail = memberRepository.findByEmail(signUp.getEmail());
-        if (userEmail.isPresent()) {
-//            throw new IllegalArgumentException();
-            return;
-        }
         String encodedPassword = passwordEncoder.encode(signUp.getPassword());
 
         Member member = Member.builder()
@@ -35,5 +29,23 @@ public class AuthService {
                 .providerType("Local") // 일반 회원가입 회원
                 .build();
         memberRepository.save(member);
+    }
+
+    public boolean checkDuplicateEmail(SignUp signUp) {
+        // 중복 이메일 체크
+        Optional<Member> userEmail = memberRepository.findByEmail(signUp.getEmail());
+        if (userEmail.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkDuplicateUsername(SignUp signUp) {
+        // 중복 아이디 체크
+        Optional<Member> username = memberRepository.findByUsername(signUp.getLoginId());
+        if (username.isPresent()) {
+            return true;
+        }
+        return false;
     }
 }

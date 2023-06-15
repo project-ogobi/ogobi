@@ -93,7 +93,7 @@ public class MemberController {
             return rq.historyBack("이미 존재하는 닉네임입니다.");
         } else if (trimNickname.isEmpty()) {
             return rq.historyBack("닉네임을 입력해주세요.");
-        } else if (trimNickname.length() <= 2 || trimNickname.length() >= 8) {
+        } else if (trimNickname.length() < 2 || trimNickname.length() > 8) {
             return rq.historyBack("닉네임은 2자 이상, 8자 이하로 입력해주세요.");
         }
         memberService.editNickname(memberId, trimNickname, principal.getName());

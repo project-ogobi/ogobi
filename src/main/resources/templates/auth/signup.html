@@ -4,7 +4,7 @@
 <div layout:fragment="content" class="container">
     <p class="font-semibold p-3 pb-0 text-center text-lg">회원가입</p>
     <div class="mt-4 mb-2 flex flex-col gap-3 mx-auto center w-5/6">
-        <form th:action="@{/auth/signup}" method="post">
+        <form th:object="${signupForm}" th:action="@{/auth/signup}" method="post">
             <div class="alert alert-danger mb-2 flex justify-center" th:if="${param.error}">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span>모든 항목을 입력해주세요.</span>
