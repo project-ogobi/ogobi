@@ -2,18 +2,10 @@
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="container my-3">
-    <div class="float-right m-2 mt-10">
-        <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-primary mx-1"
-           sec:authorize="isAuthenticated()"
-           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">수정</a>
-        <a href="javascript:void(0);" th:data-uri="@{|/posts/${category}/delete/${post.id}|}"
-           class="delete btn btn-error" sec:authorize="isAuthenticated()"
-           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
-           onclick="if(confirm('정말로 삭제하시겠습니까?')) { location.href = this.dataset.uri; }">삭제</a>
-    </div>
+
     <div class="pt-7 pl-7 text-left">
         <h5 class="text-gray-400" th:text="${category eq 'free' ? '자유 게시판' : '공유 게시판'}"></h5>
-        <h1 class="font-semibold text-4xl my-1" th:text="${post.subject}">제목</h1>
+        <h1 class="flex flex-auto break-all font-semibold text-3xl my-1" th:text="${post.subject}">제목</h1>
         <h5 class="font-semibold text-base text-gray-500 my-3 pr-5" th:if="${post.author != null}">
             <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="text-center font-semibold text-green-900 text-xs"></span>
             <span th:text="${post.author.nickname}">작성자</span>
@@ -35,8 +27,16 @@
              th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         <div class="text-gray-400 text-sm" th:if="${post.modifyDate != null && post.modifyDate != post.createDate}"
              th:text="|${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')} (수정됨)|"></div>
+        <div class="m-2">
+            <a th:href="@{|/posts/${category}/modify/${post.id}|}" class="btn btn-sm btn-primary mx-1" sec:authorize="isAuthenticated()"
+               th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">수정</a>
+            <a href="javascript:void(0);" th:data-uri="@{|/posts/${category}/delete/${post.id}|}"
+               class="delete btn btn-sm btn-error" sec:authorize="isAuthenticated()"
+               th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
+               onclick="if(confirm('정말로 삭제하시겠습니까?')) { location.href = this.dataset.uri; }">삭제</a>
+        </div>
     </div>
-    <div class="ml-6">
+    <div class="break-all mx-4">
         <div class="bg-green-200 rounded-2xl p-4 h-auto">
             <div class="flex w-full">
                 <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
@@ -111,7 +111,7 @@
             </th:block>
         </div>
         <!-- 댓글 내용 -->
-        <div class="flex-auto" th:text="${comment.content}"></div>
+        <div class="flex-auto break-all" th:text="${comment.content}"></div>
         <!-- 댓글 수정 폼 -->
         <form th:action="@{|/comments/${category}/${post.id}/detail/${comment.id}/modify|}" method="post"
               class="hidden flex-col my-6">

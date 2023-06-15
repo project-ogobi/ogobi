@@ -16,8 +16,8 @@
             <ul>
                 <li th:each="c: ${challenge}">
                     <th:block th:unless="${c.isDone}">
-                        <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
-                            <div class="card-body">
+                        <div class="card card-compact w-80 mx-auto bg-base-100 shadow-xl my-3">
+                            <div class="card-body ">
                                 <a th:href="@{/challenges/{id}(id=${c.getId})}">
                                     <h2 class="card-title" th:text="${c.challengeName}"></h2>
                                 </a>
@@ -50,15 +50,24 @@
         function dayDiff(startDateString) {
             var startDate = new Date(startDateString);
             var currentDate = new Date();
-            var timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
-            return Math.ceil(timeDiff / (1000 * 3600 * 24));
+            var timeDiff = currentDate.getTime() - startDate.getTime();
+            return timeDiff / (1000 * 3600 * 24);
         }
 
         var challengeItems = document.querySelectorAll(".card-compact");
         challengeItems.forEach(function(item) {
             var startDateString = item.querySelector("#progress").getAttribute("data-startdate");
             var diff = dayDiff(startDateString);
-            item.querySelector("#progress").innerText = diff + "일차 진행중! 화이팅";
+
+            if (diff < 0) {
+                diff = Math.floor(diff);
+                item.querySelector("#progress").innerText = "시작 " + Math.abs(diff) + "일전! 준비해주세요";
+                item.querySelector("#progress").style.color = "red";
+            } else {
+                diff = Math.ceil(diff);
+                item.querySelector("#progress").innerText = diff + "일차 진행중! 화이팅";
+                item.querySelector("#progress").style.color = "red";
+            }
         });
     </script>
     <!-- content 종료 -->

@@ -2,6 +2,7 @@ package site.ogobi.ogobi.boundedContext.chatMessage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.chatRoom.ChatRoom;
 import site.ogobi.ogobi.boundedContext.chatRoom.ChatRoomService;
 
@@ -16,6 +17,7 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
 
+    @Transactional
     public ChatMessage save(String content, String nickName, Long senderId, Long roomId) {
 
         ChatMessage chatMessage = ChatMessage.builder()

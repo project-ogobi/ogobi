@@ -6,7 +6,7 @@
     <h1 class="font-semibold p-3 text-center text-lg">내 정보</h1>
     <!-------------- 프로필 -------------->
     <div class="flex-col flex justify-center items-center">
-        <div class="card card-compact w-3/5 bg-green-200 shadow-lg mb-8 p-6">
+        <div class="card card-compact sm:w-3/5 w-4/5 bg-green-200 shadow-lg mb-8 p-6">
             <div th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="text-center font-semibold text-green-900"></div>
             <div class="text-center mb-4 text-gray-600" th:text="|${member.nickname}님 안녕하세요.|"></div>
 
@@ -48,7 +48,6 @@
                         <div th:each="challenge : ${doneList}">
                             <div class="font-semibold" th:if="${#lists.size(doneList)==0}">완료된 챌린지가 없습니다.</div>
                             <a th:text="${challenge.challengeName}" th:href="@{/challenges/{id}(id=${challenge.id})}" class="font-semibold text-green-900">챌린지 제목</a>
-                            <button class="btn btn-sm btn-primary" th:if="${challenge.isSuccess}">성공</button>
                             <button class="btn btn-sm btn-primary" th:unless="${challenge.isSuccess}">실패</button>
                         </div>
                     </div>
