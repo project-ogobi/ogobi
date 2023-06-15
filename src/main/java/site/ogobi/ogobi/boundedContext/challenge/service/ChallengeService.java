@@ -127,14 +127,10 @@ public class ChallengeService {
 
         // 챌린지 생성 시기별
         if (compareStart > 0 && compareEnd > 0){ // 과거의 챌린지 생성 상황
-            log.info("[과거]challengeStatusId={}", id);
-            log.info("[과거]challengeSuccess={}", challenge.isSuccess());
             challenge.setDone(true);
         } else if (compareStart < 0 && compareEnd < 0) { // 미래의 챌린지 생성 상황
-            log.info("[미래]challengeStatusId={}", id);
             challenge.setDone(false);
         } else if (compareStart >= 0 && compareEnd <= 0 && challenge.getUsedMoney() > challenge.getTargetMoney()) {
-            log.info("[진행중,금액초과]challengeStatusId={}", id);
             challenge.setDone(true); // 진행중인 챌린지의 목표금액 비교
             challenge.setSuccess(false);
         }
