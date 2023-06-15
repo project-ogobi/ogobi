@@ -20,9 +20,9 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
+import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
-import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,9 +31,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Comparator.comparing;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +65,8 @@ public class ChallengeService {
                 .description(description)
                 .startDate(startDate)
                 .endDate(endDate)
+                .isDone(false)
+                .isSuccess(true)
                 .targetMoney(targetMoney)
                 .usedMoney(0)
                 .createDate(LocalDateTime.now())
@@ -125,14 +130,13 @@ public class ChallengeService {
             return;
         }
 
-        // 종료시점 비교
-        if (compareStart < 0 || compareEnd > 0){
+        // 챌린지 생성 시기별
+        if (compareStart > 0 && compareEnd > 0){ // 과거의 챌린지 생성 상황
             challenge.setDone(true);
-        }
-
-        // 진행중인 챌린지의 목표금액 비교
-        if (compareStart >= 0 && compareEnd <= 0 && challenge.getUsedMoney() > challenge.getTargetMoney()) {
-            challenge.setDone(true);
+        } else if (compareStart < 0 && compareEnd < 0) { // 미래의 챌린지 생성 상황
+            challenge.setDone(false);
+        } else if (compareStart >= 0 && compareEnd <= 0 && challenge.getUsedMoney() > challenge.getTargetMoney()) {
+            challenge.setDone(true); // 진행중인 챌린지의 목표금액 비교
             challenge.setSuccess(false);
         }
 
@@ -183,8 +187,8 @@ public class ChallengeService {
         // 누적 그래프 생성
         JFreeChart chart = ChartFactory.createLineChart(
                 "", // 제목
-                "기간", // X-축 레이블
-                "누적 지출금액", // Y-축 레이블
+                "Period", // X-축 레이블
+                "Price", // Y-축 레이블
                 dataset, // 데이터셋
                 PlotOrientation.VERTICAL,
                 true,
@@ -249,4 +253,10 @@ public class ChallengeService {
 
     }
 
+    @Transactional
+    public List<Challenge> sortChallenge(List<Challenge> challenges) {
+        return challenges.stream()
+                .sorted(comparing(Challenge::getStartDate))
+                .collect(Collectors.toList());
+    }
 }
