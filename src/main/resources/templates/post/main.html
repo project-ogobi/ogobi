@@ -35,10 +35,10 @@
                 </div>
                 <div class="flex justify-between font-semibold text-green-400 px-3">
                     <div>
-                        <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-900"></span>
-                        <div th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</div>
+                    <div th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-400 text-xs"></div>
+                    <div th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</div>
                     </div>
-                    <span class="text-gray-500" style="float: right">
+                    <span class="text-gray-500 mt-4" style="float: right">
                             <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
                             <span th:text=${#lists.size(post.like)}>추천수</span>
                     </span>
@@ -80,6 +80,7 @@
 
         </div>
         <div class="collapse-content">
+            <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-900 text-xs"></span>
             <h5 class="font-semibold text-sm text-gray-500" th:if="${post.author != null}">
                 <span th:text="${post.author.nickname}">작성자</span>
                 <span style="float: right">
