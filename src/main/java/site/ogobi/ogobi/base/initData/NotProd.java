@@ -3,6 +3,7 @@ package site.ogobi.ogobi.base.initData;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import site.ogobi.ogobi.boundedContext.auth.entity.SignUp;
 import site.ogobi.ogobi.boundedContext.auth.service.AuthService;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-//@Profile({"dev", "test"})
+@Profile({"dev", "test"})
 public class NotProd {
 
     @Bean

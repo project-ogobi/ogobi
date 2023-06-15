@@ -43,7 +43,7 @@ public class ChallengeController {
             challengeService.checkDone(challenge.getId());
         }
         model.addAttribute("challenge", li);
-        return "/challenge/challengeHome";
+        return "challenge/challengeHome";
     }
 
     //createForm
@@ -51,7 +51,7 @@ public class ChallengeController {
     @GetMapping("/createForm")
     public String goToCreate(Model model){
         model.addAttribute("createForm", new CreateForm());
-        return "/challenge/createForm";
+        return "challenge/createForm";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -70,6 +70,11 @@ public class ChallengeController {
             }
             return rq.historyBack(errorMessage.toString());
         }
+
+        if (createForm.getStartDate().isAfter(createForm.getEndDate())){
+            return rq.historyBack("종료날짜가 시작날짜보다 빠를수 없습니다.");
+        }
+
         challengeService.create(rq.getMember(), createForm.getChallengeName(), createForm.getDescription(), createForm.getTargetMoney(), createForm.getStartDate(), createForm.getEndDate());
 
         return "redirect:/challenges";
@@ -124,14 +129,14 @@ public class ChallengeController {
 
         model.addAttribute("updateForm", updateForm);
         model.addAttribute("updateId", id);
-        return "/challenge/updateForm";
+        return "challenge/updateForm";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
     public String update(@Valid CreateForm updateForm, @PathVariable Long id, BindingResult result){
         if (result.hasErrors()) {
-            return "/challenge/updateForm";
+            return "challenge/updateForm";
         }
         if(!challengeService.canUpdate(rq.getMember(), id)){
             return rq.historyBack("잘못된 접근입니다");
