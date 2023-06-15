@@ -59,10 +59,6 @@ public class ChallengeController {
     public String create(@Valid CreateForm createForm, BindingResult result){
         Member member = rq.getMember();
 
-        if (createForm.getStartDate().isAfter(createForm.getEndDate())){
-            return rq.historyBack("시작날짜가 종료날짜보다 빠를수 없습니다.");
-        }
-
         if (result.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : result.getFieldErrors()) {
