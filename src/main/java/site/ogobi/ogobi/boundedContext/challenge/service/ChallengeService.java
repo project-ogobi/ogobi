@@ -18,6 +18,7 @@ import site.ogobi.ogobi.boundedContext.image.repository.GraphImageRepository;
 import site.ogobi.ogobi.boundedContext.image.service.ImageService;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
+import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
 import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
@@ -44,14 +45,15 @@ public class ChallengeService {
     private final TitleRepository titleRepository;
     private final ImageService imageService;
     private final GraphImageRepository graphImageRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public void create(Member member, String challengeName, String description, int targetMoney, LocalDate startDate, LocalDate endDate) {
+        Member member1 = memberRepository.findById(member.getId()).get();
 
-        //TODO: 칭호 가져오는 다른 방법?혹은 개선점? 현재 방식은 문제가 발생하기 쉬워보임.
-        //if ( member.getChallenge() != null || member.getChallenge().size()==9){
-        //    getTitle();
-        //}
+        if ( member1.getChallenge() != null && member1.getChallenge().size()==9){
+            getTitle(member1);
+        }
 
         Challenge challenge = Challenge
                 .builder()
@@ -234,12 +236,12 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void getTitle(){
+    public void getTitle(Member member){
         Title aLotChallenge = titleRepository.findById(1L).orElse(null);
 
         if(aLotChallenge!=null){
             MemberTitle memberTitle = MemberTitle.builder()
-                    .member(rq.getMember())
+                    .member(member)
                     .title(aLotChallenge)
                     .build();
             memberTitleRepository.save(memberTitle);

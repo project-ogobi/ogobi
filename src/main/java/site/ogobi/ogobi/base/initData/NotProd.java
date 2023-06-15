@@ -51,6 +51,10 @@ public class NotProd {
                     .email("lucas0209@naver.com")
                     .password("test1")
                     .build();
+//칭호
+            Title aLotChallenge = Title.builder()
+                    .name("명예 도전자").build();
+            titleRepository.save(aLotChallenge);
 
             authService.signUp(signup1);
             authService.signUp(signup2);
@@ -103,10 +107,6 @@ public class NotProd {
 
             spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyLunch, sampleImage);
             spendingHistoryService.create(challengeService.findChallengeById(1L).get(), historyCoffee, sampleImage2);
-
-            Title aLotChallenge = Title.builder()
-                    .name("명예 도전자").build();
-            titleRepository.save(aLotChallenge);
 
 
         };
