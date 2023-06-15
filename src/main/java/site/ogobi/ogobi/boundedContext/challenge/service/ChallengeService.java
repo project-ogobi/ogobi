@@ -20,9 +20,9 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.entity.MemberTitle;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberTitleRepository;
+import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.title.Title;
 import site.ogobi.ogobi.boundedContext.title.TitleRepository;
-import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,9 +31,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Comparator.comparing;
 
 @Service
 @RequiredArgsConstructor
@@ -250,4 +253,10 @@ public class ChallengeService {
 
     }
 
+    @Transactional
+    public List<Challenge> sortChallenge(List<Challenge> challenges) {
+        return challenges.stream()
+                .sorted(comparing(Challenge::getStartDate))
+                .collect(Collectors.toList());
+    }
 }

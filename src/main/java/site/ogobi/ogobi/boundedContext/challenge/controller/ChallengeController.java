@@ -42,6 +42,7 @@ public class ChallengeController {
         for (Challenge challenge : li) {
             challengeService.checkDone(challenge.getId());
         }
+        li = challengeService.sortChallenge(li);
         model.addAttribute("challenge", li);
         return "challenge/challengeHome";
     }
