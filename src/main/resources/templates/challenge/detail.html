@@ -7,14 +7,14 @@
     <div class="w-full">
         <div class="font-semibold text-2xl my-1 text-center my-4">챌린지 상세</div>
 
-        <div class="bg-green-200 rounded-2xl p-4 h-auto">
-            <div class="flex w-full">
-                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
+        <div class="bg-green-200 rounded-2xl mx-4 p-4 h-auto">
+            <div class="flex flex-col w-full sm:flex-row">
+                <div class="grid h-28 p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
                     <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
                     <div th:text="${challenge.description}"></div>
                 </div>
-                <div class="divider divider-horizontal"></div>
-                <div class="grid h-full p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-left p-1">
+                <div class="divider sm:divider-horizontal"></div>
+                <div class="grid h-28 p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center p-1">
                     <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
                     <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
                     <div id="progress"></div>
@@ -29,7 +29,7 @@
         </div>
 
         <th:block th:if="${challenge.hasSpendingHistory}">
-            <div class="flex items-center justify-center" th:each="spendingHistory: ${challenge.getSpendingHistories()}">
+            <div class="flex items-center justify-center mx-2" th:each="spendingHistory: ${challenge.getSpendingHistories()}">
                 <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 object-center">
                     <div class="card-body">
                         <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>

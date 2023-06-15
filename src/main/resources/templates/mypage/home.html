@@ -6,7 +6,7 @@
     <h1 class="font-semibold p-3 text-center text-lg">내 정보</h1>
     <!-------------- 프로필 -------------->
     <div class="flex-col flex justify-center items-center">
-        <div class="card card-compact w-3/5 bg-green-200 shadow-lg mb-8 p-6">
+        <div class="card card-compact sm:w-3/5 w-4/5 bg-green-200 shadow-lg mb-8 p-6">
             <div th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="text-center font-semibold text-green-900"></div>
             <div class="text-center mb-4 text-gray-600" th:text="|${member.nickname}님 안녕하세요.|"></div>
 
@@ -51,6 +51,11 @@
                             <button class="btn btn-sm btn-primary" th:unless="${challenge.isSuccess}">실패</button>
                         </div>
                     </div>
+                </div>
+                <div class="collapse bg-green-100">
+                    <a class="collapse-title text-xl font-medium font-semibold" th:href="@{|/mypages/edit/${member.id}|}">
+                        닉네임 변경
+                    </a>
                 </div>
                 <div class="collapse bg-green-100">
                     <input type="checkbox" />
