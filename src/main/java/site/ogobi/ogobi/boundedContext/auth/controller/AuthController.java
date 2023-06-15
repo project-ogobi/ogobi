@@ -42,4 +42,9 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
+    @GetMapping("/consent")
+    public String showConsent() {
+        return "auth/consent";
+    }
+
 }
