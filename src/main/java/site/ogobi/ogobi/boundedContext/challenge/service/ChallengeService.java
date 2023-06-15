@@ -186,8 +186,8 @@ public class ChallengeService {
         // 누적 그래프 생성
         JFreeChart chart = ChartFactory.createLineChart(
                 "", // 제목
-                "기간", // X-축 레이블
-                "누적 지출금액", // Y-축 레이블
+                "Period", // X-축 레이블
+                "Price", // Y-축 레이블
                 dataset, // 데이터셋
                 PlotOrientation.VERTICAL,
                 true,
