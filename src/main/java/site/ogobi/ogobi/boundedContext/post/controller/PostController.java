@@ -145,7 +145,9 @@ public class PostController {
         Post.Category postCategory = getCategory(category);
         Member member = this.memberService.getMember(principal.getName());
 
-
+        if(postDto.getChallengeId() == null){
+            return rq.historyBack("챌린지를 선택해주세요.");
+        }
 
         this.postService.create(postDto.getSubject(), postDto.getContent(), postCategory, member, postDto.getChallengeId());
 
