@@ -1,12 +1,12 @@
 package site.ogobi.ogobi.boundedContext.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.base.rq.Rq;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
 import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
@@ -14,6 +14,7 @@ import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.service.MemberService;
 import site.ogobi.ogobi.boundedContext.title.Title;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -71,5 +72,31 @@ public class MemberController {
         return "redirect:/mypages/home";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/edit/{id}")
+    public String showEditInformation(@PathVariable("id") Long memberId, Principal principal, Model model) {
+        Member member = this.memberService.findById(memberId);
+        if (!member.getUsername().equals(principal.getName())) {
+            return rq.historyBack("접근할 수 없는 페이지입니다.");
+        }
+        model.addAttribute("member", member);
 
+        return "mypage/edit";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/edit/{id}")
+    public String editInformation(@PathVariable("id") Long memberId, @RequestParam("nickname") String newNickname, Principal principal) {
+        String trimNickname = newNickname.trim();
+
+        if (memberService.findbyNickname(trimNickname) != null) {
+            return rq.historyBack("이미 존재하는 닉네임입니다.");
+        } else if (trimNickname.isEmpty()) {
+            return rq.historyBack("닉네임을 입력해주세요.");
+        } else if (trimNickname.length() <= 2 || trimNickname.length() >= 8) {
+            return rq.historyBack("닉네임은 2자 이상, 8자 이하로 입력해주세요.");
+        }
+        memberService.editNickname(memberId, trimNickname, principal.getName());
+        return "redirect:/mypages/home";
+    }
 }
