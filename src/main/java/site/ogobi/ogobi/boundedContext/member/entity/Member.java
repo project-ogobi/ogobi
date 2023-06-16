@@ -1,24 +1,18 @@
 package site.ogobi.ogobi.boundedContext.member.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import jakarta.persistence.*;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import site.ogobi.ogobi.base.baseEntity.BaseEntity;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
-import site.ogobi.ogobi.boundedContext.like.entity.Like;
-import site.ogobi.ogobi.boundedContext.post.entity.Post;
+import site.ogobi.ogobi.boundedContext.chatRoom.ChatRoom;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -30,16 +24,24 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String username; // 진짜 로그인할때 쓰는 아이디
     private String password;
+    private String email;
+    private String providerType; // 어떤 OAuth인지 (Local, Kakao, Google, Naver)
+    @Setter
+    private String title;   //  칭호
+    private String resetToken = null;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
     @OrderBy("id desc")
     private List<Challenge> challenge;
 
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL})
+    private List<ChatRoom> ownedChatRoom;
+
     public boolean isAdmin() {
         return "admin".equals(username);
     }
 
-    public boolean hasChallenge(){
+    public boolean hasChallenge() {
         return challenge.size() != 0;
     }
 
@@ -56,5 +58,17 @@ public class Member extends BaseEntity {
         }
 
         return grantedAuthorities;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

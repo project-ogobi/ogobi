@@ -1,60 +1,72 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
-<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+<div layout:fragment="content">
 
-        <!-- content 시작 -->
-        <div class="container flex-grow flex flex-col items-center justify-center max-w-xl mx-auto  min-w-xl">
-            <div>
-                챌린지 상세보기
+<!-- content 시작 -->
+    <div class="w-full">
+        <div class="font-semibold text-2xl my-1 text-center my-4">챌린지 상세</div>
 
-                <div class="mt-4 mb-2 flex flex-col gap-2">
-                    <div th:text="${challenge.challengeName}"></div>
+        <div class="bg-green-200 rounded-2xl mx-4 p-4 h-auto">
+            <div class="flex flex-col w-full sm:flex-row">
+                <div class="grid h-28 p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center">
+                    <div class="font-semibold text-xl my-1" th:text="${challenge.challengeName}"></div>
                     <div th:text="${challenge.description}"></div>
+                </div>
+                <div class="divider sm:divider-horizontal"></div>
+                <div class="grid h-28 p-2 flex-grow card bg-base-100 bg-opacity-50 rounded-box place-items-center p-1">
                     <div th:text="${'챌린지 기간: ' + challenge.startDate + ' ~ ' + challenge.endDate}"></div>
                     <div th:text="${ '사용금액 / 목표금액: ' + challenge.usedMoney + '원 / ' + challenge.targetMoney + '원'}"></div>
-                    <div th:text="${'달성률: ' + challenge.achievementRate + '%'}"></div>
+                    <div id="progress"></div>
                 </div>
-
-                <a th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
-
-                <th:block th:unless="${challenge.hasSpendingHistory}">
-                    <div>아직 지출내역이 없습니다. 지출내역을 추가해보세요.</div>
-                </th:block>
-
-                <th:block th:if="${challenge.hasSpendingHistory}">
-                    <ul>
-                        <li th:each="spendingHistory: ${challenge.getSpendingHistories()}">
-                            <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 ">
-                                <div class="card-body">
-                                    <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>
-                                    <div th:text="${spendingHistory.getPrice + '원'}"></div>
-                                    <p>날짜-시간</p>
-                                    <div th:text="${spendingHistory.getDescription}"></div>
-
-                                    <div th:each="image: ${spendingHistory.getImageFiles()}">
-                                        <img th:src="${image.getUploadFileUrl}"/>
-                                    </div>
-
-                                    <div class="card-actions justify-end">
-                                        <a th:href="@{/challenges/{id}/{sh_id}/updateForm(id=${challenge.getId}, sh_id=${spendingHistory.getId})}"
-                                           id="btn-challenge-spendingHistory-update" class="btn btn-sm btn-primary">수정</a>
-
-                                        <form href="javascript:;" onsubmit="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
-                                            <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary">삭제</button>
-                                        </form>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </th:block>
-
             </div>
-
         </div>
-        <!-- content 종료 -->
 
+        <div class="flex items-center justify-center">
+            <a th:unless="${challenge.isDone}" th:href="@{/challenges/{id}/createForm(id=${challenge.getId})}" id="btn-challenge-createNewSpendingHistory" class="btn btn-primary my-3">+ 직접 입력하기</a>
+            <hr style="margin-left: 10px;">
+            <a th:href="@{/challenges/{id}/showGraph(id=${challenge.getId})}" id="btn-challenge-graph" class="btn btn-primary my-3">지출내역 누적그래프 확인</a>
+        </div>
 
+        <th:block th:if="${challenge.hasSpendingHistory}">
+            <div class="flex items-center justify-center mx-2" th:each="spendingHistory: ${challenge.getSpendingHistories()}">
+                <div class="card card-compact w-96 bg-base-100 shadow-xl my-3 object-center">
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${spendingHistory.getContent}"></h2>
+                        <div th:text="${spendingHistory.getPrice + '원'}"></div>
+                        <div th:text="|생성/수정 일시: ${#temporals.format(spendingHistory.modifyDate, 'yyyy-MM-dd HH:mm')}|"></div>
+                        <div th:text="${spendingHistory.getDescription}"></div>
+                        <div th:text="|${spendingHistory.getDate} 에 지출한 내역입니다.|"></div>
+
+                        <div th:each="image: ${spendingHistory.getImageFiles()}">
+                            <img th:src="${image.getUploadFileUrl}"/>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <a th:href="@{/challenges/{id}/{sh_id}/updateForm(id=${challenge.getId}, sh_id=${spendingHistory.getId})}"
+                               id="btn-challenge-spendingHistory-update" class="btn btn-sm btn-primary">수정</a>
+
+                            <form href="javascript:;" onsubmit="return confirm('정말로 삭제하시겠습니까?')" th:action="@{/challenges/{id}/{sh_id}/delete(id=${challenge.getId}, sh_id=${spendingHistory.getId})}" method="get">
+                                <button id="btn-challenge-spendingHistory-delete" class="btn btn-sm btn-primary btn-outline">삭제</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+<!-- content 종료 -->
+
+    <script th:inline="javascript">
+        function dayDiff(startDateString) {
+            var startDate = new Date(startDateString);
+            var currentDate = new Date();
+            var timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
+            return Math.ceil(timeDiff / (1000 * 3600 * 24));
+        }
+        var startDate =  /*[[${challenge.startDate}]]*/ '';
+        var diff = dayDiff(startDate);
+        document.getElementById("progress").innerText = diff + "일차 진행중! 화이팅";
+    </script>
 </div>

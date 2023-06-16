@@ -1,0 +1,150 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content" class="container">
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #66CC99;
+            --color-secondary: #339966;
+            --color-tertiary: #336633;
+            --color-quaternary: #006633;
+            --color-quinary: #003300;
+        }
+
+        .content {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+        }
+
+        .text-shadows {
+            text-shadow: 3px 3px 0 var(--color-secondary), 6px 6px 0 var(--color-tertiary),
+            9px 9px var(--color-quaternary), 12px 12px 0 var(--color-quinary);
+            font-family: bungee, sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: 3.75rem;
+            text-align: center;
+            margin: 0;
+            color: var(--color-primary);
+            animation: shadows 1.2s ease-in infinite;
+            letter-spacing: 0.4rem;
+        }
+
+        @keyframes shadows {
+            0% {
+                text-shadow: none;
+            }
+            10% {
+                transform: translate(-3px, -3px);
+                text-shadow: 3px 3px 0 var(--color-secondary);
+            }
+            20% {
+                transform: translate(-6px, -6px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary);
+            }
+            30% {
+                transform: translate(-9px, -9px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+            }
+            40% {
+                transform: translate(-12px, -12px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            50% {
+                transform: translate(-12px, -12px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            60% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            70% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+            }
+            80% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary);
+            }
+            90% {
+                text-shadow: 3px 3px 0 var(--color-secondary);
+            }
+            100% {
+                text-shadow: none;
+            }
+        }
+    </style>
+    <div class="flex flex-col">
+        <div class="content">
+            <h2 class="text-shadows">OGOBI</h2>
+        </div>
+    </div>
+
+    <p class="font-semibold p-3 pb-0 text-center text-lg">로그인</p>
+    <div class="mt-4 mb-2 flex flex-col gap-3 mx-auto center w-5/6">
+        <form th:action="@{/auth/login}" method="post">
+            <div class="alert alert-danger mb-2 flex justify-center" th:if="${param.error}">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>사용자 아이디 또는 비밀번호가 일치하지 않습니다.</span>
+            </div>
+
+            <div class="flex justify-center gap-10">
+                <div>
+                    <div class="flex justify-center">
+                        <div class="flex flex-col mb-1">
+                            <label for="username" class="form-label m-1">아이디</label>
+                            <input type="text" name="username" id="username" class="input input-bordered input-sm w-full">
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <div class="flex flex-col mb-8">
+                            <label for="password" class="form-label m-1">비밀번호</label>
+                            <input type="password" name="password" id="password" class="input input-bordered input-sm w-full">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button type="submit" class="btn btn-md btn-outline btn-primary btn-lg">로그인</button>
+                </div>
+            </div>
+            <div class="flex flex-row justify-center gap-1">
+                <a th:href="@{/auth/consent}" class="flex flex-content btn btn-primary w-32">회원가입</a>
+                <a th:href="@{/auth/forgot-password}" class="flex flex-content btn btn-ghost bg-gray-200 w-32">비밀번호 찾기</a>
+
+            </div>
+            <hr class="my-5 border-gray-300">
+            <div class="flex justify-center">
+                <div class="flex flex-col w-11/12 gap-2">
+                    <a href="/oauth2/authorization/kakao" class="btn btn-warning gap-2 bg-yellow-300">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>카카오 로그인</span>
+                    </a>
+                    <a href="/oauth2/authorization/naver" class="btn btn-success gap-2 bg-green-400">
+                        <i class="fa-solid fa-n text-white"></i>
+                        <span class="normal-case text-white">네이버 로그인</span>
+                    </a>
+                    <a href="/oauth2/authorization/google" class="btn btn-outline gap-2">
+                        <i class="fa-brands fa-google"></i>
+                        <span>구글 로그인</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</html>

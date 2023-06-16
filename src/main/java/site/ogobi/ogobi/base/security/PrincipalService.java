@@ -1,7 +1,6 @@
 package site.ogobi.ogobi.base.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,16 +9,23 @@ import org.springframework.transaction.annotation.Transactional;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 import site.ogobi.ogobi.boundedContext.member.repository.MemberRepository;
 
+// "/auth/login" 요청이 오면 자동으로 UserDetailsService 타입으로 loC 되어있는 loadUserByUsername 함수가 실행
+// Authentication 객체로 만들어준다
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Transactional(readOnly = false)
-public class UserSecurityService implements UserDetailsService {
+public class PrincipalService implements UserDetailsService {
+
     private final MemberRepository memberRepository;
 
+    // 시큐리티 session => Authentication => UserDetails
+    // 여기서 리턴된 값이 Authentication 안에 들어간다.(리턴될 때)
+    // 그리고 시큐리티 session안에 Authentication이 들어간다.
+    // 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("username(%s) not found".formatted(username)));
+        return new PrincipalDetails(member, null);
 
-        return new User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
 }

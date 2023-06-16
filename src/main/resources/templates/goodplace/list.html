@@ -1,0 +1,73 @@
+<html layout:decorate="~{template}">
+
+<div layout:fragment="content" class="overflow-x-auto">
+    <div class="flex items-center justify-center gap-1">
+        <h1 class="font-semibold py-3 text-center text-lg">착한가게</h1>
+        <label for="my-modal-4" class="btn btn-xs btn-outline btn-circle border-gray-400">
+            <i class="fa-solid fa-question text-gray-400"></i>
+        </label>
+    </div>
+    <!-- Put this part before </body> tag -->
+    <input type="checkbox" id="my-modal-4" class="modal-toggle" />
+    <label for="my-modal-4" class="modal cursor-pointer">
+        <label class="modal-box relative" for="">
+            <h3 class="text-lg font-bold">착한가게란?</h3>
+            <p class="py-4">서울시의 착한가격업소로, 가격이 저렴하고 서비스가 좋은 가격안정 모범업소(착한가게) 정보에 대한 서비스입니다.</br></br>매월 셋째주에 갱신되며,</br>추천수를 기준으로 내림차순 정렬되어 있습니다.</p>
+        </label>
+    </label>
+    <!-- 업종 분류 -->
+    <form class="mb-3 mr-10 text-right" action="/goodplace" method="GET">
+        <select name="vo" class="select select-bordered select-xs w-1/4 max-w-xs">
+            <option value="" disabled selected>업종</option>
+            <option value="001">한식</option>
+            <option value="002">중식</option>
+            <option value="003">경양식,일식</option>
+            <option value="004">기타외식업(다방,패스트푸드등)</option>
+            <option value="005">이 미용업</option>
+            <option value="006">목욕업</option>
+            <option value="007">세탁업</option>
+            <option value="008">숙박업(호텔,여관)</option>
+            <option value="013">기타서비스업종</option>
+        </select>
+        <button type="submit" class="btn btn-xs btn-primary">검색</button>
+    </form>
+    <!-- 착한가게 목록 -->
+    <style>
+        .card:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+    </style>
+    <div class="card-container">
+        <div class="card mx-4 sm:w-5/12 bg-base-100 shadow-xl mb-5" th:each="store : ${stores}">
+            <figure><img class="w-full h-60" th:src="${store.photo}"/></figure>
+            <div class="card-body">
+                <h2 class="card-title flex justify-between">
+                    <span th:text="${store.name}" th:class="${#strings.length(store.name) &gt;= 8} ? 'text-lg'"></span>
+                    <span class="flex items-center gap-1 text-green-300">
+                        <i class="fa-regular fa-thumbs-up"></i>
+                        <span class="text-base" th:text="${store.recommend}">추천수</span>
+                    </span>
+                </h2>
+                <p th:text="'전화번호: ' + ${store.phoneNumber}"></p>
+                <p th:text="'주소: ' + ${store.address}"></p>
+                <div class="card-actions justify-end">
+                    <div class="badge badge-outline" th:text="${store.categoryName}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 페이징 -->
+    <div class="btn-group flex items-center justify-center mb-5" th:unless="${param.vo}">
+        <a class="btn btn-sm btn-outline" th:href="@{/goodplace}" th:if="${param.start != null and param.start != '1001'}">이전</a>
+        <a class="btn btn-sm btn-outline" th:href="@{/goodplace(start=1001, end=2000)}" th:unless="${param.start != null and param.start != '1001'}">다음</a>
+    </div>
+
+</div>
+</html>

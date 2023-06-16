@@ -13,10 +13,13 @@ import site.ogobi.ogobi.boundedContext.spendingHistory.entity.SpendingHistory;
 import site.ogobi.ogobi.boundedContext.spendingHistory.form.SpendingHistoryForm;
 import site.ogobi.ogobi.boundedContext.spendingHistory.repository.SpendingHistoryRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SpendingHistoryService {
@@ -27,7 +30,6 @@ public class SpendingHistoryService {
 
     @Transactional
     public void create(Challenge challenge, SpendingHistoryForm form, List<Image> images){
-
         challenge.updateUsedMoney(challenge.getUsedMoney() + form.getItemPrice());
 
         SpendingHistory spendingHistory = SpendingHistory.builder()
@@ -35,10 +37,28 @@ public class SpendingHistoryService {
                 .content(form.getItemName())
                 .price(form.getItemPrice())
                 .description(form.getDescription())
+                .date(form.getDate())
                 .build();
 
-        update(spendingHistory, form, images);
+        mappingImagesAndHistoryWithForm(spendingHistory, form, images);
         spendingHistoryRepository.save(spendingHistory);
+    }
+    @Transactional
+    public void mappingImagesAndHistoryWithForm(SpendingHistory item, SpendingHistoryForm form, List<Image> images){
+        int presentUsedMoney = item.getChallenge().getUsedMoney();
+        int updatedUsedMoney = presentUsedMoney - item.getPrice() + form.getItemPrice();
+
+        item.setContent(form.getItemName());
+        item.setPrice(form.getItemPrice());
+        item.setDescription(form.getDescription());
+        item.setDate(form.getDate());
+
+        item.setImageFiles(images);
+        for (Image image : images) {
+            image.setSpendingHistory(item);
+        }
+
+        item.getChallenge().updateUsedMoney(updatedUsedMoney);
     }
 
     public Optional<SpendingHistory> findSpendingHistoryById(Long id) {
@@ -47,9 +67,9 @@ public class SpendingHistoryService {
 
 
     @Transactional
-    public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images) {
+    public void updateSpendingHistory(SpendingHistoryForm form, Long id, List<Image> images, List<String> listId) {
         SpendingHistory item = findSpendingHistoryById(id).orElseThrow();
-        update(item, form, images);
+        update(item, form, images, listId);
     }
 
 
@@ -59,31 +79,43 @@ public class SpendingHistoryService {
         create(challenge, form, images);
     }
 
+    @Transactional
+    public boolean validateDate(Challenge challenge, LocalDate input) {
+        int compareStart = input.compareTo(challenge.getStartDate());
+        int compareEnd = input.compareTo(challenge.getEndDate());
+
+        return compareStart >= 0 && compareEnd <= 0;
+    }
+
     public SpendingHistoryForm buildSpendingHistoryForm(SpendingHistory spendingHistory) {
         SpendingHistoryForm spendingHistoryForm = SpendingHistoryForm.builder()
                 .itemName(spendingHistory.getContent())
                 .itemPrice(spendingHistory.getPrice())
+                .description(spendingHistory.getDescription())
+                .date(spendingHistory.getDate())
                 .build();
         return spendingHistoryForm;
     }
 
     @Transactional
-    public void update(SpendingHistory item, SpendingHistoryForm form, List<Image> images) {
-        item.setContent(form.getItemName());
-        item.setDescription(form.getDescription());
+    public void update(SpendingHistory item, SpendingHistoryForm form, List<Image> images, List<String> listId) {
+
+        List<Image> newImages = new ArrayList<>();
 
         if (item.getImageFiles() != null && item.getImageFiles().size() > 0) {
-            for (Image imageFile : item.getImageFiles()) {
-                imageRepository.delete(imageFile);
-                imageService.deleteUploadedFile(imageFile.getUploadFilePath());
-            }
-            item.setImageFiles(new ArrayList<>());
-        }
-        item.setImageFiles(images);
+            for (Image image : item.getImageFiles()) {
+                if (!listId.contains(String.valueOf(image.getId()))) {
+                    imageRepository.delete(image);
+                    imageService.deleteUploadedFile(image.getUploadFilePath());
+                } else {
+                    newImages.add(image);
+                }
 
-        for (Image image : images) {
-            image.setSpendingHistory(item);
+            }
         }
+
+        newImages.addAll(images);
+        mappingImagesAndHistoryWithForm(item, form, newImages);
     }
 
     @Transactional
@@ -95,5 +127,15 @@ public class SpendingHistoryService {
         }
 
         spendingHistoryRepository.delete(item);
+    }
+
+    @Transactional
+    public void updateWithoutNewImage(SpendingHistoryForm form, Long shId, List<String> listId) {
+        SpendingHistory item = findSpendingHistoryById(shId).orElseThrow();
+        List<Image> updateImages = item.getImageFiles().stream()
+                .filter(image -> listId.contains(String.valueOf(image.getId())))
+                .collect(Collectors.toList());
+
+        mappingImagesAndHistoryWithForm(item, form, updateImages);
     }
 }

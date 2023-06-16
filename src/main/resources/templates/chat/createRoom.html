@@ -1,0 +1,28 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template}">
+
+<div layout:fragment="content">
+
+    <!-- content 시작 -->
+    <div class="font-semibold p-3 pb-0 text-center text-lg">채팅방 생성</div>
+    <div class="mt-1 mb-2 flex flex-col mx-auto center w-5/6">
+        <form class="space-y-4" action="#" th:action="@{/chatrooms/create}" th:object="${chatRoom}" method="post">
+            <div class="flex flex-col gap-2">
+                <label for="name">제목</label>
+                <input type="text" id="name" name="name" th:field="*{name}" required="required"
+                       class="input input-bordered" placeholder="제목을 입력하세요."/>
+
+                <label for="content">설명</label>
+                <textarea id="content" name="content" th:field="*{content}" required="required"
+                          class="textarea textarea-bordered" placeholder="설명을 입력하세요."></textarea>
+            </div>
+            <div style="float: right;">
+                <button type="submit" class="btn btn-primary">등록</button>
+                <input type="button" value="취소" class="btn btn-error mx-1" th:onclick="'location.href=\'' + @{/chatrooms} + '\';'"/>
+            </div>
+        </form>
+    </div>
+    <!-- content 종료 -->
+
+</div>
+</html>

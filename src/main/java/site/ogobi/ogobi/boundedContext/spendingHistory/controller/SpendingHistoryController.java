@@ -7,6 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
@@ -41,6 +43,8 @@ public class SpendingHistoryController {
         // dto 객체 전환
         SpendingHistoryForm spendingHistoryForm = spendingHistoryService.buildSpendingHistoryForm(spendingHistory);
 
+        List<Image> Images = spendingHistory.getImageFiles();
+        model.addAttribute("presentImages", Images);
         model.addAttribute("form", spendingHistoryForm);
         model.addAttribute("cid", challenge_id);
         model.addAttribute("sh_id", sh_id);
@@ -52,14 +56,34 @@ public class SpendingHistoryController {
     @PostMapping("/{challenge_id}/{sh_id}/updateForm")
     public String updateSpendingHistory(@Valid SpendingHistoryForm form, BindingResult result,
                                         @PathVariable Long challenge_id, @PathVariable Long sh_id,
-                                        @RequestParam List<MultipartFile> file) throws IOException {
-        if (result.hasErrors()) {
-            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
+                                        @RequestParam(value = "images", required = false) List<MultipartFile> file,
+                                        @RequestParam(value = "existingImageId", required = false) List<String> listId ) throws IOException {
+
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        if (!spendingHistoryService.validateDate(challenge, form.getDate())) {
+            return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm" + "?error";
         }
 
-        String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);
-        List<Image> imageFiles = imageService.uploadFiles(file, filePath);
-        spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles);
+        if (file == null){
+            spendingHistoryService.updateWithoutNewImage(form, sh_id, listId);
+        }
+        else{
+            if (result.hasErrors()) {
+                List<ObjectError> errors = result.getAllErrors();
+
+                for (ObjectError error : errors) {
+                    String errorMessage = error.getDefaultMessage();
+
+                    System.out.println("에러 발생! 메시지: " + errorMessage);
+                }
+
+                return "redirect:/challenges/" + challenge_id + "/" + sh_id + "/updateForm";
+            }
+
+            String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);
+            List<Image> imageFiles = imageService.uploadFiles(file, filePath);
+            spendingHistoryService.updateSpendingHistory(form, sh_id, imageFiles, listId);
+        }
 
         return "redirect:/challenges/" + challenge_id;
     }
@@ -80,6 +104,11 @@ public class SpendingHistoryController {
             return "redirect:/challenges/" + challenge_id + "/createForm";
         }
 
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        if (!spendingHistoryService.validateDate(challenge, form.getDate())) {
+            return "redirect:/challenges/" + challenge_id + "/createForm" + "?error";
+        }
+
         String filePath = challengeService.makeFilePathWithChallengeId(challenge_id);
         List<Image> imageFiles = imageService.uploadFiles(file, filePath);
         spendingHistoryService.createSpendingHistory(form, challenge_id, imageFiles);
@@ -89,8 +118,11 @@ public class SpendingHistoryController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{challenge_id}/{sh_id}/delete")
     public String deleteSpendingHistory(@PathVariable Long challenge_id, @PathVariable Long sh_id){
-        spendingHistoryService.delete(sh_id);
+        Challenge challenge = challengeService.findChallengeById(challenge_id).orElseThrow();
+        SpendingHistory spendingHistory = spendingHistoryService.findSpendingHistoryById(sh_id).orElseThrow();
+        challenge.updateUsedMoney(challenge.getUsedMoney() - spendingHistory.getPrice());
 
+        spendingHistoryService.delete(sh_id);
         return "redirect:/challenges/" + challenge_id;
     }
 }

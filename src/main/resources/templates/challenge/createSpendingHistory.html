@@ -1,12 +1,17 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{template}">
 
-<div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
+<div layout:fragment="content" class="flex items-center justify-center my-3">
     <form th:action method="post" enctype="multipart/form-data" th:object="${form}">
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                챌린지 기간 내의 날짜를 입력해주세요.
+            </div>
+        </div>
         <!-- content 시작 -->
-        <div class= "container flex-grow flex items-center justify-center max-w-xl mx-auto min-w-xl">
-            <div class="mt-4 mb-2 flex flex-col gap-2">
-                <div class="form-group">
+        <div class= "container">
+            <div class="mt-4 mb-2 flex flex-col gap-3 mx-auto center w-5/6">
+                <div class="form-group flex flex-col">
                     <label th:for="itemName">지출 품목</label>
                     <input type="text" th:field="*{itemName}" class="input input-bordered input-primary w-full" placeholder="Type here">
                 </div>
@@ -24,13 +29,63 @@
                 </div>
                 <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="fieldError">Incorrect data</p>
 
-                <div>파일<input type="file" name="file" multiple="multiple"></div>
+                <div class="form-group">
+                    <label th:for="date">지출한 날짜</label>
+                    <input type="text" th:field="*{date}" id="datepicker" class="border border-primary rounded-md text-center">
+                </div>
+                <p id="date-error" class="fieldError" style="display: none; color: red;">날짜를 입력해주세요.</p>
+
+                <script>
+                    $( function() {
+                        $( "#datepicker" ).datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: "yy-mm-dd",
+                            onSelect: function(dateText) {
+                                $("#date-error").hide();
+                            }
+                        });
+
+                        $("form").submit(function(e) {
+                            // Check if the date input is empty
+                            if ($("#datepicker").val() === "") {
+                                $("#date-error").show();
+                                e.preventDefault();
+                            }
+                        });
+                    } );
+                </script>
+
+                <div id="preview">선택파일 미리보기</div>
+
+                <div><input type="file" name="file" id="image" multiple="multiple"></div>
+
+                <script>
+                    document.getElementById("image").addEventListener("change", function() {
+                        var previewContainer = document.getElementById("preview");
+                        previewContainer.innerHTML = "선택파일 미리보기"; // 기존 미리보기 이미지 제거
+
+                        var files = Array.from(this.files);
+
+                        files.forEach(function(file) {
+                            var reader = new FileReader();
+
+                            reader.onload = function(e) {
+                                var imageElement = "<img src='" + e.target.result + "' style='width: 300px'>";
+                                previewContainer.innerHTML += imageElement;
+                            };
+
+                            reader.readAsDataURL(file);
+                        });
+                    });
+                </script>
+                <div class = "flex justify-end">
+                    <button type="submit" name="submit" class="btn btn-outline btn-primary">등록하기</button>
+                </div>
             </div>
         </div>
 
-        <div class = "flex justify-end">
-            <button type="submit" name="submit" class="btn btn-primary">등록하기</button>
-        </div>
+
         <!-- content 종료 -->
     </form>
 </div>

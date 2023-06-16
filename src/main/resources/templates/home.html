@@ -1,8 +1,212 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{template}">
 
 <div layout:fragment="content" class="flex-grow flex items-center justify-center my-3">
-    <h1>메인 페이지입니다.</h1>
+
+    <style>
+        #check-btn { display: none; }
+        #check-btn:checked ~ .members { display: block; }
+        .members { display: none; }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #66CC99;
+            --color-secondary: #339966;
+            --color-tertiary: #336633;
+            --color-quaternary: #006633;
+            --color-quinary: #003300;
+        }
+
+        .content {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+        }
+
+        .text-shadows {
+            text-shadow: 3px 3px 0 var(--color-secondary), 6px 6px 0 var(--color-tertiary),
+            9px 9px var(--color-quaternary), 12px 12px 0 var(--color-quinary);
+            font-family: bungee, sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: 3.75rem;
+            text-align: center;
+            margin: 0;
+            color: var(--color-primary);
+            animation: shadows 1.2s ease-in infinite;
+            letter-spacing: 0.4rem;
+        }
+
+        @keyframes shadows {
+            0% {
+                text-shadow: none;
+            }
+            10% {
+                transform: translate(-3px, -3px);
+                text-shadow: 3px 3px 0 var(--color-secondary);
+            }
+            20% {
+                transform: translate(-6px, -6px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary);
+            }
+            30% {
+                transform: translate(-9px, -9px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+            }
+            40% {
+                transform: translate(-12px, -12px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            50% {
+                transform: translate(-12px, -12px);
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            60% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
+            }
+            70% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+            }
+            80% {
+                text-shadow: 3px 3px 0 var(--color-secondary),
+                6px 6px 0 var(--color-tertiary);
+            }
+            90% {
+                text-shadow: 3px 3px 0 var(--color-secondary);
+            }
+            100% {
+                text-shadow: none;
+            }
+        }
+    </style>
+
+    <div class="flex flex-col">
+        <div class="content">
+            <h2 class="text-shadows">OGOBI</h2>
+        </div>
+
+        <div class="text-center mt-16">
+            <figure class="flex justify-center mb-4"><img src="/images/cash.png" alt="cashPhoto" class="flex justify-center w-12 h-12" /></figure>
+            <p>😁안녕하세요. 여러분!<p>
+            <p>오늘의 고비는🐟</p>
+            <p>💸절약을 위해 하루하루를 애쓰며 살아가는</p>
+            <p>여러분을 위한 사이트입니다.🤸‍♂</p>
+            <p>오늘의 고비에서 📆정해진 일정 내에,</p>
+            <p>💵목표한 금액만을 사용할 수 있도록</p>
+            <p>챌린지를 생성하세요.😉</p>
+        </div>
+
+        <div class="flex justify-center">
+            <a href="/challenges" class="btn btn-primary mt-12 mb-32">시작하기</a>
+        </div>
+
+        <input id="check-btn" type="checkbox"/>
+            <label class="justify-center" for="check-btn"><figure class="flex justify-center "><img src="/images/fish.png" alt="cashPhoto" class="flex justify-center w-5 h-5" /></figure></label>
+        </button>
+<!--        숨긴 카드-->
+            <div class="members flex-col my-2 flex items-center justify-center">
+                <div class="card w-96 bg-base-100 shadow-xl mb-4">
+                    <figure><img src="/images/su.png" alt="syPhoto" /></figure>
+                    <div class="card-body">
+                        <div class="flex">
+                            <h2 class="card-title">
+                                김수연
+                            </h2>
+                            <span class="text-sm text-gray-500 mt-1 ml-1">- yyeonann@gmail.com</span>
+                        </div>
+                        <p class="mt-4 font-semibold text-gray-600">“혼자 꾸는 꿈은 그저 꿈에 지나지 않는다.</p>
+                        <p class="ml-2 font-semibold text-gray-600">하지만 함께 꾸는 꿈은 현실이다.”</p>
+                        <p class="text-right my-1 font-semibold font-semibold text-gray-600 text-sm">-존 레논/ 오노 요코-</p>
+                        <div class="card-actions justify-end">
+                            <div class="badge badge-primary text-white">소셜 로그인</div>
+                            <div class="badge badge-primary badge-outline">게시글 작성</div>
+                            <div class="badge badge-primary text-white">게시판</div>
+                            <div class="badge badge-primary badge-outline">추천 장소</div>
+                            <div class="badge badge-primary text-white">최신 글</div>
+                            <div class="badge badge-primary badge-outline">UI 디자인</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-96 bg-base-100 shadow-xl mb-4">
+                    <figure><img src="/images/ye.jpg" alt="yrPhoto" /></figure>
+                    <div class="card-body">
+                        <div class="flex">
+                            <h2 class="card-title">
+                                박예림
+                            </h2>
+                            <span class="text-sm text-gray-500 mt-1 ml-1">- naiga6@gmail.com</span>
+                        </div>
+                        <p class="font-semibold my-2 text-gray-600">"우리의 행적이 미래를 결정한다."</p>
+                        <p class="text-right my-1 font-semibold text-gray-600 text-sm">-가렌-</p>
+                        <div class="card-actions justify-end">
+                            <div class="badge badge-primary badge-outline">게시글 상세</div>
+                            <div class="badge badge-primary text-white">댓글</div>
+                            <div class="badge badge-primary badge-outline">칭호</div>
+                            <div class="badge badge-primary text-white">인기 글</div>
+                            <div class="badge badge-primary badge-outline">추천</div>
+                            <div class="badge badge-primary text-white">마이 페이지</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-96 bg-base-100 shadow-xl mb-4">
+                    <figure><img src="/images/youn.jpg" alt="ysPhoto" /></figure>
+                    <div class="card-body">
+                        <div class="flex">
+                            <h2 class="card-title">
+                                정윤성
+                            </h2>
+                            <span class="text-sm text-gray-500 mt-1 ml-1">- yunsung9841@gmail.com</span>
+                        </div>
+                        <p class="my-4 font-semibold text-gray-600">"목표를 향해 꾸준히 나아가는 한 걸음"</p>
+                        <div class="card-actions justify-end">
+                            <div class="badge badge-primary text-white">채팅 방</div>
+                            <div class="badge badge-primary badge-outline">실시간 채팅</div>
+                            <div class="badge badge-primary text-white">챌린지 홈</div>
+                            <div class="badge badge-primary badge-outline">챌린지 작성</div>
+                            <div class="badge badge-primary text-white">이미지 업로드</div>
+                            <div class="badge badge-primary badge-outline">반응형 웹</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-96 bg-base-100 shadow-xl mb-4">
+                    <figure><img src="/images/min.png" alt="msPhoto" /></figure>
+                    <div class="card-body">
+                        <div class="flex">
+                            <h2 class="card-title">
+                                최민수
+                            </h2>
+                            <span class="text-sm text-gray-500 mt-1 ml-1">- ms.lucaschoi@gmail.com</span>
+                        </div>
+                        <p class="mt-4 font-semibold text-gray-600">"순간의 쾌락에 빠져 돈을 쓰는 것은 어리석다.</p>
+                        <p class="ml-2 font-semibold text-gray-600">지혜로운 씀씀이는 바로 절약하는 것!"</p>
+                        <p class="text-right my-1 font-semibold text-gray-600 text-sm">-By myself-</p>
+                        <div class="card-actions justify-end">
+                            <div class="badge badge-primary text-white">챌린지 수행 내역</div>
+                            <div class="badge badge-primary badge-outline">지출 그래프</div>
+                            <div class="badge badge-primary text-white">회원가입</div>
+                            <div class="badge badge-primary badge-outline">비밀번호 찾기(이메일 발송)</div>
+                            <div class="badge badge-primary text-white">이미지 업로드</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
 </div>
 
 </html>

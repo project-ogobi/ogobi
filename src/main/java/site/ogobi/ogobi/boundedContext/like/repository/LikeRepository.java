@@ -4,7 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.ogobi.ogobi.boundedContext.like.entity.Like;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
 
-public interface LikeRepository extends JpaRepository<Like, Long> {
-    Like findByMember(Member member);
+import java.util.Optional;
 
+public interface LikeRepository extends JpaRepository<Like, Long> {
+    Optional<Like> findByMemberIdAndPostId(Long memberId, Long postId);
 }

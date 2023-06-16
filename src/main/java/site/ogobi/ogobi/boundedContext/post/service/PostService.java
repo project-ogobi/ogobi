@@ -9,10 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.repository.ChallengeRepository;
 import site.ogobi.ogobi.boundedContext.member.entity.Member;
+import site.ogobi.ogobi.boundedContext.post.entity.ChallengePost;
 import site.ogobi.ogobi.boundedContext.post.entity.Post;
+import site.ogobi.ogobi.boundedContext.post.repository.ChallengePostRepository;
 import site.ogobi.ogobi.boundedContext.post.repository.PostRepository;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,24 +29,18 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final ChallengeRepository challengeRepository;
+    private final ChallengePostRepository challengePostRepository;
 
     public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
     }
 
-    public boolean isMyPost(Member member, Post post) {   //글 작성자가 본인인지 여부 판단
-        String writer = post.getAuthor().getNickname();
-
-        if (member.getNickname().equals(writer)) {
-            return true;
-        }
-        return false;
-    }
 
     public Post getPost(Long id) {
         Optional<Post> post = this.postRepository.findById(id);
 
-        if (! post.isPresent()) {
+        if (!post.isPresent()) {
             return null;
         }
         return post.get();
@@ -52,6 +52,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.postRepository.findAll(pageable);
     }
+
     public Page<Post> getListByCategory(Post.Category category, int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
@@ -60,20 +61,32 @@ public class PostService {
     }
 
     @Transactional
-    public void create(String subject, String content, Post.Category category, Member member) {
+    public void create(String subject, String content, Post.Category category, Member member, Long challengeId) {
         Post p = Post.builder()
                 .subject(subject)
                 .content(content)
                 .category(category)
                 .author(member)
                 .build();
-        postRepository.save(p);
+        Post post = postRepository.save(p);
+
+
+        if (category.equals(Post.Category.SHARING)){
+            Challenge challenge = challengeRepository.findById(challengeId).get();
+
+            ChallengePost challengePost = ChallengePost.builder()
+                    .challenge(challenge)
+                    .post(post)
+                    .build();
+            challengePostRepository.save(challengePost);
+        }
     }
+
 
     @Transactional
     public void modify(Long postId, String subject, String content, String username) {
         Post post = getPost(postId);
-        if(!post.getAuthor().getUsername().equals(username)) {
+        if (!post.getAuthor().getUsername().equals(username)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         post.modify(subject, content);
@@ -86,5 +99,36 @@ public class PostService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         postRepository.delete(post);
+    }
+
+    public List<Post> bestPostList() {
+        List<Post> sortLike = postRepository.findAll(Sort.by(Sort.Direction.DESC, "like"));
+        LocalDate oneWeekAgo = LocalDate.now().minus(7, ChronoUnit.DAYS);   //  오늘부터 7일 전
+        List<Post> periodPosts = new ArrayList<>(); //  7일 전에 올라온 게시글 중 추천 수가 가장 높은 게시글을 담을 리스트
+
+        for (Post post : sortLike) {
+            if (post.getCreateDate().isAfter(oneWeekAgo.atStartOfDay())) {
+                periodPosts.add(post);    //  오늘부터 7일 이내에 작성된 게시글이라면 리스트에 추가
+            }
+        }
+
+        int count = Math.min(periodPosts.size(), 5); //  5개나, 5개 미만이면 다 넘긴다.
+
+        return periodPosts.subList(0, count);
+    }
+
+    public List<Post> resentPostList() {
+        List<Post> sortDate = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
+        int count = Math.min(sortDate.size(), 5);
+        return sortDate.subList(0, count);
+    }
+
+    public Optional<Challenge> findByChallengeId(Long id){
+        return challengeRepository.findById(id);
+    }
+
+    @Transactional
+    public int incleaseView(Long postId) {
+        return this.postRepository.incleaseView(postId);
     }
 }

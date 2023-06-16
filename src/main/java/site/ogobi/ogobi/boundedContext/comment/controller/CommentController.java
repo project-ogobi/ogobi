@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import site.ogobi.ogobi.base.rq.Rq;
+import site.ogobi.ogobi.boundedContext.challenge.entity.Challenge;
+import site.ogobi.ogobi.boundedContext.challenge.service.ChallengeService;
 import site.ogobi.ogobi.boundedContext.comment.dto.CommentDto;
 import site.ogobi.ogobi.boundedContext.comment.entity.Comment;
 import site.ogobi.ogobi.boundedContext.comment.service.CommentService;
@@ -28,15 +30,18 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final MemberService memberService;
+    private final ChallengeService challengeService;
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{category}/detail/{id}")
     public String createComment(Model model, @PathVariable String category, @PathVariable Long id, @Valid CommentDto commentDto, BindingResult bindingResult, Principal principal) {
         Post post = this.postService.getPost(id);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", post);
-            return "post/detail";
+            return rq.historyBack("내용을 입력해주세요.");
         }
+
         Member member = this.memberService.getMember(principal.getName());
         this.commentService.create(post, commentDto.getContent(), member);
 
@@ -69,7 +74,7 @@ public class CommentController {
         }
 
         if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+            return rq.historyBack("수정 권한이 없습니다.");
         }
 
         commentDto.setContent(comment.getContent());
@@ -87,7 +92,7 @@ public class CommentController {
         }
 
         if (!member.getUsername().equals(comment.getAuthor().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+            return rq.historyBack("수정 권한이 없습니다.");
         }
 
         commentService.modifyComment(comment, commentDto.getContent());

@@ -2,35 +2,103 @@
       layout:decorate="~{template}">
 
 
-<div layout:fragment="content" class="container my-3">
-    <h1 class="font-semibold p-3 text-center text-lg">게시판 HOME</h1>
+<div layout:fragment="content" class="container">
+    <script>
+        $(document).ready(function() {
+            $(".a__move").click(function(event) {
+                var itemId = $(this).attr("href");
+                adjustSlideScroll(itemId);
+            });
+        });
+        function adjustSlideScroll(itemId) {
+            var offset = 500; // 스크롤 위치를 조정할 오프셋 값
+            var selectedCarouselItem = $(itemId);
+            var topOffset = selectedCarouselItem.offset().top - offset;
+
+            $("html, body").animate({
+                scrollTop: topOffset
+            }, 800); // 800ms 동안 스크롤 애니메이션을 적용
+        }
+
+    </script>
+    <h1 class="font-semibold p-3 text-center text-lg">인기글</h1>
 
     <!--   카드 시작 -->
-    <div class="carousel w-full">
-        <div id="item1" class="carousel-item w-full">
-            <div>인기 글1</div>
-        </div>
+    <div class="carousel w-full mb-3">
+        <div th:id="${'item' + post.id}" class="carousel-item w-full flex justify-center" th:each="post, i: ${bestPosts}">
+            <div class="bg-gray-200 rounded-lg w-5/6 p-4 flex-col flex shadow-xl">
+                <div class="mb-1 px-3">
+                    <div class="badge badge-sm badge-primary mb-1" th:text="|TOP ${i.count}|"></div>
+                    <div class="flex justify-between font-semibold text-lg tracking-wider">
+                        <a th:text="${post.subject}" th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}"></a>
+                    </div>
+                </div>
+                <div class="flex justify-between font-semibold text-green-400 px-3">
+                    <div>
+                    <div th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-400 text-xs"></div>
+                    <div th:if="${post.author != null}" th:text="${post.author.nickname}">작성자</div>
+                    </div>
+                    <span class="text-gray-500 mt-4" style="float: right">
+                            <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
+                            <span th:text=${#lists.size(post.like)}>추천수</span>
+                    </span>
+                </div>
 
-        <div id="item2" class="carousel-item w-full">
-            <div>인기 글2</div>
-        </div>
-
-        <div id="item3" class="carousel-item w-full">
-            <div>인기 글3</div>
-        </div>
-
-        <div id="item4" class="carousel-item w-full">
-            <div>인기 글4</div>
+            </div>
         </div>
     </div>
     <!--   카드 끝 -->
 
     <!--   번호 -->
-    <div class="flex justify-center w-full py-2 gap-2">
-        <a href="#item1" class="btn btn-xs">1</a>
-        <a href="#item2" class="btn btn-xs">2</a>
-        <a href="#item3" class="btn btn-xs">3</a>
-        <a href="#item4" class="btn btn-xs">4</a>
+    <div class="flex w-full gap-2 justify-center items-center">
+        <div class="flex-col" th:each="post, i : ${bestPosts}">
+            <a th:href="${'#item' + post.id}" class="btn btn-xs btn-primary a__move" th:text="${i.count}">index</a>
+        </div>
+    </div>
+
+    <!-- 선 추가 -->
+    <hr class="my-5 border-gray-300 w-11/12 mx-auto">
+    <h1 class="font-semibold text-center text-lg mb-3">최신 게시글</h1>
+    <style>
+        .collapse:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    <div class="collapse collapse-open border border-base-300 bg-base-100 rounded-box mb-2 shadow-xl"
+         th:each="post : ${resentPostList}">
+        <div class="collapse-title pb-1 pr-4">
+            <h5 class="flex justify-between items-center">
+                <div class="text-gray-400" th:text="${post.getCategory().toString().toLowerCase() eq 'free' ? '자유 게시판' : '공유 게시판'}"></div>
+                <div class="text-gray-400 text-xs" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+            </h5>
+            <div class="flex items-center">
+
+                <a class="font-semibold text-lg tracking-wider" th:text="${post.subject}"
+                   th:href="@{|/posts/${post.getCategory().toString().toLowerCase()}/detail/${post.id}|}"></a><span>&nbsp;&nbsp;</span>
+                <span class="badge badge-primary badge-outline badge-sm">NEW</span>
+            </div>
+
+        </div>
+        <div class="collapse-content">
+            <span th:if="${member.title != null}" th:text="|🎊${member.title}🎊|" class="font-semibold text-green-900 text-xs"></span>
+            <h5 class="font-semibold text-sm text-gray-500" th:if="${post.author != null}">
+                <span th:text="${post.author.nickname}">작성자</span>
+                <span style="float: right">
+                    <i class="fa-solid fa-eye"></i><span>&nbsp;</span>
+                    <span th:text="${post.view}">조회수</span><span>&nbsp;&nbsp;&nbsp;</span>
+                    <i class="fa-solid fa-thumbs-up"></i><span>&nbsp;</span>
+                    <span th:text=${#lists.size(post.like)}>추천수</span><span>&nbsp;&nbsp;&nbsp;</span>
+                    <i class="fa-solid fa-comment"></i><span>&nbsp;</span>
+                    <span th:text="${#lists.size(post.comments)}">댓글수</span>
+                </span>
+            </h5>
+        </div>
+    </div>
+
+    <!-- 게시글이 없을 때 메시지 출력 -->
+    <div class="border border-base-300 bg-base-100 rounded-box font-medium text-center text-lg mb-2 p-5 w-11/12 mx-auto" th:if="${#lists.isEmpty(resentPostList)}">
+        게시글이 없습니다.
     </div>
 
 </div>
+</html>
